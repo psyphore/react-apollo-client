@@ -1,0 +1,32 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "1.2.1",
+    "@material-ui/icons": "1.1.0",
+    "apollo-cache-inmemory": "1.2.4",
+    "apollo-client": "2.3.4",
+    "apollo-link": "1.2.2",
+    "apollo-link-error": "1.1.0",
+    "apollo-link-http": "1.5.4",
+    "graphql": "git://github.com/graphql/graphql-js.git#npm",
+    "graphql-tag": "2.9.2",
+    "react": "16.4.1",
+    "react-apollo": "2.1.5",
+    "react-autosuggest": "9.3.4",
+    "react-dom": "16.4.1",
+    "react-router-dom": "4.3.1",
+    "subscriptions-transport-ws": "0.9.11",
+    "autosuggest-highlight": "3.1.1"
+  },
+  "devDependencies": {
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
