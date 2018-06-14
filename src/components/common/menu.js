@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { NavLink } from "react-router-dom";
@@ -18,11 +18,8 @@ const styles = theme => ({
     },
   });
 
-  class MenuListComposition extends React.Component {
-    state = {
-      open: false,
-    };
-  
+  class MenuListComposition extends Component {
+
     render() {
       const { classes } = this.props;
   

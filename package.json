@@ -10,6 +10,8 @@
     "apollo-link": "1.2.2",
     "apollo-link-error": "1.1.0",
     "apollo-link-http": "1.5.4",
+    "apollo-link-retry": "2.2.4",
+    "apollo-link-rest": "^0.3.0",
     "graphql": "git://github.com/graphql/graphql-js.git#npm",
     "graphql-tag": "2.9.2",
     "react": "16.4.1",
