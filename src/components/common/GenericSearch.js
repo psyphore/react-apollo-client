@@ -44,8 +44,10 @@ class GenericSearch extends Component {
                     onChange={this.handleInputChange}
                     />
                 <Button variant="outlined" color="primary" className={classes.button}>Office</Button>
-                <Button variant="outlined" color="primary" className={classes.button}>Person</Button>
+                <Button variant="outlined" color="primary" className={classes.button}>Product</Button>
                 <Button variant="outlined" color="primary" className={classes.button}>Title</Button>
+                <Button variant="outlined" color="primary" className={classes.button}>First name</Button>
+                <Button variant="outlined" color="primary" className={classes.button}>Lastname</Button>
                 <p>{this.state.query}</p>
             </div>
         );

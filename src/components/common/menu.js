@@ -29,15 +29,15 @@ const styles = theme => ({
             <Button variant="outlined" color="primary" className={classes.button}>Home</Button>
           </NavLink>
 
-          <NavLink to="/regions/10/0" as="regions">
-            <Button variant="outlined" className={classes.button}>Regions</Button>
+          <NavLink to="/buildings/10/0" as="regions">
+            <Button variant="outlined" className={classes.button}>Building</Button>
           </NavLink>
 
-          <NavLink to="/people/60/0" as="peeps">
+          <NavLink to="/people/10/0" as="peeps">
             <Button variant="outlined" className={classes.button}>Peeps</Button>
           </NavLink>
           
-          <NavLink to="/person/Sipho/Hlophe" as="me">
+          <NavLink to="/me/Sipho/Hlophe" as="me">
             <Button variant="outlined" color="secondary" className={classes.button}>My Profile</Button>              
           </NavLink>
         </div>

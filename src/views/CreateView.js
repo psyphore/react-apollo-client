@@ -12,7 +12,7 @@ mutation CreateView($message: String!) {
 }
 `
 
-class CreateView extends React.Component {
+class CreateView extends React.PureComponent {
   handleSubmit(e) {
     e.preventDefault()
     let formData = new FormData(this.form)

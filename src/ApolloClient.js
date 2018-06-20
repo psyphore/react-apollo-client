@@ -5,12 +5,30 @@ import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
 import { RetryLink } from 'apollo-link-retry';
 import { RestLink } from 'apollo-link-rest'
+import { withClientState } from 'apollo-link-state'
 // import { SubscriptionClient } from 'subscriptions-transport-ws';
- 
+
+const defaultState = {
+  currentGame: {
+    __typename: 'CurrentGame',
+    teamAScore: 0,
+    teamBScore: 0,
+    teamAName: 'Team A',
+    teamBName: 'Team B'
+  }
+}
+
 const createClient = function(uri, ws) {
+  const cache = new InMemoryCache();
+
   // const networkInterface = new SubscriptionClient(ws || process.env.REACT_APP_GRAPHQL_SUB_URI, {
   //   reconnect: true,
   // });
+
+  const stateLink = withClientState({
+    cache,
+    defaults: defaultState
+  });
 
   const rest = new RestLink({
     endpoints: {
@@ -23,6 +41,7 @@ const createClient = function(uri, ws) {
   });
 
   const link = ApolloLink.from([
+    stateLink,
     onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors)
         graphQLErrors.map(({ message, locations, path }) => console.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`));
@@ -35,8 +54,6 @@ const createClient = function(uri, ws) {
     }),
     new HttpLink({ uri: uri, credentials: 'same-origin' })
   ]);
-
-  const cache = new InMemoryCache();
 
   const client = new ApolloClient({
       link,

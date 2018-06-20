@@ -37,9 +37,9 @@ const styles = theme => ({
   },
 });
 
-class RegionDetailedCard extends PureComponent {
+class BuildingDetailedCard extends PureComponent {
   render() {
-    const { classes, theme, region } = this.props;
+    const { classes, theme, building } = this.props;
 
     return (
         <div>
@@ -51,15 +51,15 @@ class RegionDetailedCard extends PureComponent {
             /> */}
             <div className={classes.details}>
               <CardContent className={classes.content}>
-                <Typography variant="headline">{region.title}</Typography>
+                <Typography variant="headline">{building.name}</Typography>
               </CardContent>
               <div className={classes.controls}>
-                  <Link to={"/region/"+region.id}>
+                  <Link to={"/building/"+building.id}>
                       <IconButton aria-label="Show More">
                           <OpenInBrowser className={classes.playIcon}/>
                       </IconButton>
                   </Link>
-                  <Link to={"/region/"+region.id}>
+                  <Link to={"/building/"+building.id}>
                       <IconButton aria-label="Show More">
                           <ArrowForward className={classes.playIcon}/>
                       </IconButton>
@@ -72,10 +72,10 @@ class RegionDetailedCard extends PureComponent {
   }
 }
 
-RegionDetailedCard.propTypes = {
+BuildingDetailedCard.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  region: PropTypes.object.isRequired
+  building: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(RegionDetailedCard);
+export default withStyles(styles, { withTheme: true })(BuildingDetailedCard);

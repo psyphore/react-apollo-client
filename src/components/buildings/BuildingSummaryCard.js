@@ -31,15 +31,19 @@ const styles = theme => ({
     paddingLeft: theme.spacing.unit,
     paddingBottom: theme.spacing.unit
   },
+  headCount: {
+    height: 38,
+    width: 120
+  },
   icon: {
     height: 38,
     width: 38
   }
 });
 
-class RegionSummaryCard extends PureComponent {
+class BuildingSummaryCard extends PureComponent {
   render() {
-    const { classes, region } = this.props;
+    const { classes, theme, building } = this.props;
 
     return (
       <div>
@@ -47,23 +51,25 @@ class RegionSummaryCard extends PureComponent {
           <div className={classes.details}>
             <CardContent className={classes.content}>
               <Typography variant="headline">
-                {region.title}
+                {building.name}
               </Typography>
               <Typography variant="subheading" color="textSecondary">
-                {region.address}
+                {building.address}
               </Typography>
             </CardContent>
             <div className={classes.controls}>
-                <Typography className={classes.icon} 
+                <Typography className={classes.headCount} 
                             variant="subheading" 
                             color="textSecondary">
-                  {region.people.length}
+                  Head Count: {building.headcount}
                 </Typography>
-                <Link to={"/region/"+region.id}>
-                    <IconButton aria-label="Show More">
-                        <OpenInBrowser className={classes.icon}/>
-                    </IconButton>
-                </Link>
+                <Typography>
+                  <Link to={"/building/"+building.id}>
+                      <IconButton aria-label="Show More">
+                          <OpenInBrowser className={classes.icon}/>
+                      </IconButton>
+                  </Link>
+                </Typography>
             </div>
           </div>
         </Card>
@@ -72,10 +78,10 @@ class RegionSummaryCard extends PureComponent {
   }
 }
 
-RegionSummaryCard.propTypes = {
+BuildingSummaryCard.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  region: PropTypes.object.isRequired
+  building: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(RegionSummaryCard);
+export default withStyles(styles, { withTheme: true })(BuildingSummaryCard);

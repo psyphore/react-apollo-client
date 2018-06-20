@@ -6,7 +6,7 @@ import gql from 'graphql-tag';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-import Person from '../components/people/PersonCard';
+import Person from '../../components/people/PersonCard';
 // import PersonDetailDialog from '../components/PersonDetailDialog';
 
 const query = gql`

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import PeopleContainer from '../components/people/people-container';
+import PeopleContainer from '../../components/people/people-container';
 
 const query = gql`
 query awulethela($first: Int = 5, $offset: Int = 0) {

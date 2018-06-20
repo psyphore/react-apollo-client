@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-import RegionSummaryCard from './RegionSummaryCard';
+import BuildingSummaryCard from './BuildingSummaryCard';
 import GenericSearch from '../common/GenericSearch';
 
 const styles = theme => ({
@@ -19,22 +19,22 @@ const styles = theme => ({
     },
   });
 
-class RegionContainer extends PureComponent {
+class BuildingContainer extends PureComponent {
     render() {
-        const { classes, regions } = this.props;
+        const { classes, buildings } = this.props;
         return (
             <div>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Paper>
-                            <GenericSearch collection={regions} action={()=>{}} />
+                            {/* <GenericSearch collection={buildings} action={()=>{}} /> */}
                         </Paper>
                     </Grid>
                     <Grid item xs={12} className={classes.root}>
-                    {regions.map(
-                    (region) => (<div className={classes.chip}>
-                        <RegionSummaryCard key={region.id} 
-                                           region={region} />
+                    {buildings.map(
+                    (building) => (<div className={classes.chip}>
+                        <BuildingSummaryCard key={building.id} 
+                                           building={building} />
                     </div>)
                     )}
                     </Grid>
@@ -44,10 +44,10 @@ class RegionContainer extends PureComponent {
     }
 }
 
-RegionContainer.propTypes = {
+BuildingContainer.propTypes = {
     classes: PropTypes.object.isRequired,
-    regions: PropTypes.arrayOf(PropTypes.object).isRequired
+    buildings: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
-const PeopleContainerComponent = withStyles(styles)(RegionContainer);
-export default PeopleContainerComponent;
+const BuildingContainerComponent = withStyles(styles)(BuildingContainer);
+export default BuildingContainerComponent;

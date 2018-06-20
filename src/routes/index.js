@@ -1,11 +1,15 @@
 import LandingView from '../views/LandingView';
-import PeepsView from '../views/PeepsView';
-import DetailView from '../views/DetailView';
-import RegionView from '../views/RegionView';
+
+import PeepsView from '../views/person/PeepsView';
+import DetailView from '../views/person/DetailView';
+
+import BuildingView from '../views/building/BuildingView';
+import BuildingDetailView from '../views/building/BuildingDetailView';
 
 export {
     LandingView,
     PeepsView,
     DetailView,
-    RegionView
+    BuildingView,
+    BuildingDetailView
 }
