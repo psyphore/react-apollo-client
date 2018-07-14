@@ -1,29 +1,15 @@
 import React, { PureComponent } from 'react';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 
+import { getBuildingsQuery } from '../../graphql/index'
 import BuildingContainerComponent from '../../components/buildings/BuildingContainer';
-
-const query = gql`
-query getBuildings($id: ID, $name: String, $first: Int, $offset: Int) {
-  buildings(id: $id, name: $name, first: $first, offset: $offset) {
-    ...buildingFields
-  }
-}
-
-fragment buildingFields on Building {
-  id
-  name
-  address
-  headcount
-}
- ` 
+import { Loader } from '../../components/common';
 
 const options = {
   options: props => ({
     variables: {
-        offset: parseInt(props.match.params.offset),
-        first: parseInt(props.match.params.first)
+      first: parseInt(props.match.params.first),  
+      offset: parseInt(props.match.params.offset)
     }
   })
 }
@@ -33,7 +19,7 @@ class BuildingView extends PureComponent {
   render() {
     let { data } = this.props
     if (data.loading) {
-      return <div>Loading...</div>
+      return <div><Loader /></div>
     }
 
     if (data.error) {
@@ -48,5 +34,5 @@ class BuildingView extends PureComponent {
   }
 }
 
-BuildingView = graphql(query, options)(BuildingView)
+BuildingView = graphql(getBuildingsQuery, options)(BuildingView)
 export default BuildingView;

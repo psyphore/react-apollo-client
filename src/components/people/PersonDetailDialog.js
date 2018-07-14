@@ -13,17 +13,17 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 import PersonC from './PersonChip';
 
 const styles = {
   appBar: {
-    position: 'relative',
+    position: 'relative'
   },
   flex: {
-    flex: 1,
-  },
+    flex: 1
+  }
 };
 
 function Transition(props) {
@@ -32,7 +32,7 @@ function Transition(props) {
 
 class FullScreenDialog extends React.Component {
   state = {
-    open: false,
+    open: false
   };
 
   handleClickOpen = () => {
@@ -45,7 +45,7 @@ class FullScreenDialog extends React.Component {
 
   render() {
     const { classes, detail } = this.props;
-    
+
     return (
       <div>
         <PersonC detail={detail} onClick={this.handleClickOpen} />
@@ -57,26 +57,32 @@ class FullScreenDialog extends React.Component {
         >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+              <IconButton
+                color="inherit"
+                onClick={this.handleClose}
+                aria-label="Close"
+              >
                 <CloseIcon />
               </IconButton>
-              <Typography variant="title" color="inherit" className={classes.flex}>
+              <Typography
+                variant="title"
+                color="inherit"
+                className={classes.flex}
+              >
                 {detail.firstname + ' ' + detail.lastname}
               </Typography>
             </Toolbar>
           </AppBar>
           <List>
-            <ListItem >
+            <ListItem>
               <ListItemText primary="email" secondary={detail.email} />
             </ListItem>
             <Divider />
-            <ListItem >
+            <ListItem>
               <ListItemText primary="mobile" secondary={detail.mobile} />
             </ListItem>
-            <ListItem >
-              <Link to={"/person/"+detail.firstname+"/"+detail.lastname} >
-                  View
-                </Link>
+            <ListItem>
+              <Link to={'/person/' + detail.id}>View</Link>
             </ListItem>
           </List>
         </Dialog>

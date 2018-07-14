@@ -1,33 +1,33 @@
-import React from 'react'
-import { gql, graphql } from 'react-apollo'
+import React from 'react';
+import { gql, graphql } from 'react-apollo';
 
 const mutation = gql`
-mutation CreateView($message: String!) {
-  createMessage(message: $message) {
-    formErrors,
-    message {
-      id,
+  mutation CreateView($message: String!) {
+    createMessage(message: $message) {
+      formErrors
+      message {
+        id
+      }
     }
   }
-}
-`
+`;
 
 class CreateView extends React.PureComponent {
   handleSubmit(e) {
-    e.preventDefault()
-    let formData = new FormData(this.form)
+    e.preventDefault();
+    let formData = new FormData(this.form);
     this.props
       .mutate({ variables: { message: formData.get('message') } })
       .then(res => {
         if (res.data.createMessage.formErrors === null) {
-          window.location.replace(`/`)
+          window.location.replace(`/`);
         } else {
-          console.log(res.data.createMessage.formErrors)
+          console.log(res.data.createMessage.formErrors);
         }
       })
       .catch(err => {
-        console.log('Network error!')
-      })
+        console.log('Network error!');
+      });
   }
 
   render() {
@@ -42,8 +42,8 @@ class CreateView extends React.PureComponent {
           <button type="submit">Submit</button>
         </form>
       </div>
-    )
+    );
   }
 }
-CreateView = graphql(mutation)(CreateView)
-export default CreateView
+CreateView = graphql(mutation)(CreateView);
+export default CreateView;

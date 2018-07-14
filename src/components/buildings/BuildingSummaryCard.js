@@ -3,76 +3,59 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import IconButton from '@material-ui/core/IconButton';
+import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import OpenInBrowser from '@material-ui/icons/OpenInBrowser';
 import { Link } from 'react-router-dom';
+import Badge from '@material-ui/core/Badge';
+import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
   card: {
-    display: 'flex',
-    maxWidth: 275,
-    maxHeight: 275
+    maxWidth: 345
   },
-  details: {
-    display: 'flex',
-    flexDirection: 'column'
+  media: {
+    height: 0,
+    paddingTop: '56.25%' // 16:9
   },
-  content: {
-    flex: '1 0 auto'
+  badge: {
+    margin: theme.spacing.unit * 2,
+    padding: `0 ${theme.spacing.unit * 2}px`
   },
-  cover: {
-    width: 151,
-    height: 151
-  },
-  controls: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingLeft: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit
-  },
-  headCount: {
-    height: 38,
-    width: 120
-  },
-  icon: {
-    height: 38,
-    width: 38
+  avatar: {
+    margin: 10
   }
 });
 
 class BuildingSummaryCard extends PureComponent {
   render() {
-    const { classes, theme, building } = this.props;
+    const { classes, building } = this.props;
 
     return (
       <div>
-        <Card className={classes.card}>
-          <div className={classes.details}>
-            <CardContent className={classes.content}>
-              <Typography variant="headline">
-                {building.name}
-              </Typography>
-              <Typography variant="subheading" color="textSecondary">
-                {building.address}
-              </Typography>
-            </CardContent>
-            <div className={classes.controls}>
-                <Typography className={classes.headCount} 
-                            variant="subheading" 
-                            color="textSecondary">
-                  Head Count: {building.headcount}
+        <Link
+          to={'/building/' + building.id}
+          style={{ textDecoration: 'none' }}
+        >
+          <Badge
+            color="primary"
+            badgeContent={building.headcount}
+            className={classes.badge.margin}
+          >
+            <Card className={classes.card}>
+              {/* <CardMedia className={classes.media}
+                  src={<Avatar className={classes.avatar}>H</Avatar>}
+                /> */}
+              <CardContent>
+                <Typography gutterBottom variant="headline" component="h3">
+                  {building.name}
                 </Typography>
-                <Typography>
-                  <Link to={"/building/"+building.id}>
-                      <IconButton aria-label="Show More">
-                          <OpenInBrowser className={classes.icon}/>
-                      </IconButton>
-                  </Link>
+                <Typography variant="subheading" color="textSecondary">
+                  {building.address}
                 </Typography>
-            </div>
-          </div>
-        </Card>
+              </CardContent>
+            </Card>
+          </Badge>
+        </Link>
       </div>
     );
   }

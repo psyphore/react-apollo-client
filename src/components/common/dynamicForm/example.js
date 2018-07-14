@@ -19,7 +19,7 @@ class ExampleOfDynamicFormComponent extends PureComponent {
         let data = [];
         if (model.id) {
           data = this.state.data.filter((d) => {
-            return d.id != model.id
+            return d.id !== model.id
           });
         } else {
           model.id = +new Date();
@@ -33,7 +33,7 @@ class ExampleOfDynamicFormComponent extends PureComponent {
     
       onEdit = (id) => {
         let record = this.state.data.find((d) => {
-          return d.id == id;
+          return d.id === id;
         });
         alert(JSON.stringify(record));
         this.setState({

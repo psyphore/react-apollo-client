@@ -1,18 +1,12 @@
 import React, { PureComponent } from 'react';
-// import PropTypes from 'prop-types';
+import { GraphQLSearch } from '../components/common';
 
 class LandingView extends PureComponent {
-    render() {
-        return (
-            <div>
-                <p>Welcome to Cardinal</p>
-            </div>
-        );
-    }
+  render() {
+    return <GraphQLSearch />;
+  }
 }
 
-LandingView.propTypes = {
-    
-};
+LandingView.propTypes = {};
 
 export default LandingView;

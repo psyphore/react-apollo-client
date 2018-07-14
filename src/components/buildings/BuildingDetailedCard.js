@@ -12,29 +12,29 @@ import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   card: {
-    display: 'flex',
+    display: 'flex'
   },
   details: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   content: {
-    flex: '1 0 auto',
+    flex: '1 0 auto'
   },
   cover: {
     width: 151,
-    height: 151,
+    height: 151
   },
   controls: {
     display: 'flex',
     alignItems: 'center',
     paddingLeft: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit
   },
   playIcon: {
     height: 38,
-    width: 38,
-  },
+    width: 38
+  }
 });
 
 class BuildingDetailedCard extends PureComponent {
@@ -42,33 +42,33 @@ class BuildingDetailedCard extends PureComponent {
     const { classes, theme, building } = this.props;
 
     return (
-        <div>
-          <Card className={classes.card}>
-              {/* <CardMedia
+      <div>
+        <Card className={classes.card}>
+          {/* <CardMedia
               className={classes.cover}
               image={person.avatar}
               title={person.firstname + ' ' + person.lastname}
             /> */}
-            <div className={classes.details}>
-              <CardContent className={classes.content}>
-                <Typography variant="headline">{building.name}</Typography>
-              </CardContent>
-              <div className={classes.controls}>
-                  <Link to={"/building/"+building.id}>
-                      <IconButton aria-label="Show More">
-                          <OpenInBrowser className={classes.playIcon}/>
-                      </IconButton>
-                  </Link>
-                  <Link to={"/building/"+building.id}>
-                      <IconButton aria-label="Show More">
-                          <ArrowForward className={classes.playIcon}/>
-                      </IconButton>
-                  </Link>
-              </div>
+          <div className={classes.details}>
+            <CardContent className={classes.content}>
+              <Typography variant="headline">{building.name}</Typography>
+            </CardContent>
+            <div className={classes.controls}>
+              <Link to={'/building/' + building.id}>
+                <IconButton aria-label="Show More">
+                  <OpenInBrowser className={classes.playIcon} />
+                </IconButton>
+              </Link>
+              <Link to={'/building/' + building.id}>
+                <IconButton aria-label="Show More">
+                  <ArrowForward className={classes.playIcon} />
+                </IconButton>
+              </Link>
             </div>
-          </Card>
-        </div>
-      );
+          </div>
+        </Card>
+      </div>
+    );
   }
 }
 

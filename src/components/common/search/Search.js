@@ -42,7 +42,7 @@ const suggestions = [
   { label: 'Bouvet Island' },
   { label: 'Brazil' },
   { label: 'British Indian Ocean Territory' },
-  { label: 'Brunei Darussalam' },
+  { label: 'Brunei Darussalam' }
 ];
 
 function renderInput(inputProps) {
@@ -54,9 +54,9 @@ function renderInput(inputProps) {
       InputProps={{
         inputRef: ref,
         classes: {
-          input: classes.input,
+          input: classes.input
         },
-        ...other,
+        ...other
       }}
     />
   );
@@ -96,7 +96,7 @@ function renderSuggestionsContainer(options) {
 }
 
 function getSuggestionValue(suggestion) {
-  return suggestion.display
+  return suggestion.display;
 }
 
 function getSuggestions(value) {
@@ -108,7 +108,8 @@ function getSuggestions(value) {
     ? []
     : suggestions.filter(suggestion => {
         const keep =
-          count < 5 && suggestion.label.toLowerCase().slice(0, inputLength) === inputValue;
+          count < 5 &&
+          suggestion.label.toLowerCase().slice(0, inputLength) === inputValue;
 
         if (keep) {
           count += 1;
@@ -122,64 +123,64 @@ const styles = theme => ({
   container: {
     flexGrow: 1,
     position: 'relative',
-    height: 250,
+    height: 250
   },
   suggestionsContainerOpen: {
     position: 'absolute',
     zIndex: 1,
     marginTop: theme.spacing.unit,
     left: 0,
-    right: 0,
+    right: 0
   },
   suggestion: {
-    display: 'block',
+    display: 'block'
   },
   suggestionsList: {
     margin: 0,
     padding: 0,
-    listStyleType: 'none',
-  },
+    listStyleType: 'none'
+  }
 });
 
 class Search extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       value: {},
-      suggestions: [],
+      suggestions: []
     };
   }
-  
+
   handleSuggestionsFetchRequested = ({ value }) => {
     this.setState({
-      suggestions: getSuggestions(value),
+      suggestions: getSuggestions(value)
     });
   };
 
   handleSuggestionsClearRequested = () => {
     this.setState({
-      suggestions: [],
+      suggestions: []
     });
   };
 
   handleChange = (event, { newValue }) => {
     this.setState({
-      value: newValue,
+      value: newValue
     });
   };
 
   render() {
     const { classes, collection } = this.props;
-    this.setState({suggestions: collection});
-    
+    this.setState({ suggestions: collection });
+
     return (
       <Autosuggest
         theme={{
           container: classes.container,
           suggestionsContainerOpen: classes.suggestionsContainerOpen,
           suggestionsList: classes.suggestionsList,
-          suggestion: classes.suggestion,
+          suggestion: classes.suggestion
         }}
         renderInputComponent={renderInput}
         suggestions={this.state.suggestions}
@@ -192,7 +193,7 @@ class Search extends Component {
           classes,
           placeholder: 'Search title',
           value: this.state.value,
-          onChange: this.handleChange,
+          onChange: this.handleChange
         }}
       />
     );
