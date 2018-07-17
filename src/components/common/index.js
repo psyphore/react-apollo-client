@@ -1,13 +1,15 @@
 import CircularIndeterminate from './loader/index'
 import AppHeader from './layout/layout-header'
 import DynamicForm from './dynamicForm/index'
-import GenericSearch from './search/GenericSearch'
 import GraphQLSearch from './search/GraphQLSearch'
+import ErrorMessage from './error/index'
+import Footer from './layout/footer'
 
 export {
     CircularIndeterminate as Loader,
     AppHeader,
     DynamicForm,
-    GenericSearch,
-    GraphQLSearch
+    GraphQLSearch,
+    ErrorMessage,
+    Footer
 }

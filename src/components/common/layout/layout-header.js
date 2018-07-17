@@ -11,7 +11,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 const styles = {
   root: {
@@ -73,8 +73,11 @@ class ButtonAppBar extends Component {
               color="inherit"
               className={classes.flex}
             >
-              {title}
+              <Link to="/" as="home" style={{ textDecoration: 'none' }}>
+                {title}
+              </Link>
             </Typography>
+
             {auth && (
               <div>
                 <IconButton

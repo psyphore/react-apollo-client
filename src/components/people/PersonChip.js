@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
-import { Link } from 'react-router-dom';
+import Link from 'react-router-dom/Link';
 
 const baseUrl = `${process.env.REACT_APP_GRAPHQL_URI}/media/`;
 
@@ -16,6 +16,10 @@ const styles = theme => ({
   },
   chip: {
     margin: theme.spacing.unit / 2
+  },
+  size: {
+    width: 60,
+    height: 60
   }
 });
 
@@ -29,8 +33,13 @@ class PersonChip extends Component {
           <Chip
             avatar={
               detail.avatar ? (
-                <Avatar size={32} src={baseUrl + detail.avatar} />
-              ) : null
+                <Avatar size={classes.size} src={baseUrl + detail.avatar} />
+              ) : (
+                <Avatar sizes={classes.size}>
+                  {detail.firstname.substring(0, 1) +
+                    detail.lastname.substring(0, 1)}
+                </Avatar>
+              )
             }
             label={detail.firstname + ' ' + detail.lastname}
             className={classes.chip}
@@ -42,7 +51,7 @@ class PersonChip extends Component {
 }
 
 PersonChip.propTypes = {
-  detail: PropTypes.instanceOf(PropTypes.object).isRequired,
+  detail: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired
 };
 

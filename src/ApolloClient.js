@@ -5,6 +5,7 @@ import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
 import { RetryLink } from 'apollo-link-retry';
 import { withClientState } from 'apollo-link-state';
+import { WebSocketLink } from 'apollo-link-ws';
 
 const defaultState = {};
 
@@ -12,6 +13,13 @@ const createClient = function(uri) {
   const cache = new InMemoryCache();
 
   const stateLink = withClientState({ cache, defaults: defaultState });
+
+  const wsLink = new WebSocketLink({
+    uri: `ws://localhost:3081/graphql`,
+    options: {
+      reconnect: true
+    }
+  });
 
   const link = ApolloLink.from([
     stateLink,
@@ -26,7 +34,8 @@ const createClient = function(uri) {
       if (networkError) console.error(`[Network error]: ${networkError}`);
     }),
     new RetryLink({ delay: 5000, attempts: 5 }),
-    new HttpLink({ uri: uri, credentials: 'same-origin' })
+    new HttpLink({ uri: uri, credentials: 'same-origin' }),
+    wsLink
   ]);
 
   const client = new ApolloClient({ link, cache });

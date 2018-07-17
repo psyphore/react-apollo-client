@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 
 import { getPersonQuery } from '../../graphql/index';
-import { Loader } from '../../components/common';
+import { Loader, ErrorMessage } from '../../components/common';
 import PersonDetailedContainer from '../../components/people/PersonDetailedContainer';
 
 const queryOptions = {
@@ -27,7 +27,7 @@ class DetailView extends Component {
     }
 
     if (data.error) {
-      return <div>{JSON.stringify(data.error)}</div>;
+      return <ErrorMessage error={data.error} />;
     }
 
     return (
@@ -38,7 +38,7 @@ class DetailView extends Component {
   }
 }
 
-DetailView.PropTypes = {
+DetailView.propTypes = {
   classes: PropTypes.object,
   data: PropTypes.object.isRequired
 };

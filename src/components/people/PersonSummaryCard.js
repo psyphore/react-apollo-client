@@ -5,7 +5,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import { Link } from 'react-router-dom';
+import Link from 'react-router-dom/Link';
 
 const baseUrl = `${process.env.REACT_APP_GRAPHQL_URI}/media/`;
 
@@ -29,8 +29,8 @@ class PersonSummaryCard extends Component {
           <Card className={classes.card}>
             <CardMedia
               className={classes.media}
-              image={person.avatar ? baseUrl + person.avatar : null}
               title={person.firstname + ' ' + person.lastname}
+              image={person.avatar ? baseUrl + person.avatar : null}
             />
             <CardContent>
               <Typography gutterBottom variant="headline" component="h4">

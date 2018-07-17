@@ -4,10 +4,9 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
 
 import { primaryTheme } from './themes/primary-theme';
-import { AppHeader } from './components/common';
+import { AppHeader, Footer } from './components/common';
 import AppRoutes from './routes/index.routes';
 
 const styles = theme => ({
@@ -15,7 +14,12 @@ const styles = theme => ({
     display: 'grid',
     gridGap: '5px',
     gridTemplateColumns: '1fr',
-    gridTemplateRows: '1fr auto 1fr'
+    gridTemplateRows: '1fr auto 1fr',
+    width: '100vw',
+    maxWidth: '95vw',
+    margin: '0 auto',
+    [theme.breakpoints.down('md')]:{ maxWidth:'85vw'},
+    [theme.breakpoints.down('sm')]:{ maxWidth:'95vw'}
   },
   header: {
     gridRow: '-1 / 2'
@@ -49,8 +53,7 @@ class App extends Component {
                 <AppRoutes />
               </div>
               <div className={classes.footer}>
-                <Divider className={classes.divider} />
-                <p>this is a footer</p>
+                <Footer />
               </div>
             </div>
           </Router>

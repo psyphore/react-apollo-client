@@ -36,7 +36,7 @@ class PersonDetailedContainer extends Component {
 
     return (
       <div>
-        <Grid container spacing={24}>
+        <Grid container spacing={8}>
           <Grid item md={12}>
             <Paper className={classes.paper}>
               <Typography component="h1">

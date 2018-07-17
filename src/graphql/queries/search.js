@@ -1,18 +1,21 @@
 import gql from 'graphql-tag';
 
 export const searchQuery = gql`
-  query($query: BasicSearch!) {
-    search(query: $query) {
-      count
-      data {
-        ...data
-      }
+  # Try to write your query here
+query($query: BasicSearch!) {
+  search(query: $query) {
+    count
+    data {
+      ...data
     }
   }
+}
 
-  fragment data on Searchable {
-    id
-    displayName
-    avatar
-  }
+fragment data on Person {
+  id
+  firstname
+  lastname
+  avatar
+}
+
 `;
