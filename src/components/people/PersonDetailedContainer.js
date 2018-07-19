@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Person from '../../components/people/PersonCard';
 import PersonC from '../../components/people/PersonChip';
-import ProductSummaryCard from '../../components/products/ProductSummaryCard';
+import ProductSummaryList from '../../components/products/ProductSummaryCard';
 
 const styles = theme => ({
   root: {
@@ -26,7 +26,7 @@ const styles = theme => ({
   },
   paper: {
     padding: theme.spacing.unit * 2,
-    textAlign: 'center',
+    textAlign: 'right',
     color: theme.palette.text.secondary
   }
 });
@@ -38,13 +38,13 @@ class PersonDetailedContainer extends Component {
     return (
       <div>
         <Grid container spacing={8}>
-          <Grid item md={12}>
+          {/* <Grid item md={12}>
             <Paper className={classes.paper}>
-              <Typography component="h1">
+              <Typography component="subheading">
                 {person.firstname + ' ' + person.lastname}
               </Typography>
             </Paper>
-          </Grid>
+          </Grid> */}
           <Grid item md={3}>
             <Paper className={classes.paper}>
               <Person detail={person} />
@@ -53,28 +53,25 @@ class PersonDetailedContainer extends Component {
           <Grid item md={9}>
             <Paper className={classes.paper}>
               <div className={classes.children}>
-                {person.line ? (
-                  person.line.map(person => (
-                    <PersonC key={person.id} detail={person} />
-                  ))
-                ) : person.team ? (
-                  person.team.map(person => (
-                    <PersonC key={person.id} detail={person} />
-                  ))
-                ) : (
+                {person.line
+                  ? person.line.map(person => (
+                      <PersonC key={person.id} detail={person} />
+                    ))
+                  : null}
+                {person.team
+                  ? person.team.map(person => (
+                      <PersonC key={person.id} detail={person} />
+                    ))
+                  : null}
+                {(!person.line || person.line.length === 0) &&
+                (!person.team || person.team === 0) ? (
                   <Typography variant="subheading">No Associations</Typography>
-                )}
+                ) : null}
               </div>
             </Paper>
             <Paper className={classes.paper}>
-              <div className={classes.children}>
-                {person.products ? (
-                  person.products.map(product => (
-                    <ProductSummaryCard key={product.id} product={product} />
-                  ))
-                ) : (
-                  <Typography variant="subheading">No Products</Typography>
-                )}
+              <div className={classes.childrenx}>
+                <ProductSummaryList products={person.products} />
               </div>
             </Paper>
           </Grid>

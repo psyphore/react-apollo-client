@@ -6,6 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Link from 'react-router-dom/Link';
+import Avatar from '@material-ui/core/Avatar';
+import Person from '@material-ui/icons/Person';
 
 const baseUrl = `${process.env.REACT_APP_GRAPHQL_URI}/media/`;
 
@@ -16,6 +18,12 @@ const styles = {
   media: {
     height: 0,
     paddingTop: '56.25%' // 16:9
+  },
+  avatar: {
+    left: '50%'
+  },
+  cardContent: {
+    textAlign: 'center'
   }
 };
 
@@ -27,12 +35,18 @@ class PersonSummaryCard extends Component {
       <div>
         <Link to={'/person/' + person.id} style={{ textDecoration: 'none' }}>
           <Card className={classes.card}>
-            <CardMedia
-              className={classes.media}
-              title={person.firstname + ' ' + person.lastname}
-              image={person.avatar ? baseUrl + person.avatar : null}
-            />
-            <CardContent>
+            {person.avatar ? (
+              <CardMedia
+                className={classes.media}
+                title={person.firstname + ' ' + person.lastname}
+                image={baseUrl + person.avatar}
+              />
+            ) : (
+              <Avatar className={classes.avatar} alt={person.firstname + ' ' + person.lastname}>
+                <Person />
+              </Avatar>
+            )}
+            <CardContent className={classes.cardContent}>
               <Typography gutterBottom variant="headline" component="h4">
                 {person.firstname + ' ' + person.lastname}
               </Typography>

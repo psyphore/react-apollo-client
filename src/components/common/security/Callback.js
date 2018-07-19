@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import { Loader } from '../index'
+import { Loader } from '../index';
 
 class Callback extends Component {
   render() {
-
-    return (
-        <Loader />
-    );
+    return <Loader />;
   }
 }
 

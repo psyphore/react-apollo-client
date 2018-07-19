@@ -34,11 +34,11 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
     color: theme.palette.text.secondary
-
   }
 });
 
 class App extends Component {
+
   render() {
     const { classes } = this.props;
 

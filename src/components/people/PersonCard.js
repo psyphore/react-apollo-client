@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Title from '@material-ui/icons/Title';
 import Phone from '@material-ui/icons/Phone';
 import Email from '@material-ui/icons/Email';
 import Details from '@material-ui/icons/Details';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+import WorkIcon from '@material-ui/icons/Work';
 
 const baseUrl = `${process.env.REACT_APP_GRAPHQL_URI}/media/`;
 
@@ -35,58 +37,44 @@ class PersonCard extends Component {
     return (
       <div className={classes.root}>
         <Card className={classes.card}>
-          <CardMedia
-            className={classes.media}
-            image={detail.avatar ? baseUrl + detail.avatar : null}
-            title={detail.firstname + ' ' + detail.lastname}
-          />
+          {detail.avatar ? (
+            <CardMedia
+              className={classes.media}
+              image={baseUrl + detail.avatar}
+              title={detail.firstname + ' ' + detail.lastname}
+            />
+          ) : null}
           <CardContent>
             <Typography gutterBottom variant="headline" component="h1">
               {detail.firstname + ' ' + detail.lastname}
             </Typography>
-            {detail.title ? (
-              <Typography
-                variant="subheading"
-                color="textSecondary"
-                component="h2"
-              >
-                <Title />
-                {detail.title}
-              </Typography>
-            ) : null}
-            {detail.mobile ? (
-              <Typography
-                variant="subheading"
-                color="textSecondary"
-                component="h3"
-              >
-                <Phone /> {detail.mobile}
-              </Typography>
-            ) : null}
-            {detail.email ? (
-              <Typography
-                variant="subheading"
-                color="textSecondary"
-                component="h3"
-              >
-                <Email /> {detail.email}
-              </Typography>
-            ) : null}
-            {detail.bio ? (
-              <Typography
-                variant="subheading"
-                color="textSecondary"
-                component="h3"
-              >
-                <Details /> {detail.bio}
-              </Typography>
-            ) : null}
+            <List>
+              <ListItem>
+                <Avatar>
+                  <WorkIcon />
+                </Avatar>
+                <ListItemText primary={detail.title} />
+              </ListItem>
+              <ListItem>
+                <Avatar>
+                  <Email />
+                </Avatar>
+                <ListItemText primary={detail.email} />
+              </ListItem>
+              <ListItem>
+                <Avatar>
+                  <Phone />
+                </Avatar>
+                <ListItemText primary={detail.mobile} />
+              </ListItem>
+              <ListItem>
+                <Avatar>
+                  <Details />
+                </Avatar>
+                <ListItemText primary={detail.bio} />
+              </ListItem>
+            </List>
           </CardContent>
-          <CardActions>
-            <Button size="small" color="primary">
-              Show More
-            </Button>
-          </CardActions>
         </Card>
       </div>
     );

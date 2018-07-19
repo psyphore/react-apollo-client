@@ -3,12 +3,12 @@ import history from './history.service';
 
 export default class Auth {
   auth0 = new auth0.WebAuth({
-    domain: 'isivumelwano.eu.auth0.com',
-    clientID: 'b86Cd_cnOqBA4ti9wk3HPqOmplKkkRQz',
-    redirectUri: 'http://localhost:3081/callback',
-    audience: 'https://isivumelwano.eu.auth0.com/userinfo',
-    responseType: 'token id_token',
-    scope: 'openid'
+    domain: process.env.REACT_APP_AUTH0_DOMAIN,
+    clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
+    redirectUri: process.env.REACT_APP_AUTH0_REDIRECT_URI,
+    audience: process.env.REACT_APP_AUTH0_AUDIANCE,
+    responseType: process.env.REACT_APP_AUTH0_RESPONSE_TYPE,
+    scope: process.env.REACT_APP_AUTH0_SCOPE
   });
 
   constructor() {

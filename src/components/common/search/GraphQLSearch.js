@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { withApollo } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -49,9 +48,21 @@ class GraphQLSearch extends PureComponent {
     fetching: false
   };
 
+  _reset = () => {
+    this.setState({
+      first: 100,
+      offset: 0,
+      result: [],
+      count: 0,
+      fetching: false
+    });
+  };
+
   _executeSearch = async () => {
     const { query, first, offset } = this.state;
     const { client } = this.props;
+
+    this._reset();
 
     this.setState({
       fetching: true
@@ -87,6 +98,10 @@ class GraphQLSearch extends PureComponent {
                     helperText="Search for person via title, first name, last name, branch name, branch address, product name"
                     margin="normal"
                     onChange={e => this.setState({ query: e.target.value })}
+                    onKeyPress={e =>
+                      e.key === 'Enter' ? this._executeSearch() : null
+                    }
+                    onFocus={() => this.setState({ query: '' })}
                     value={query}
                   />
                 </Grid>
@@ -119,7 +134,7 @@ class GraphQLSearch extends PureComponent {
           </Grid>
 
           <Grid item md={12}>
-            {this.state.count != 0 ? (
+            {this.state.count !== 0 ? (
               <div className={classes.results}>
                 {this.state.result.map(res => (
                   <PersonSummaryCard key={res.id} person={res} />

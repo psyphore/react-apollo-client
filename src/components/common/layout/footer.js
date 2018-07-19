@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
 import * as moment from 'moment';
 
 const styles = theme => ({
   root: {
     flexGrow: 1
-  },
-  divider: {
-    margin: `${theme.spacing.unit * 2}px 0`
   }
 });
 
@@ -19,7 +17,9 @@ class AppFooter extends Component {
     return (
       <div className={classes.root}>
         <Divider />
-        <p >Cardinal - {moment().format('YYYY')}</p>
+        <Typography variant="subheading" gutterBottom>
+          Cardinal - {moment().format('YYYY')}
+        </Typography>
       </div>
     );
   }
