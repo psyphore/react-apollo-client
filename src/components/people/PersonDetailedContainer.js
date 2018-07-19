@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Person from '../../components/people/PersonCard';
 import PersonC from '../../components/people/PersonChip';
+import ProductSummaryCard from '../../components/products/ProductSummaryCard';
 
 const styles = theme => ({
   root: {
@@ -62,6 +63,17 @@ class PersonDetailedContainer extends Component {
                   ))
                 ) : (
                   <Typography variant="subheading">No Associations</Typography>
+                )}
+              </div>
+            </Paper>
+            <Paper className={classes.paper}>
+              <div className={classes.children}>
+                {person.products ? (
+                  person.products.map(product => (
+                    <ProductSummaryCard key={product.id} product={product} />
+                  ))
+                ) : (
+                  <Typography variant="subheading">No Products</Typography>
                 )}
               </div>
             </Paper>

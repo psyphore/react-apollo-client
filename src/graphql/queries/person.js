@@ -58,8 +58,15 @@ const getPersonQuery = gql`
   }
 
   fragment productField on Product {
+    id
     name
+    description
     status
+    art
+    championCount
+    champions {
+      ...otherPeopleFields
+    }
   }
 
   fragment buildingField on Building {

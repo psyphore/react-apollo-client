@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Router } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 
 import { primaryTheme } from './themes/primary-theme';
-import { AppHeader, Footer } from './components/common';
+import { AppHeader, AppFooter } from './components/common';
 import AppRoutes from './routes/index.routes';
+import { history } from './services/';
 
 const styles = theme => ({
   container: {
@@ -18,21 +19,22 @@ const styles = theme => ({
     width: '100vw',
     maxWidth: '95vw',
     margin: '0 auto',
-    [theme.breakpoints.down('md')]:{ maxWidth:'85vw'},
-    [theme.breakpoints.down('sm')]:{ maxWidth:'95vw'}
+    [theme.breakpoints.down('md')]: { maxWidth: '85vw' },
+    [theme.breakpoints.down('sm')]: { maxWidth: '95vw' }
   },
   header: {
-    gridRow: '-1 / 2'
+    gridRow: '-1 / 0'
   },
   content: {
     gridRow: '2 / 3',
     margin: '1%'
   },
   footer: {
-    gridRow: '3 / 4'
-  },
-  divider: {
-    margin: `${theme.spacing.unit * 2}px 0`
+    gridRow: '3 / 3',
+    padding: theme.spacing.unit * 2,
+    textAlign: 'center',
+    color: theme.palette.text.secondary
+
   }
 });
 
@@ -43,21 +45,19 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={primaryTheme}>
         <CssBaseline />
-        <div className={classes.container}>
-          <Router>
-            <div>
-              <div className={classes.header}>
-                <AppHeader title={process.env.REACT_APP_NAME} />
-              </div>
-              <div className={classes.content}>
-                <AppRoutes />
-              </div>
-              <div className={classes.footer}>
-                <Footer />
-              </div>
+        <Router history={history}>
+          <div className={classes.container}>
+            <div className={classes.header}>
+              <AppHeader title={process.env.REACT_APP_NAME} />
             </div>
-          </Router>
-        </div>
+            <div className={classes.content}>
+              <AppRoutes />
+            </div>
+            <div className={classes.footer}>
+              <AppFooter />
+            </div>
+          </div>
+        </Router>
       </MuiThemeProvider>
     );
   }
