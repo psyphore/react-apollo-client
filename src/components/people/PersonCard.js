@@ -19,7 +19,7 @@ const baseUrl = `${process.env.REACT_APP_GRAPHQL_URI}/media/`;
 const styles = {
   root: {
     marginTop: '1%',
-    marginLeft: '1%'
+    marginLeft: '8%'
   },
   card: {
     maxWidth: 345

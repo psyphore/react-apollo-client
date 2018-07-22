@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Person from '../../components/people/PersonCard';
 import PersonC from '../../components/people/PersonChip';
 import ProductSummaryList from '../../components/products/ProductSummaryCard';
+import LunchDialog from '../lunch/LunchDialog';
 
 const styles = theme => ({
   root: {
@@ -21,30 +22,51 @@ const styles = theme => ({
     gridGap: '5px',
     gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
     gridAutoRows: '50px',
-    alignContent: 'space-evenly',
+    alignContent: 'space-around',
     alignItems: 'center'
+  },
+  actionPaper: {
+    padding: theme.spacing.unit * 2,
+    textAlign: 'left',
+    color: theme.palette.text.secondary
   },
   paper: {
     padding: theme.spacing.unit * 2,
-    textAlign: 'right',
+    textAlign: 'center',
     color: theme.palette.text.secondary
   }
 });
 
 class PersonDetailedContainer extends Component {
   render() {
-    const { classes, person } = this.props;
+    const { classes, person, auth } = this.props;
 
     return (
       <div>
         <Grid container spacing={8}>
-          {/* <Grid item md={12}>
-            <Paper className={classes.paper}>
-              <Typography component="subheading">
-                {person.firstname + ' ' + person.lastname}
-              </Typography>
+          <Grid item md={12}>
+            <Paper className={classes.actionPaper}>
+              {/* <Typography variant="subheading">
+                {JSON.stringify(auth.isAuthenticated()) +
+                  ' ' +
+                  auth
+                    .isAuthenticatedAsync()
+                    .then(
+                      res => console.log(res),
+                      err => JSON.stringify(err)
+                    )}
+              </Typography> */}
+              <div>
+                <LunchDialog
+                  detail={{
+                    title: 'Place Your Lunch Orders',
+                    main: 'steak and pap',
+                    veg: 'boiled potatoes :)'
+                  }}
+                />
+              </div>
             </Paper>
-          </Grid> */}
+          </Grid>
           <Grid item md={3}>
             <Paper className={classes.paper}>
               <Person detail={person} />

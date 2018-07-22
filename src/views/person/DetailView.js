@@ -16,7 +16,7 @@ const queryOptions = {
 
 class DetailView extends Component {
   render() {
-    let { data } = this.props;
+    let { data, auth } = this.props;
 
     if (data.loading) {
       return (
@@ -32,7 +32,7 @@ class DetailView extends Component {
 
     return (
       <div>
-        <PersonDetailedContainer person={data.person} />
+        <PersonDetailedContainer auth={auth} person={data.person} />
       </div>
     );
   }

@@ -7,7 +7,11 @@ import { RetryLink } from 'apollo-link-retry';
 import { withClientState } from 'apollo-link-state';
 import { WebSocketLink } from 'apollo-link-ws';
 
+import Auth from './security.service';
+
 const defaultState = {};
+
+const auth = new Auth();
 
 export const createClient = (uri, ws) => {
   const cache = new InMemoryCache();
@@ -21,7 +25,23 @@ export const createClient = (uri, ws) => {
     }
   });
 
+  const httpLink = new HttpLink({ uri: uri, credentials: 'same-origin' });
+
+  const retryLink = new RetryLink({ delay: 5000, attempts: 5 });
+
+  const authMiddleware = new ApolloLink((operation, forward) => {
+    // add the authorization to the headers
+    operation.setContext({
+      headers: {
+        authorization: auth.getAuthorizationHeader()
+      }
+    });
+
+    return forward(operation);
+  });
+
   const link = ApolloLink.from([
+    authMiddleware,
     stateLink,
     onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors)
@@ -33,8 +53,8 @@ export const createClient = (uri, ws) => {
 
       if (networkError) console.error(`[Network error]: ${networkError}`);
     }),
-    new RetryLink({ delay: 5000, attempts: 5 }),
-    new HttpLink({ uri: uri, credentials: 'same-origin' }),
+    retryLink,
+    httpLink,
     wsLink
   ]);
 
@@ -42,4 +62,3 @@ export const createClient = (uri, ws) => {
 
   return client;
 };
-

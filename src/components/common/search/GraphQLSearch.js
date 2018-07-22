@@ -9,7 +9,7 @@ import Badge from '@material-ui/core/Badge';
 
 import { searchQuery } from '../../../graphql';
 import PersonSummaryCard from '../../people/PersonSummaryCard';
-import { Loader } from '../index';
+import { Loader, ErrorMessage } from '../index';
 
 const styles = theme => ({
   root: {
@@ -43,18 +43,20 @@ class GraphQLSearch extends PureComponent {
     query: '',
     first: 100,
     offset: 0,
-    result: [],
+    result: null,
     count: 0,
-    fetching: false
+    fetching: false,
+    extensions: null
   };
 
   _reset = () => {
     this.setState({
       first: 100,
       offset: 0,
-      result: [],
+      result: null,
       count: 0,
-      fetching: false
+      fetching: false,
+      extensions: null
     });
   };
 
@@ -63,6 +65,13 @@ class GraphQLSearch extends PureComponent {
     const { client } = this.props;
 
     this._reset();
+
+    if (query && query.length === 0) {
+      this.setState({
+        errors: [{ message: 'Missing search query...' }]
+      });
+      return;
+    }
 
     this.setState({
       fetching: true
@@ -73,16 +82,26 @@ class GraphQLSearch extends PureComponent {
       variables: { query: { query, first, offset } }
     });
 
+    if (result.errors) {
+      this.setState({
+        errors: result.errors,
+        fetching: false,
+        extensions: result.extensions
+      });
+      return;
+    }
+
     this.setState({
       result: result.data.search.data,
       count: result.data.search.count,
-      fetching: false
+      fetching: false,
+      extensions: result.extensions
     });
   };
 
   render() {
     const { classes } = this.props;
-    const { query } = this.state;
+    const { query, errors, fetching, count, extensions } = this.state;
 
     return (
       <div>
@@ -101,7 +120,8 @@ class GraphQLSearch extends PureComponent {
                     onKeyPress={e =>
                       e.key === 'Enter' ? this._executeSearch() : null
                     }
-                    onFocus={() => this.setState({ query: '' })}
+                    onFocusCapture={() => this.setState({ query: '' })}
+                    disabled={fetching}
                     value={query}
                   />
                 </Grid>
@@ -110,8 +130,8 @@ class GraphQLSearch extends PureComponent {
                     variant="fab"
                     color="primary"
                     aria-label="search"
-                    disabled={this.state.fetching}
-                    onClick={() => this._executeSearch()}
+                    disabled={fetching}
+                    onClick={this._executeSearch}
                   >
                     <Search />
                   </Button>
@@ -121,11 +141,21 @@ class GraphQLSearch extends PureComponent {
           </Grid>
 
           <Grid item md={12}>
-            {this.state.fetching ? <Loader /> : null}
-            {this.state.count ? (
+            {fetching ? <Loader /> : null}
+            {errors ? <ErrorMessage error={errors} /> : null}
+            {count ? (
               <Badge
                 color="primary"
-                badgeContent={this.state.count}
+                badgeContent={count}
+                className={classes.badge.margin}
+              >
+                <span />
+              </Badge>
+            ) : null}
+            {extensions ? (
+              <Badge
+                color="primary"
+                badgeContent={extensions.duration}
                 className={classes.badge.margin}
               >
                 <span />

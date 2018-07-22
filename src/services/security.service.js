@@ -1,8 +1,9 @@
-import auth0 from 'auth0-js';
+import { WebAuth } from 'auth0-js';
 import history from './history.service';
+import { resolve } from 'url';
 
 export default class Auth {
-  auth0 = new auth0.WebAuth({
+  auth0 = new WebAuth({
     domain: process.env.REACT_APP_AUTH0_DOMAIN,
     clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
     redirectUri: process.env.REACT_APP_AUTH0_REDIRECT_URI,
@@ -16,6 +17,8 @@ export default class Auth {
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
+    this.getParsedToken = this.getParsedToken.bind(this);
+    this.getAuthorizationHeader = this.getAuthorizationHeader.bind(this);
   }
 
   login() {
@@ -60,5 +63,43 @@ export default class Auth {
     // Access Token's expiry time
     let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
+  }
+
+  isAuthenticatedAsync() {
+    return new Promise((resolve, reject) => {
+      if (!this.isAuthenticated()) {
+        reject('token expired!');
+        return;
+      }
+
+      let token = localStorage.getItem('id_token');
+      let parsed = this.parseToken(token);
+      this.auth0.validateToken(token, parsed.nonce, (e, r) => {
+        if (e) {
+          reject(e);
+          return;
+        }
+
+        resolve(r);
+      });
+    });
+  }
+
+  parseToken(token) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace('-', '+').replace('_', '/');
+    return JSON.parse(window.atob(base64));
+  }
+
+  getParsedToken() {
+    return this.isAuthenticated()
+      ? this.parseToken(localStorage.getItem('id_token'))
+      : this.login();
+  }
+
+  getAuthorizationHeader() {
+    const token = localStorage.getItem('id_token');
+    const authorizationHeader = token ? `Bearer ${token}` : null;
+    return authorizationHeader;
   }
 }

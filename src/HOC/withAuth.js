@@ -23,7 +23,7 @@ export default ProtectedComponent => {
 
     render() {
       // Pass the received 'props' and created functions to the ProtectedRoute component
-      return <ProtectedComponent {...this.props} />;
+      return <ProtectedComponent auth={this.auth} {...this.props} />;
     }
   }
 
