@@ -8,8 +8,8 @@ import { Loader } from '../../components/common';
 const queryOptions = {
   options: props => ({
     variables: {
-      first: parseInt(props.match.params.first),
-      offset: parseInt(props.match.params.offset)
+      first: props.match.params.first,
+      offset: props.match.params.offset
     }
   })
 };

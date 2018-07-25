@@ -9,7 +9,7 @@ export class AuthBrand extends Component {
   render() {
     return (
       <div>
-          <a href="#" onClick={this.goTo.bind(this, 'home')}>Auth0 - React</a>
+          <a onClick={this.goTo.bind(this, 'home')}>Auth0 - React</a>
       </div>
     );
   }

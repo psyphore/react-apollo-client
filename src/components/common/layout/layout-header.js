@@ -13,6 +13,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { NavLink, Link } from 'react-router-dom';
 
+import SimpleDialogDemo from '../support/SupportDialog'
+
 const styles = {
   root: {
     flexGrow: 1
@@ -77,6 +79,7 @@ class ButtonAppBar extends Component {
                 {title}
               </Link>
             </Typography>
+            <SimpleDialogDemo />
 
             {auth && (
               <div>

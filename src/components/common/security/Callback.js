@@ -11,7 +11,7 @@ class Callback extends Component {
     }
   };
   componentDidMount() {
-    const { history, location, match } = this.props
+    const { location } = this.props
     this.handleVerification(location);
   }
 

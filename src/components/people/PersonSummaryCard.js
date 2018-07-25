@@ -5,7 +5,6 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import Link from 'react-router-dom/Link';
 import Avatar from '@material-ui/core/Avatar';
 import Person from '@material-ui/icons/Person';
 
@@ -33,7 +32,6 @@ class PersonSummaryCard extends Component {
 
     return (
       <div>
-        <Link to={'/person/' + person.id} style={{ textDecoration: 'none' }}>
           <Card className={classes.card}>
             {person.avatar ? (
               <CardMedia
@@ -42,7 +40,10 @@ class PersonSummaryCard extends Component {
                 image={baseUrl + person.avatar}
               />
             ) : (
-              <Avatar className={classes.avatar} alt={person.firstname + ' ' + person.lastname}>
+              <Avatar
+                className={classes.avatar}
+                alt={person.firstname + ' ' + person.lastname}
+              >
                 <Person />
               </Avatar>
             )}
@@ -52,7 +53,6 @@ class PersonSummaryCard extends Component {
               </Typography>
             </CardContent>
           </Card>
-        </Link>
       </div>
     );
   }

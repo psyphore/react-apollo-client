@@ -21,7 +21,8 @@ export const createClient = (uri, ws) => {
   const wsLink = new WebSocketLink({
     uri: ws,
     options: {
-      reconnect: true
+      reconnect: true,
+      lazy: true
     }
   });
 

@@ -11,9 +11,11 @@ const client = createClient(
   process.env.REACT_APP_GRAPHQL_SUBSCRIPTIONS_URI
 );
 
+const ws = {};
+
 const Main = () => (
   <ApolloProvider client={client}>
-    <App />
+    <App {...ws} />
   </ApolloProvider>
 );
 

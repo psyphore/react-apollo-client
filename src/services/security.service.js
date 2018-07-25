@@ -1,6 +1,5 @@
 import { WebAuth } from 'auth0-js';
 import history from './history.service';
-import { resolve } from 'url';
 
 export default class Auth {
   auth0 = new WebAuth({

@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
 import Badge from '@material-ui/core/Badge';
+import Link from 'react-router-dom/Link';
 
 import { searchQuery } from '../../../graphql';
 import PersonSummaryCard from '../../people/PersonSummaryCard';
@@ -167,7 +168,13 @@ class GraphQLSearch extends PureComponent {
             {this.state.count !== 0 ? (
               <div className={classes.results}>
                 {this.state.result.map(res => (
-                  <PersonSummaryCard key={res.id} person={res} />
+                  <Link
+                    key={res.id}
+                    to={'/person/' + res.id}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <PersonSummaryCard person={res} />
+                  </Link>
                 ))}
               </div>
             ) : null}

@@ -4,6 +4,8 @@ import { getProductsQuery, getProductQuery } from './queries/product';
 import { searchQuery } from './queries/search';
 import { serverHits, notification } from './subscriptions/subs';
 import { leaveNotification } from './subscriptions/leave';
+import { todaysMeals } from './queries/lunch';
+import { supportRegister, currentSupportPerson } from './queries/support';
 
 export {
   getBuildingQuery,
@@ -14,5 +16,9 @@ export {
   getProductQuery,
   searchQuery,
   serverHits,
-  notification
+  notification,
+  leaveNotification,
+  todaysMeals,
+  supportRegister,
+  currentSupportPerson
 };

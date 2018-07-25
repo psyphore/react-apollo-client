@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 import Person from '../../components/people/PersonCard';
 import PersonC from '../../components/people/PersonChip';
@@ -57,13 +58,7 @@ class PersonDetailedContainer extends Component {
                     )}
               </Typography> */}
               <div>
-                <LunchDialog
-                  detail={{
-                    title: 'Place Your Lunch Orders',
-                    main: 'steak and pap',
-                    veg: 'boiled potatoes :)'
-                  }}
-                />
+                <LunchDialog auth={auth} />
               </div>
             </Paper>
           </Grid>
@@ -74,25 +69,53 @@ class PersonDetailedContainer extends Component {
           </Grid>
           <Grid item md={9}>
             <Paper className={classes.paper}>
-              <div className={classes.children}>
-                {person.line
-                  ? person.line.map(person => (
-                      <PersonC key={person.id} detail={person} />
-                    ))
-                  : null}
-                {person.team
-                  ? person.team.map(person => (
-                      <PersonC key={person.id} detail={person} />
-                    ))
-                  : null}
+              <div>
+                {person.line && person.line.length !== 0 ? (
+                  <div>
+                    <div className={classes.actionPaper}>
+                      <Typography variant="title" gutterBottom>
+                        My Reporting Line
+                      </Typography>
+                      <Divider />
+                    </div>
+                    <div className={classes.children}>
+                      {person.line.map(person => (
+                        <PersonC key={person.id} detail={person} />
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+                {person.team && person.team.length !== 0 ? (
+                  <div>
+                    <div className={classes.actionPaper}>
+                      <Typography variant="title" gutterBottom>
+                        My team
+                      </Typography>
+                      <Divider />
+                    </div>
+                    <div className={classes.children}>
+                      {person.team.map(person => (
+                        <PersonC key={person.id} detail={person} />
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
                 {(!person.line || person.line.length === 0) &&
                 (!person.team || person.team === 0) ? (
-                  <Typography variant="subheading">No Associations</Typography>
+                  <Typography variant="button" gutterBottom>
+                    No Associations
+                  </Typography>
                 ) : null}
               </div>
             </Paper>
             <Paper className={classes.paper}>
-              <div className={classes.childrenx}>
+              <div>
+                <div className={classes.actionPaper}>
+                  <Typography variant="title" gutterBottom>
+                    My Products
+                  </Typography>
+                  <Divider />
+                </div>
                 <ProductSummaryList products={person.products} />
               </div>
             </Paper>
