@@ -38,7 +38,6 @@ const styles = theme => ({
 });
 
 class App extends Component {
-
   render() {
     const { classes } = this.props;
 
@@ -54,7 +53,7 @@ class App extends Component {
               <AppRoutes />
             </div>
             <div className={classes.footer}>
-              <AppFooter />
+              <AppFooter title={process.env.REACT_APP_NAME} />
             </div>
           </div>
         </Router>

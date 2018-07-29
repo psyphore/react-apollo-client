@@ -57,11 +57,32 @@ export default class Auth {
     history.replace('/');
   }
 
-  isAuthenticated() {
+  isAuthenticated(person) {
     // Check whether the current time is past the
     // Access Token's expiry time
     let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    return new Date().getTime() < expiresAt;
+    let valid = new Date().getTime() < expiresAt;
+    let token = localStorage.getItem('id_token');
+    if (!token) return false;
+    let parsed = this.parseToken(token);
+    let isMe = false;
+
+    if (!person) isMe = true;
+    else if (
+      parsed.email +
+        ''
+          .toLocaleLowerCase()
+          .indexOf(person.email + ''.toLocaleLowerCase()) !==
+      -1
+    ) {
+      isMe = true;
+      console.log(person);
+    } else {
+      console.log(parsed);
+      isMe = false;
+    }
+
+    return valid && isMe;
   }
 
   isAuthenticatedAsync() {
@@ -71,7 +92,7 @@ export default class Auth {
         return;
       }
 
-      let token = localStorage.getItem('id_token');
+      let token = localStorage.getItem('id_token') || '';
       let parsed = this.parseToken(token);
       this.auth0.validateToken(token, parsed.nonce, (e, r) => {
         if (e) {
@@ -101,4 +122,4 @@ export default class Auth {
     const authorizationHeader = token ? `Bearer ${token}` : null;
     return authorizationHeader;
   }
-}
+} 

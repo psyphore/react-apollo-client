@@ -12,13 +12,13 @@ const styles = theme => ({
 
 class AppFooter extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, title } = this.props;
 
     return (
       <div className={classes.root}>
         <Divider />
         <Typography variant="subheading" gutterBottom>
-          Cardinal - {moment().format('YYYY')}
+          {title + ' - '+ moment().format('YYYY')}
         </Typography>
       </div>
     );

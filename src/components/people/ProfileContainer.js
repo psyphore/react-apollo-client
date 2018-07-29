@@ -38,15 +38,22 @@ const styles = theme => ({
   }
 });
 
-class PersonDetailedContainer extends Component {
+class ProfileContainer extends Component {
   render() {
-    const { classes, person } = this.props;
+    const { classes, person, auth } = this.props;
 
     return (
       <div>
         <Grid container spacing={8}>
+          <Grid item md={12}>
+            <Paper className={classes.actionPaper}>
+              <LunchDialog auth={auth} person={person} />
+            </Paper>
+          </Grid>
           <Grid item md={3}>
-            <Person detail={person} />
+            <Paper className={classes.paper}>
+              <Person detail={person} />
+            </Paper>
           </Grid>
           <Grid item md={9}>
             <Paper className={classes.paper}>
@@ -64,7 +71,6 @@ class PersonDetailedContainer extends Component {
                     </div>
                   </div>
                 ) : null}
-
                 {person.line && person.line.length !== 0 ? (
                   <div>
                     <div className={classes.actionPaper}>
@@ -80,7 +86,6 @@ class PersonDetailedContainer extends Component {
                     </div>
                   </div>
                 ) : null}
-
                 {person.team && person.team.length !== 0 ? (
                   <div>
                     <div className={classes.actionPaper}>
@@ -96,7 +101,6 @@ class PersonDetailedContainer extends Component {
                     </div>
                   </div>
                 ) : null}
-
                 {(!person.line || person.line.length === 0) &&
                 (!person.team || person.team === 0) ? (
                   <Typography variant="button" gutterBottom>
@@ -123,9 +127,9 @@ class PersonDetailedContainer extends Component {
   }
 }
 
-PersonDetailedContainer.propTypes = {
+ProfileContainer.propTypes = {
   classes: PropTypes.object.isRequired,
   person: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(PersonDetailedContainer);
+export default withStyles(styles)(ProfileContainer);

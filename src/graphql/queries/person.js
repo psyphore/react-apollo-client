@@ -75,4 +75,81 @@ const getPersonQuery = gql`
   }
 `;
 
-export { getPeopleQuery, getPersonQuery };
+const getMeQuery = gql`
+  query {
+    me {
+      ...personFields
+      products {
+        ...productField
+      }
+      building {
+        ...buildingField
+      }
+    }
+  }
+
+  fragment personFields on Person {
+    id
+    title
+    firstname
+    lastname
+    email
+    mobile
+    bio
+    avatar
+    manager {
+      ...otherPeopleFields
+    }
+    team {
+      ...otherPeopleFields
+    }
+    line {
+      ...otherPeopleFields
+    }
+    meals {
+      ...mealFields
+    }
+  }
+
+  fragment otherPeopleFields on Person {
+    id
+    title
+    firstname
+    lastname
+    avatar
+  }
+
+  fragment productField on Product {
+    id
+    name
+    description
+    status
+    art
+    championCount
+    champions {
+      ...otherPeopleFields
+    }
+  }
+
+  fragment buildingField on Building {
+    name
+    address
+  }
+
+  fragment mealFields on Meal {
+    name
+  }
+`;
+
+const getMyAvatarQuery = gql`
+  query {
+    me {
+      id
+      firstname
+      lastname
+      avatar
+    }
+  }
+`;
+
+export { getPeopleQuery, getPersonQuery, getMeQuery, getMyAvatarQuery };

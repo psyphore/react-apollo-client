@@ -4,18 +4,21 @@ import { ApolloProvider } from 'react-apollo';
 
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import { createClient } from './services/';
+import { createClient, Auth } from './services/';
+import { AppContext } from './HOC/appContext';
 
 const client = createClient(
   process.env.REACT_APP_GRAPHQL_URI,
   process.env.REACT_APP_GRAPHQL_SUBSCRIPTIONS_URI
 );
 
-const ws = {};
-
 const Main = () => (
   <ApolloProvider client={client}>
-    <App {...ws} />
+    <AppContext.Provider
+      value={{ title: process.env.REACT_APP_NAME, auth: Auth }}
+    >
+      <App />
+    </AppContext.Provider>
   </ApolloProvider>
 );
 

@@ -16,12 +16,15 @@ import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
 import Grade from '@material-ui/icons/Grade';
 import AddIcon from '@material-ui/icons/Add';
+import { Check } from '@material-ui/icons';
 import Grid from '@material-ui/core/Grid';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Snackbar from '@material-ui/core/Snackbar';
 import * as moment from 'moment';
 
-import { todaysMeals } from '../../graphql';
+import { todaysMeals, placeOrder } from '../../graphql';
 import { Loader } from '../common';
 
 const styles = theme => ({
@@ -43,6 +46,30 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
+class SnackAttack extends PureComponent {
+  render() {
+    const { message, open, onClose } = this.props;
+
+    return (
+      <div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left'
+          }}
+          open={open}
+          autoHideDuration={6000}
+          onClose={onClose}
+          ContentProps={{
+            'aria-describedby': 'message-id'
+          }}
+          message={<span id="message-id">{message}</span>}
+        />
+      </div>
+    );
+  }
+}
+
 class FullScreenDialog extends PureComponent {
   state = {
     open: false,
@@ -62,9 +89,42 @@ class FullScreenDialog extends PureComponent {
     this.setState({ open: false });
   };
 
-  handlePlaceOrder = () => {
+  handlePlaceOrder = async () => {
     // do some fency stuff here
-    this.handleClose();
+    const { client, person } = this.props;
+
+    // simulate posting meal order
+    this.setState({
+      fetching: true
+    });
+
+    const result = await client.mutate({
+      mutation: placeOrder,
+      variables: {
+        body: {
+          content: this.state.selection,
+          date: moment().format('DDMMYYYY'),
+          person: {
+            id: person.id,
+            firstname: person.firstname,
+            lastname: person.lastname,
+            mobile: person.mobile,
+            email: person.email
+          }
+        }
+      }
+    });
+
+    if (result.data.placeOrder) {
+      this.setState({
+        fetching: false,
+        snackAlert: true,
+        snackMessage: `Meal '${this.state.selection}' Placed Successfully`
+      });
+      setTimeout(() => {
+        this.handleClose();
+      }, 3000);
+    }
   };
 
   handleFetchingMealsOfTheDay = async () => {
@@ -74,21 +134,20 @@ class FullScreenDialog extends PureComponent {
       selection: null,
       todaysOptions: [],
       fetching: true,
-      extensions: null
+      extensions: null,
+      customMeal: false
     });
 
-    let isWeekend = moment().weekday() >= 6 || moment().weekday() <= 7;
+    let isWeekend = moment().weekday() === 6 || moment().weekday() === 7;
     let day = isWeekend ? moment().weekday(1) : moment();
 
     this.setState({
       today: day
     });
 
-    let date = day.format('DDMMYYYY');
-
     const result = await client.query({
       query: todaysMeals,
-      variables: { date }
+      variables: { date: day.format('DDMMYYYY') }
     });
 
     if (result.errors) {
@@ -97,7 +156,9 @@ class FullScreenDialog extends PureComponent {
         todaysOptions: [],
         errors: result.errors,
         fetching: false,
-        extensions: result.extensions
+        extensions: result.extensions,
+        snackAlert: false,
+        snackMessage: null
       });
       return;
     }
@@ -110,13 +171,24 @@ class FullScreenDialog extends PureComponent {
     });
   };
 
-  handleMealSelection = () => {};
+  handleMealSelection = e => {
+    this.setState({
+      selection: e.name
+    });
+  };
+
+  handleCustomMeal = () => {
+    this.setState({
+      customMeal: !this.state.customMeal,
+      selection: null
+    });
+  };
 
   render() {
-    const { classes, auth } = this.props;
-    const { fetching, todaysOptions, today } = this.state;
+    const { classes, auth, person } = this.props;
+    const { fetching, todaysOptions, today, customMeal } = this.state;
 
-    if (!auth.isAuthenticated()) return <div />;
+    if (!auth.isAuthenticated(person)) return <div />;
 
     return (
       <div>
@@ -128,6 +200,11 @@ class FullScreenDialog extends PureComponent {
         >
           <AddShoppingCart />
         </Button>
+        <SnackAttack
+          message={this.state.snackMessage}
+          open={this.state.snackAlert}
+          onClose={() => this.setState({ snackAlert: false })}
+        />
         <Dialog
           fullScreen
           open={this.state.open}
@@ -168,31 +245,76 @@ class FullScreenDialog extends PureComponent {
             </Grid>
             <Grid item md={12}>
               {fetching ? <Loader /> : null}
-              <Grid item md={9}>
-                <Paper>
-                  <List>
-                    {todaysOptions && todaysOptions.length !== 0
-                      ? todaysOptions.map((meal, index) => (
-                          <ListItem
-                            button
-                            key={index}
-                            onClick={e => this.handleMealSelection(e)}
-                          >
-                            <ListItemIcon>
-                              <Grade />
-                            </ListItemIcon>
-                            <ListItemText
-                              primary={meal.name}
-                              secondary={meal.type.replace(/_+/g, ' ')}
-                            />
-                          </ListItem>
-                        ))
-                      : null}
-                  </List>
-                </Paper>
+              <Grid item md={4}>
+                {!fetching ? (
+                  <Paper>
+                    <List>
+                      {todaysOptions && todaysOptions.length !== 0
+                        ? todaysOptions.map((meal, index) => (
+                            <ListItem
+                              button
+                              key={index}
+                              onClick={() => this.handleMealSelection(meal)}
+                            >
+                              <ListItemIcon>
+                                <Grade />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={meal.name}
+                                secondary={meal.type.replace(/_+/g, ' ')}
+                              />
+                            </ListItem>
+                          ))
+                        : null}
+                      <ListItem button onClick={this.handleCustomMeal}>
+                        <ListItemIcon>
+                          <Grade />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary="Custom Meal Order"
+                          secondary="mix it up"
+                        />
+                      </ListItem>
+                    </List>
+                  </Paper>
+                ) : null}
               </Grid>
-              <Grid item md={3}>
-                <Paper className={classes.paper} />
+              <Grid item md={4}>
+                {customMeal ? (
+                  <Paper className={classes.paper}>
+                    <Typography variant="subheading">Custom Order:</Typography>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="customMeal"
+                      label="Custom Meal Order"
+                      type="text"
+                      multiline
+                      rowsMax={6}
+                      fullWidth
+                      onChange={e =>
+                        this.setState({ selection: e.target.value })
+                      }
+                    />
+                  </Paper>
+                ) : null}
+              </Grid>
+              <Grid item md={4}>
+                {this.state.selection ? (
+                  <Paper className={classes.paper}>
+                    <List>
+                      <ListItem>
+                        <ListItemIcon>
+                          <Check />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={this.state.selection}
+                          secondary="Current Selection"
+                        />
+                      </ListItem>
+                    </List>
+                  </Paper>
+                ) : null}
               </Grid>
             </Grid>
           </Grid>
@@ -204,7 +326,8 @@ class FullScreenDialog extends PureComponent {
 
 FullScreenDialog.propTypes = {
   classes: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  person: PropTypes.object.isRequired
 };
 
 const LunchDialog = withApollo(FullScreenDialog);

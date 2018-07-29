@@ -127,7 +127,7 @@ class SimpleDialogDemo extends PureComponent {
       <div>
         <Button
           variant="fab"
-          color="primary"
+          color="secondary"
           aria-label="Support"
           onClick={this.handleClickOpen}
         >
