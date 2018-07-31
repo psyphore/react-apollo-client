@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Router } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
@@ -37,29 +37,27 @@ const styles = theme => ({
   }
 });
 
-class App extends Component {
-  render() {
-    const { classes } = this.props;
+function App(props) {
+  const { classes } = props;
 
-    return (
-      <MuiThemeProvider theme={primaryTheme}>
-        <CssBaseline />
-        <Router history={history}>
-          <div className={classes.container}>
-            <div className={classes.header}>
-              <AppHeader title={process.env.REACT_APP_NAME} />
-            </div>
-            <div className={classes.content}>
-              <AppRoutes />
-            </div>
-            <div className={classes.footer}>
-              <AppFooter title={process.env.REACT_APP_NAME} />
-            </div>
+  return (
+    <MuiThemeProvider theme={primaryTheme}>
+      <CssBaseline />
+      <Router history={history}>
+        <div className={classes.container}>
+          <div className={classes.header}>
+            <AppHeader title={process.env.REACT_APP_NAME} />
           </div>
-        </Router>
-      </MuiThemeProvider>
-    );
-  }
+          <div className={classes.content}>
+            <AppRoutes />
+          </div>
+          <div className={classes.footer}>
+            <AppFooter title={process.env.REACT_APP_NAME} />
+          </div>
+        </div>
+      </Router>
+    </MuiThemeProvider>
+  );
 }
 
 App.propTypes = {

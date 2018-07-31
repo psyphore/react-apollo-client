@@ -76,9 +76,7 @@ export default class Auth {
       -1
     ) {
       isMe = true;
-      console.log(person);
     } else {
-      console.log(parsed);
       isMe = false;
     }
 

@@ -6,7 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { NavLink } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 
-import SimpleDialogDemo from '../support/SupportDialog';
+import { Support } from '../support/';
 import ProfileButton from '../people/ProfileButton';
 
 const styles = {
@@ -40,7 +40,7 @@ function AppHeaderBar(props) {
             </Button>
           </div>
           <div className={props.classes.row}>
-            <SimpleDialogDemo />
+            <Support />
             <ProfileButton />
           </div>
         </Toolbar>

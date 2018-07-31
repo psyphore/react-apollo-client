@@ -9,7 +9,7 @@ import Divider from '@material-ui/core/Divider';
 import Person from '../../components/people/PersonCard';
 import PersonC from '../../components/people/PersonChip';
 import ProductSummaryList from '../../components/products/ProductSummaryCard';
-import LunchDialog from '../lunch/LunchDialog';
+import { Lunch } from '../lunch';
 
 const styles = theme => ({
   root: {
@@ -47,7 +47,7 @@ class ProfileContainer extends PureComponent {
         <Grid container spacing={8}>
           <Grid item md={12}>
             <Paper className={classes.actionPaper}>
-              <LunchDialog auth={auth} person={person} />
+              <Lunch auth={auth} person={person} />
             </Paper>
           </Grid>
           <Grid item md={3}>

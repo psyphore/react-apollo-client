@@ -32,5 +32,4 @@ DetailView.propTypes = {
   data: PropTypes.object.isRequired
 };
 
-DetailView = graphql(getPersonQuery, queryOptions)(DetailView);
-export default DetailView;
+export default graphql(getPersonQuery, queryOptions)(DetailView);

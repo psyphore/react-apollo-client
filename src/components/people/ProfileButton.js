@@ -69,5 +69,4 @@ ProfileButton.propTypes = {
   classes: PropTypes.object
 };
 
-ProfileButton = withStyles(styles)(ProfileButton);
-export default graphql(getMyAvatarQuery, {})(ProfileButton);
+export default graphql(getMyAvatarQuery, {})(withStyles(styles)(ProfileButton));

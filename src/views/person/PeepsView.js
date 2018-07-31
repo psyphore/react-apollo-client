@@ -27,5 +27,4 @@ function PeepsView(props) {
   );
 }
 
-PeepsView = graphql(getPeopleQuery, queryOptions)(PeepsView);
-export default PeepsView;
+export default graphql(getPeopleQuery, queryOptions)(PeepsView);

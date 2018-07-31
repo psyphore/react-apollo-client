@@ -1,12 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component, Fragment } from 'react';
 import './form.css';
 
-export default class DynamicForm extends React.Component {
-  state = {};
+export default class DynamicForm extends Component {
   constructor(props) {
     super(props);
+    this.state = {};
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.renderForm = this.renderForm.bind(this);
   }
+
   static getDerivedStateFromProps(nextProps, prevState) {
     if (
       nextProps.defaultValues &&
@@ -66,7 +69,7 @@ export default class DynamicForm extends React.Component {
 
   renderForm = () => {
     let model = this.props.model;
-    let defaultValues = this.props.defaultValues;
+    // let defaultValues = this.props.defaultValues;
 
     let formUI = model.map(m => {
       let key = m.key;
@@ -94,9 +97,9 @@ export default class DynamicForm extends React.Component {
 
       if (type === 'radio') {
         input = m.options.map(o => {
-          let checked = o.value == value;
+          let checked = o.value === value;
           return (
-            <React.Fragment key={'fr' + o.key}>
+            <Fragment key={'fr' + o.key}>
               <input
                 {...props}
                 className="form-input"
@@ -110,7 +113,7 @@ export default class DynamicForm extends React.Component {
                 }}
               />
               <label key={'ll' + o.key}>{o.label}</label>
-            </React.Fragment>
+            </Fragment>
           );
         });
         input = <div className="form-group-radio">{input}</div>;
@@ -118,7 +121,7 @@ export default class DynamicForm extends React.Component {
 
       if (type === 'select') {
         input = m.options.map(o => {
-          let checked = o.value === value;
+          // let checked = o.value === value;
           console.log('select: ', o.value, value);
           return (
             <option
@@ -154,7 +157,7 @@ export default class DynamicForm extends React.Component {
           }
           console.log('Checkbox: ', checked);
           return (
-            <React.Fragment key={'cfr' + o.key}>
+            <Fragment key={'cfr' + o.key}>
               <input
                 {...props}
                 className="form-input"
@@ -168,7 +171,7 @@ export default class DynamicForm extends React.Component {
                 }}
               />
               <label key={'ll' + o.key}>{o.label}</label>
-            </React.Fragment>
+            </Fragment>
           );
         });
 

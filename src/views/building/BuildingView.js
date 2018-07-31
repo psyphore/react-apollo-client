@@ -27,5 +27,4 @@ function BuildingView(props) {
   );
 }
 
-BuildingView = graphql(getBuildingsQuery, options)(BuildingView);
-export default BuildingView;
+export default graphql(getBuildingsQuery, options)(BuildingView);

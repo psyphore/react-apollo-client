@@ -1,7 +1,7 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { GraphQLSearch } from '../components';
 
-function LandingView(props) {
+function LandingView() {
   return <GraphQLSearch />;
 }
 

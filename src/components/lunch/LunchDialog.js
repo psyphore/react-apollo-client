@@ -1,6 +1,5 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { withApollo } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -11,27 +10,24 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import AddShoppingCart from '@material-ui/icons/AddShoppingCart';
-import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
-import Grade from '@material-ui/icons/Grade';
-import AddIcon from '@material-ui/icons/Add';
-import { Check } from '@material-ui/icons';
 import Grid from '@material-ui/core/Grid';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-import Snackbar from '@material-ui/core/Snackbar';
-import * as moment from 'moment';
+import Grade from '@material-ui/icons/Grade';
+import AddIcon from '@material-ui/icons/Add';
+import Check from '@material-ui/icons/Check';
 
-import { todaysMeals, placeOrder } from '../../graphql';
+import SlideUp from '../transitions/SlideUp';
 import { Loader } from '../';
+import LunchList from './LunchList';
 
 const styles = theme => ({
   appBar: {
     position: 'relative'
   },
-  flex1: {
+  flex: {
     flex: 1
   },
   button: {
@@ -39,293 +35,192 @@ const styles = theme => ({
   },
   extendedIcon: {
     marginRight: theme.spacing.unit
+  },
+  container: {
+    display: 'grid',
+    gridGap: '5px',
+    gridTemplateColumns: '1fr',
+    gridTemplateRows: '1fr auto 1fr',
+    width: '100vw',
+    maxWidth: '95vw',
+    margin: '0 auto',
+    [theme.breakpoints.down('md')]: { maxWidth: '85vw' },
+    [theme.breakpoints.down('sm')]: { maxWidth: '95vw' }
+  },
+  header: {
+    gridRow: '-1 / 0'
+  },
+  content: {
+    gridRow: '2 / 3',
+    margin: '1%'
+  },
+  footer: {
+    gridRow: '3 / 3',
+    padding: theme.spacing.unit * 2,
+    textAlign: 'center',
+    color: theme.palette.text.secondary
   }
 });
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
+function FullScreenDialog(props) {
+  const { classes, parentState, parentActions } = props;
 
-function SnackAttack(props) {
-  const { message, open, onClose } = props;
+  if (!parentActions && !parentState) return <div />;
+  const mock = [
+    {id:'m1', date: '31072018', content: 'meal' },
+    {id:'m2', date: '31072018', content: 'meal' },
+    {id:'m3', date: '31072018', content: 'meal' },
+    {id:'m4', date: '31072018', content: 'meal' },
+    {id:'m5', date: '31072018', content: 'meal' }
+  ];
   return (
     <div>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left'
-        }}
-        open={open}
-        autoHideDuration={6000}
-        onClose={onClose}
-        ContentProps={{
-          'aria-describedby': 'message-id'
-        }}
-        message={<span id="message-id">{message}</span>}
-      />
+      <Dialog
+        fullScreen
+        open={parentState.open}
+        onClose={parentActions.close}
+        TransitionComponent={SlideUp}
+      >
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="Close"
+              onClick={parentActions.close}
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography
+              variant="title"
+              color="inherit"
+              className={classes.flex}
+            >
+              {`${
+                parentState.today
+                  ? parentState.today.format('DD MMMM YYYY') + ' -'
+                  : ''
+              } Place Your Lunch Order`}
+            </Typography>
+            <Button
+              variant="fab"
+              color="primary"
+              aria-label="Lunch"
+              onClick={parentActions.placeOrder}
+            >
+              <AddIcon />
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <div className={classes.container}>
+          <div className={classes.header}>
+            <Paper>
+              <Typography variant="subheading">
+                Actions: Paging to and from Google Sheets
+              </Typography>
+            </Paper>
+          </div>
+          <div className={classes.content}>
+            <LunchList meals={mock} />
+            <Grid container className={classes.root} spacing={8}>
+              <Grid item md={12}>
+                <Grid item md={5}>
+                  <Paper />
+                </Grid>
+              </Grid>
+              <Grid item md={12}>
+                {parentState.fetching ? <Loader /> : null}
+                <Grid item md={4}>
+                  {!parentState.fetching ? (
+                    <Paper>
+                      <List>
+                        {parentState.todaysOptions &&
+                        parentState.todaysOptions.length !== 0
+                          ? parentState.todaysOptions.map((meal, index) => (
+                              <ListItem
+                                button
+                                key={index}
+                                onClick={() => parentActions.selectMeal(meal)}
+                              >
+                                <ListItemIcon>
+                                  <Grade />
+                                </ListItemIcon>
+                                <ListItemText
+                                  primary={meal.name}
+                                  secondary={meal.type.replace(/_+/g, ' ')}
+                                />
+                              </ListItem>
+                            ))
+                          : null}
+                        <ListItem button onClick={parentActions.customMeal}>
+                          <ListItemIcon>
+                            <Grade />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary="Custom Meal Order"
+                            secondary="mix it up"
+                          />
+                        </ListItem>
+                      </List>
+                    </Paper>
+                  ) : null}
+                </Grid>
+                <Grid item md={4}>
+                  {parentState.customMeal ? (
+                    <Paper className={classes.paper}>
+                      <Typography variant="subheading">
+                        Custom Order:
+                      </Typography>
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="customMeal"
+                        label="Custom Meal Order"
+                        type="text"
+                        multiline
+                        rowsMax={6}
+                        fullWidth
+                        onChange={e =>
+                          parentActions.selection('selection', e.target.value)
+                        }
+                      />
+                    </Paper>
+                  ) : null}
+                </Grid>
+                <Grid item md={4}>
+                  {parentState.selection ? (
+                    <Paper className={classes.paper}>
+                      <List>
+                        <ListItem>
+                          <ListItemIcon>
+                            <Check />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={parentState.selection}
+                            secondary="Current Selection"
+                          />
+                        </ListItem>
+                      </List>
+                    </Paper>
+                  ) : null}
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
+          <div className={classes.footer}>
+            <Paper>
+              <Typography variant="subheading">
+                Actions: Paging to and from Google Sheets
+              </Typography>
+            </Paper>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }
 
-class FullScreenDialog extends PureComponent {
-  state = {
-    open: false,
-    selection: null,
-    today: moment(),
-    todaysOptions: [],
-    fetching: false,
-    extensions: null
-  };
-
-  handleClickOpen = async () => {
-    this.setState({ open: true });
-    await this.handleFetchingMealsOfTheDay();
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  handlePlaceOrder = async () => {
-    // do some fency stuff here
-    const { client, person } = this.props;
-
-    // simulate posting meal order
-    this.setState({
-      fetching: true
-    });
-
-    const result = await client.mutate({
-      mutation: placeOrder,
-      variables: {
-        body: {
-          content: this.state.selection,
-          date: moment().format('DDMMYYYY'),
-          person: {
-            id: person.id,
-            firstname: person.firstname,
-            lastname: person.lastname,
-            mobile: person.mobile,
-            email: person.email
-          }
-        }
-      }
-    });
-
-    if (result.data.placeOrder) {
-      this.setState({
-        fetching: false,
-        snackAlert: true,
-        snackMessage: `Meal '${this.state.selection}' Placed Successfully`
-      });
-      setTimeout(() => {
-        this.handleClose();
-      }, 3000);
-    }
-  };
-
-  handleFetchingMealsOfTheDay = async () => {
-    const { client } = this.props;
-
-    this.setState({
-      selection: null,
-      todaysOptions: [],
-      fetching: true,
-      extensions: null,
-      customMeal: false
-    });
-
-    let isWeekend = moment().weekday() === 6 || moment().weekday() === 7;
-    let day = isWeekend ? moment().weekday(1) : moment();
-
-    this.setState({
-      today: day
-    });
-
-    const result = await client.query({
-      query: todaysMeals,
-      variables: { date: day.format('DDMMYYYY') }
-    });
-
-    if (result.errors) {
-      this.setState({
-        selection: null,
-        todaysOptions: [],
-        errors: result.errors,
-        fetching: false,
-        extensions: result.extensions,
-        snackAlert: false,
-        snackMessage: null
-      });
-      return;
-    }
-
-    this.setState({
-      selection: null,
-      todaysOptions: result.data.meals,
-      fetching: false,
-      extensions: result.extensions
-    });
-  };
-
-  handleMealSelection = e => {
-    this.setState({
-      selection: e.name
-    });
-  };
-
-  handleCustomMeal = () => {
-    this.setState({
-      customMeal: !this.state.customMeal,
-      selection: null
-    });
-  };
-
-  render() {
-    const { classes, auth, person } = this.props;
-    const { fetching, todaysOptions, today, customMeal } = this.state;
-
-    if (!auth.isAuthenticated(person)) return <div />;
-
-    return (
-      <div>
-        <Button
-          variant="fab"
-          color="primary"
-          aria-label="Lunch"
-          onClick={this.handleClickOpen}
-        >
-          <AddShoppingCart />
-        </Button>
-        <SnackAttack
-          message={this.state.snackMessage}
-          open={this.state.snackAlert}
-          onClose={() => this.setState({ snackAlert: false })}
-        />
-        <Dialog
-          fullScreen
-          open={this.state.open}
-          onClose={this.handleClose}
-          TransitionComponent={Transition}
-        >
-          <AppBar className={classes.appBar}>
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="Close"
-                onClick={this.handleClose}
-              >
-                <CloseIcon />
-              </IconButton>
-              <Typography
-                variant="title"
-                color="inherit"
-                className={classes.flex}
-              >
-                {`${today.format('DD MMMM YYYY')} - Place Your Lunch Order`}
-              </Typography>
-              <Button
-                variant="fab"
-                color="primary"
-                aria-label="Lunch"
-                onClick={this.handlePlaceOrder}
-              >
-                <AddIcon />
-              </Button>
-            </Toolbar>
-          </AppBar>
-          <Grid container className={classes.root} spacing={8}>
-            <Grid item md={12}>
-              <Grid item md={5}>
-                <Paper />
-              </Grid>
-            </Grid>
-            <Grid item md={12}>
-              {fetching ? <Loader /> : null}
-              <Grid item md={4}>
-                {!fetching ? (
-                  <Paper>
-                    <List>
-                      {todaysOptions && todaysOptions.length !== 0
-                        ? todaysOptions.map((meal, index) => (
-                            <ListItem
-                              button
-                              key={index}
-                              onClick={() => this.handleMealSelection(meal)}
-                            >
-                              <ListItemIcon>
-                                <Grade />
-                              </ListItemIcon>
-                              <ListItemText
-                                primary={meal.name}
-                                secondary={meal.type.replace(/_+/g, ' ')}
-                              />
-                            </ListItem>
-                          ))
-                        : null}
-                      <ListItem button onClick={this.handleCustomMeal}>
-                        <ListItemIcon>
-                          <Grade />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary="Custom Meal Order"
-                          secondary="mix it up"
-                        />
-                      </ListItem>
-                    </List>
-                  </Paper>
-                ) : null}
-              </Grid>
-              <Grid item md={4}>
-                {customMeal ? (
-                  <Paper className={classes.paper}>
-                    <Typography variant="subheading">Custom Order:</Typography>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="customMeal"
-                      label="Custom Meal Order"
-                      type="text"
-                      multiline
-                      rowsMax={6}
-                      fullWidth
-                      onChange={e =>
-                        this.setState({ selection: e.target.value })
-                      }
-                    />
-                  </Paper>
-                ) : null}
-              </Grid>
-              <Grid item md={4}>
-                {this.state.selection ? (
-                  <Paper className={classes.paper}>
-                    <List>
-                      <ListItem>
-                        <ListItemIcon>
-                          <Check />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={this.state.selection}
-                          secondary="Current Selection"
-                        />
-                      </ListItem>
-                    </List>
-                  </Paper>
-                ) : null}
-              </Grid>
-            </Grid>
-          </Grid>
-        </Dialog>
-      </div>
-    );
-  }
-}
-
 FullScreenDialog.propTypes = {
-  classes: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
-  person: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired
 };
 
-const LunchDialog = withApollo(FullScreenDialog);
-export default withStyles(styles)(LunchDialog);
+export default withStyles(styles)(FullScreenDialog);
