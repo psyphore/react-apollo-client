@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -23,31 +23,28 @@ const styles = theme => ({
   }
 });
 
-class PersonChip extends Component {
-  render() {
-    const { classes, detail } = this.props;
-
-    return (
-      <div>
-        <Link to={'/person/' + detail.id} style={{ textDecoration: 'none' }}>
-          <Chip
-            avatar={
-              detail.avatar ? (
-                <Avatar size={classes.size} src={baseUrl + detail.avatar} />
-              ) : (
-                <Avatar sizes={classes.size}>
-                  {detail.firstname.substring(0, 1) +
-                    detail.lastname.substring(0, 1)}
-                </Avatar>
-              )
-            }
-            label={detail.firstname + ' ' + detail.lastname}
-            className={classes.chip}
-          />
-        </Link>
-      </div>
-    );
-  }
+function PersonChip(props) {
+  const { classes, detail } = props;
+  return (
+    <div>
+      <Link to={'/person/' + detail.id} style={{ textDecoration: 'none' }}>
+        <Chip
+          avatar={
+            detail.avatar ? (
+              <Avatar size={classes.size} src={baseUrl + detail.avatar} />
+            ) : (
+              <Avatar sizes={classes.size}>
+                {detail.firstname.substring(0, 1) +
+                  detail.lastname.substring(0, 1)}
+              </Avatar>
+            )
+          }
+          label={detail.firstname + ' ' + detail.lastname}
+          className={classes.chip}
+        />
+      </Link>
+    </div>
+  );
 }
 
 PersonChip.propTypes = {

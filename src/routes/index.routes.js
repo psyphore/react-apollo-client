@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import { LandingView, PeepsView, DetailView, ProfileView } from './index';
 
-import { Callback } from '../components/common/';
+import { Callback } from '../components/';
 import withAuthorization from '../HOC/withAuth';
 
 export default () => {

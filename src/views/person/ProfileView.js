@@ -1,25 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 
-import { getMeQuery } from '../../graphql/index';
-import { Loader, ErrorMessage } from '../../components/common';
+import { getMeQuery } from '../../graphql';
+import { Loader, ErrorMessage } from '../../components';
 import ProfileContainer from '../../components/people/ProfileContainer';
 
-class ProfileView extends Component {
-  render() {
-    let { data, auth } = this.props;
-
-    if (data.loading) {
-      return <Loader />;
-    }
-
-    if (data.error) {
-      return <ErrorMessage error={data.error} />;
-    }
-
-    return <ProfileContainer auth={auth} person={data.me} />;
-  }
+function ProfileView(props) {
+  let { data, auth } = props;
+  return (
+    <div>
+      {data && data.loading ? <Loader /> : null}
+      {data && data.error ? <ErrorMessage error={data.error} /> : null}
+      {data && !data.loading && !data.error ? (
+        <ProfileContainer auth={auth} person={data.me} />
+      ) : null}
+    </div>
+  );
 }
 
 ProfileView.propTypes = {

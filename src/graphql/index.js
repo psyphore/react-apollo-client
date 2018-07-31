@@ -7,7 +7,7 @@ import {
 } from './queries/person';
 import { getProductsQuery, getProductQuery } from './queries/product';
 import { searchQuery } from './queries/search';
-import { serverHits, notification } from './subscriptions/subs';
+import { serverHits, notifications } from './subscriptions/subs';
 import { leaveNotification } from './subscriptions/leave';
 import { todaysMeals } from './queries/lunch';
 import { placeOrder } from './mutiations/order-lunch';
@@ -22,7 +22,7 @@ export {
   getProductQuery,
   searchQuery,
   serverHits,
-  notification,
+  notifications,
   leaveNotification,
   todaysMeals,
   placeOrder,

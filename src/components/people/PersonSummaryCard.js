@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -26,36 +26,34 @@ const styles = {
   }
 };
 
-class PersonSummaryCard extends Component {
-  render() {
-    const { classes, person } = this.props;
+function PersonSummaryCard(props) {
+  const { classes, person } = props;
 
-    return (
-      <div>
-          <Card className={classes.card}>
-            {person.avatar ? (
-              <CardMedia
-                className={classes.media}
-                title={person.firstname + ' ' + person.lastname}
-                image={baseUrl + person.avatar}
-              />
-            ) : (
-              <Avatar
-                className={classes.avatar}
-                alt={person.firstname + ' ' + person.lastname}
-              >
-                <Person />
-              </Avatar>
-            )}
-            <CardContent className={classes.cardContent}>
-              <Typography gutterBottom variant="headline" component="h4">
-                {person.firstname + ' ' + person.lastname}
-              </Typography>
-            </CardContent>
-          </Card>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Card className={classes.card}>
+        {person.avatar ? (
+          <CardMedia
+            className={classes.media}
+            title={person.firstname + ' ' + person.lastname}
+            image={baseUrl + person.avatar}
+          />
+        ) : (
+          <Avatar
+            className={classes.avatar}
+            alt={person.firstname + ' ' + person.lastname}
+          >
+            <Person />
+          </Avatar>
+        )}
+        <CardContent className={classes.cardContent}>
+          <Typography gutterBottom variant="headline" component="h4">
+            {person.firstname + ' ' + person.lastname}
+          </Typography>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 
 PersonSummaryCard.propTypes = {

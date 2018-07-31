@@ -1,12 +1,8 @@
 import React, { PureComponent } from 'react';
-import { GraphQLSearch } from '../components/common';
+import { GraphQLSearch } from '../components';
 
-class LandingView extends PureComponent {
-  render() {
-    return <GraphQLSearch />;
-  }
+function LandingView(props) {
+  return <GraphQLSearch />;
 }
-
-LandingView.propTypes = {};
 
 export default LandingView;

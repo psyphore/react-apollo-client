@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-const notification = gql`
+export const notifications = gql`
   subscription {
     notifications {
       id
@@ -10,7 +10,7 @@ const notification = gql`
   }
 `;
 
-const serverHits = gql`
+export const serverHits = gql`
   subscription {
     serverHits {
       id
@@ -19,5 +19,3 @@ const serverHits = gql`
     }
   }
 `;
-
-export { notification, serverHits };

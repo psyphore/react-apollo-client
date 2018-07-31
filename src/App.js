@@ -6,7 +6,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { primaryTheme } from './themes/primary-theme';
-import { AppHeader, AppFooter } from './components/common';
+import { AppHeader, AppFooter } from './components';
 import AppRoutes from './routes/index.routes';
 import { history } from './services/';
 

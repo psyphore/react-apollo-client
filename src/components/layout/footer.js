@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
@@ -10,19 +11,20 @@ const styles = theme => ({
   }
 });
 
-class AppFooter extends Component {
-  render() {
-    const { classes, title } = this.props;
-
-    return (
-      <div className={classes.root}>
+function AppFooterBar(props){
+  return(
+    <div className={props.classes.root}>
         <Divider />
         <Typography variant="subheading" gutterBottom>
-          {title + ' - '+ moment().format('YYYY')}
+          {props.title + ' - '+ moment().format('YYYY')}
         </Typography>
       </div>
-    );
-  }
+  )
 }
 
-export default withStyles(styles)(AppFooter);
+AppFooterBar.propTypes = {
+  title: PropTypes.string.isRequired,
+  classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(AppFooterBar);

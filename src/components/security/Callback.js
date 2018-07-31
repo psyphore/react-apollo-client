@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Loader } from '../index';
-import { Auth } from '../../../services';
+import { Auth } from '../../services';
 
 const auth = new Auth();
 

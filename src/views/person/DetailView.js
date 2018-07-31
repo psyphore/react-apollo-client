@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 
 import { getPersonQuery } from '../../graphql/index';
-import { Loader, ErrorMessage } from '../../components/common';
+import { Loader, ErrorMessage } from '../../components';
 import PersonDetailedContainer from '../../components/people/PersonDetailedContainer';
 
 const queryOptions = {
@@ -14,28 +14,17 @@ const queryOptions = {
   })
 };
 
-class DetailView extends Component {
-  render() {
-    let { data, auth } = this.props;
-
-    if (data.loading) {
-      return (
-        <div>
-          <Loader />
-        </div>
-      );
-    }
-
-    if (data.error) {
-      return <ErrorMessage error={data.error} />;
-    }
-
-    return (
-      <div>
+function DetailView(props) {
+  const { data, auth } = props;
+  return (
+    <div>
+      {data && data.loading ? <Loader /> : null}
+      {data && data.error ? <ErrorMessage error={data.error} /> : null}
+      {data && !data.loading && !data.error ? (
         <PersonDetailedContainer auth={auth} person={data.person} />
-      </div>
-    );
-  }
+      ) : null}
+    </div>
+  );
 }
 
 DetailView.propTypes = {

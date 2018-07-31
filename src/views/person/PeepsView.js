@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { graphql } from 'react-apollo';
 
-import { getPeopleQuery } from '../../graphql/index';
+import { getPeopleQuery } from '../../graphql';
 import PeopleContainer from '../../components/people/PeopleContainer';
-import { Loader } from '../../components/common';
+import { Loader, ErrorMessage } from '../../components';
 
 const queryOptions = {
   options: props => ({
@@ -14,27 +14,17 @@ const queryOptions = {
   })
 };
 
-class PeepsView extends Component {
-  render() {
-    let { data } = this.props;
-    if (data.loading) {
-      return (
-        <div>
-          <Loader />
-        </div>
-      );
-    }
-
-    if (data.error) {
-      return <div>{JSON.stringify(data.error)}</div>;
-    }
-
-    return (
-      <div>
+function PeepsView(props) {
+  const { data } = props;
+  return (
+    <div>
+      {data && data.loading ? <Loader /> : null}
+      {data && data.error ? <ErrorMessage error={data.error} /> : null}
+      {data && !data.loading && !data.error ? (
         <PeopleContainer people={data.people} />
-      </div>
-    );
-  }
+      ) : null}
+    </div>
+  );
 }
 
 PeepsView = graphql(getPeopleQuery, queryOptions)(PeepsView);

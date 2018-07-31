@@ -25,7 +25,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import * as moment from 'moment';
 
 import { todaysMeals, placeOrder } from '../../graphql';
-import { Loader } from '../common';
+import { Loader } from '../';
 
 const styles = theme => ({
   appBar: {
@@ -46,28 +46,25 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-class SnackAttack extends PureComponent {
-  render() {
-    const { message, open, onClose } = this.props;
-
-    return (
-      <div>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left'
-          }}
-          open={open}
-          autoHideDuration={6000}
-          onClose={onClose}
-          ContentProps={{
-            'aria-describedby': 'message-id'
-          }}
-          message={<span id="message-id">{message}</span>}
-        />
-      </div>
-    );
-  }
+function SnackAttack(props) {
+  const { message, open, onClose } = props;
+  return (
+    <div>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left'
+        }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={onClose}
+        ContentProps={{
+          'aria-describedby': 'message-id'
+        }}
+        message={<span id="message-id">{message}</span>}
+      />
+    </div>
+  );
 }
 
 class FullScreenDialog extends PureComponent {

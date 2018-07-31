@@ -8,8 +8,8 @@ import Dialog from '@material-ui/core/Dialog';
 import blue from '@material-ui/core/colors/blue';
 import { SecurityOutlined } from '@material-ui/icons';
 
-import PersonSummaryCard from '../../people/PersonSummaryCard';
-import { currentSupportPerson } from '../../../graphql';
+import PersonSummaryCard from '../people/PersonSummaryCard';
+import { currentSupportPerson } from '../../graphql';
 
 const styles = theme => ({
   appBar: {

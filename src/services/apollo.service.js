@@ -22,16 +22,17 @@ export const createClient = (uri, ws) => {
     uri: ws,
     options: {
       reconnect: true,
-      lazy: true
+      connectionParams: {
+        authToken: auth.getAuthorizationHeader()
+      }
     }
   });
 
   const httpLink = new HttpLink({ uri: uri, credentials: 'same-origin' });
 
-  const retryLink = new RetryLink({ delay: 5000, attempts: 5 });
+  const retryLink = new RetryLink({ delay: 5000, attempts: 2 });
 
   const authMiddleware = new ApolloLink((operation, forward) => {
-    // add the authorization to the headers
     operation.setContext({
       headers: {
         authorization: auth.getAuthorizationHeader()

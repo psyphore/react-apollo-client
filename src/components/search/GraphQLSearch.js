@@ -8,8 +8,8 @@ import Search from '@material-ui/icons/Search';
 import Badge from '@material-ui/core/Badge';
 import Link from 'react-router-dom/Link';
 
-import { searchQuery } from '../../../graphql';
-import PersonSummaryCard from '../../people/PersonSummaryCard';
+import { searchQuery } from '../../graphql';
+import PersonSummaryCard from '../people/PersonSummaryCard';
 import { Loader, ErrorMessage } from '../index';
 
 const styles = theme => ({

@@ -1,13 +1,11 @@
 import gql from 'graphql-tag';
 
-const lunchNotification = gql`
+export const lunchNotification = gql`
   subscription {
-    lunchNotification {
+    meals {
       id
       subject
       body
     }
   }
 `;
-
-export { lunchNotification };

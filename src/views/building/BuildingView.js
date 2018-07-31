@@ -1,38 +1,31 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { graphql } from 'react-apollo';
 
-import { getBuildingsQuery } from '../../graphql/index'
+import { getBuildingsQuery } from '../../graphql';
 import BuildingContainerComponent from '../../components/buildings/BuildingContainer';
-import { Loader } from '../../components/common';
+import { Loader, ErrorMessage } from '../../components';
 
 const options = {
   options: props => ({
     variables: {
-      first: props.match.params.first,  
+      first: props.match.params.first,
       offset: props.match.params.offset
     }
   })
-}
+};
 
-class BuildingView extends PureComponent {
-  
-  render() {
-    let { data } = this.props
-    if (data.loading) {
-      return <div><Loader /></div>
-    }
-
-    if (data.error) {
-      return <p>{JSON.stringify(data.error)}</p>
-    }
-
-    return (
-      <div>
+function BuildingView(props) {
+  const { data } = props;
+  return (
+    <div>
+      {data && data.loading ? <Loader /> : null}
+      {data && data.error ? <ErrorMessage error={data.error} /> : null}
+      {data && !data.loading && !data.error ? (
         <BuildingContainerComponent buildings={data.buildings} />
-      </div>
-    )
-  }
+      ) : null}
+    </div>
+  );
 }
 
-BuildingView = graphql(getBuildingsQuery, options)(BuildingView)
+BuildingView = graphql(getBuildingsQuery, options)(BuildingView);
 export default BuildingView;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -30,55 +30,53 @@ const styles = {
   }
 };
 
-class PersonCard extends Component {
-  render() {
-    const { classes, detail } = this.props;
+function PersonCard(props) {
+  const { classes, detail } = props;
 
-    return (
-      <div className={classes.root}>
-        <Card className={classes.card}>
-          {detail.avatar ? (
-            <CardMedia
-              className={classes.media}
-              image={baseUrl + detail.avatar}
-              title={detail.firstname + ' ' + detail.lastname}
-            />
-          ) : null}
-          <CardContent>
-            <Typography gutterBottom variant="headline" component="h1">
-              {detail.firstname + ' ' + detail.lastname}
-            </Typography>
-            <List>
-              <ListItem>
-                <Avatar>
-                  <WorkIcon />
-                </Avatar>
-                <ListItemText primary={detail.title} />
-              </ListItem>
-              <ListItem>
-                <Avatar>
-                  <Email />
-                </Avatar>
-                <ListItemText primary={detail.email} />
-              </ListItem>
-              <ListItem>
-                <Avatar>
-                  <Phone />
-                </Avatar>
-                <ListItemText primary={detail.mobile} />
-              </ListItem>
-              <ListItem>
-                <Avatar>
-                  <Details />
-                </Avatar>
-                <ListItemText primary={detail.bio} />
-              </ListItem>
-            </List>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  return (
+    <div className={classes.root}>
+      <Card className={classes.card}>
+        {detail.avatar ? (
+          <CardMedia
+            className={classes.media}
+            image={baseUrl + detail.avatar}
+            title={detail.firstname + ' ' + detail.lastname}
+          />
+        ) : null}
+        <CardContent>
+          <Typography gutterBottom variant="headline" component="h1">
+            {detail.firstname + ' ' + detail.lastname}
+          </Typography>
+          <List>
+            <ListItem>
+              <Avatar>
+                <WorkIcon />
+              </Avatar>
+              <ListItemText primary={detail.title} />
+            </ListItem>
+            <ListItem>
+              <Avatar>
+                <Email />
+              </Avatar>
+              <ListItemText primary={detail.email} />
+            </ListItem>
+            <ListItem>
+              <Avatar>
+                <Phone />
+              </Avatar>
+              <ListItemText primary={detail.mobile} />
+            </ListItem>
+            <ListItem>
+              <Avatar>
+                <Details />
+              </Avatar>
+              <ListItemText primary={detail.bio} />
+            </ListItem>
+          </List>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 
 PersonCard.propTypes = {
