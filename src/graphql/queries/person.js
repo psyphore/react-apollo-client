@@ -136,8 +136,10 @@ const getMeQuery = gql`
     address
   }
 
-  fragment mealFields on Meal {
-    name
+  fragment mealFields on MealHistory {
+    id
+    content
+    date
   }
 `;
 

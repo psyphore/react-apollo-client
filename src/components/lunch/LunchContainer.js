@@ -144,10 +144,20 @@ class LunchContainer extends PureComponent {
       customMeal,
       open,
       snackAlert,
-      snackMessage
+      snackMessage,
+      selection
     } = this.state;
 
-    const parentState = { fetching, todaysOptions, today, customMeal, open };
+    const parentState = {
+      fetching,
+      todaysOptions,
+      today,
+      customMeal,
+      open,
+      selection,
+      mealHistory: person.meals
+    };
+
     const parentActions = {
       customMeal: this.handleCustomMeal,
       open: this.handleClickOpen,

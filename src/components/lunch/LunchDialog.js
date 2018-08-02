@@ -66,13 +66,7 @@ function FullScreenDialog(props) {
   const { classes, parentState, parentActions } = props;
 
   if (!parentActions && !parentState) return <div />;
-  const mock = [
-    {id:'m1', date: '31072018', content: 'meal' },
-    {id:'m2', date: '31072018', content: 'meal' },
-    {id:'m3', date: '31072018', content: 'meal' },
-    {id:'m4', date: '31072018', content: 'meal' },
-    {id:'m5', date: '31072018', content: 'meal' }
-  ];
+
   return (
     <div>
       <Dialog
@@ -120,7 +114,6 @@ function FullScreenDialog(props) {
             </Paper>
           </div>
           <div className={classes.content}>
-            <LunchList meals={mock} />
             <Grid container className={classes.root} spacing={8}>
               <Grid item md={12}>
                 <Grid item md={5}>
@@ -202,6 +195,20 @@ function FullScreenDialog(props) {
                       </List>
                     </Paper>
                   ) : null}
+                </Grid>
+                <Grid item md={4}>
+                  <LunchList
+                    meals={parentState.mealHistory.slice(0, 5)}
+                    parentActions={parentActions}
+                    title="last 5 meals"
+                  />
+                </Grid>
+                <Grid item md={4}>
+                  <LunchList
+                    meals={parentState.mealHistory.slice(0, 5)}
+                    parentActions={parentActions}
+                    title="todays' trends"
+                  />
                 </Grid>
               </Grid>
             </Grid>
