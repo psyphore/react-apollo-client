@@ -9,6 +9,7 @@ import { primaryTheme } from './themes/primary-theme';
 import { AppHeader, AppFooter } from './components';
 import AppRoutes from './routes/index.routes';
 import { history } from './services/';
+import { AppContext } from './HOC';
 
 const styles = theme => ({
   container: {
@@ -43,19 +44,23 @@ function App(props) {
   return (
     <MuiThemeProvider theme={primaryTheme}>
       <CssBaseline />
-      <Router history={history}>
-        <div className={classes.container}>
-          <div className={classes.header}>
-            <AppHeader title={process.env.REACT_APP_NAME} />
-          </div>
-          <div className={classes.content}>
-            <AppRoutes />
-          </div>
-          <div className={classes.footer}>
-            <AppFooter title={process.env.REACT_APP_NAME} />
-          </div>
-        </div>
-      </Router>
+      <AppContext.Consumer>
+        {({ title }) => (
+          <Router history={history}>
+            <div className={classes.container}>
+              <div className={classes.header}>
+                <AppHeader title={title} />
+              </div>
+              <div className={classes.content}>
+                <AppRoutes />
+              </div>
+              <div className={classes.footer}>
+                <AppFooter title={title} />
+              </div>
+            </div>
+          </Router>
+        )}
+      </AppContext.Consumer>
     </MuiThemeProvider>
   );
 }

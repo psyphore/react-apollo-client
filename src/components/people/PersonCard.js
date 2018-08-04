@@ -12,6 +12,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import WorkIcon from '@material-ui/icons/Work';
+import { LocationCitySharp } from '@material-ui/icons/';
 
 import PersonCardImage from './PersonCardImage';
 
@@ -73,6 +74,14 @@ function PersonCard(props) {
                 <ListItemText primary={detail.bio} />
               </ListItem>
             ) : null}
+            {detail.building.map((building, index) => (
+              <ListItem key={index}>
+                <Avatar>
+                  <LocationCitySharp />
+                </Avatar>
+                <ListItemText primary={building.name} />
+              </ListItem>
+            ))}
           </List>
         </CardContent>
       </Card>

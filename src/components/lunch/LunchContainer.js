@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 
 import { withApollo } from 'react-apollo';
 import * as moment from 'moment';
@@ -8,6 +7,7 @@ import LunchButton from './LunchButton';
 import LunchDialog from './LunchDialog';
 import SnackBar from '../alert/SnackBar';
 import { todaysMeals, placeOrder } from '../../graphql';
+import { LunchContext, PersonContext } from '../../HOC';
 
 class LunchContainer extends PureComponent {
   constructor(props) {
@@ -136,29 +136,10 @@ class LunchContainer extends PureComponent {
   };
 
   render() {
-    const { auth, person } = this.props;
-    const {
-      fetching,
-      todaysOptions,
-      today,
-      customMeal,
-      open,
-      snackAlert,
-      snackMessage,
-      selection
-    } = this.state;
+    const { person } = this.props;
+    const { snackAlert, snackMessage } = this.state;
 
-    const parentState = {
-      fetching,
-      todaysOptions,
-      today,
-      customMeal,
-      open,
-      selection,
-      mealHistory: person.meals
-    };
-
-    const parentActions = {
+    const actions = {
       customMeal: this.handleCustomMeal,
       open: this.handleClickOpen,
       close: this.handleClose,
@@ -167,27 +148,30 @@ class LunchContainer extends PureComponent {
       selection: (prop, value) => this.setState({ [prop]: value })
     };
 
-    if (!auth.isAuthenticated(person)) return <div />;
-
     return (
       <div>
-        <LunchButton clickHandler={this.handleClickOpen} />
-        <LunchDialog parentState={parentState} parentActions={parentActions} />
-        {snackAlert ? (
-          <SnackBar
-            message={snackMessage}
-            open={snackAlert}
-            closeHandler={() => this.setState({ snackAlert: false })}
-          />
-        ) : null}
+        <PersonContext.Consumer>
+          {state => (
+            <div>
+              <LunchContext.Provider
+                value={{ actions, state: this.state, person: person }}
+              >
+                <LunchButton clickHandler={this.handleClickOpen} />
+                <LunchDialog />
+                {snackAlert ? (
+                  <SnackBar
+                    message={snackMessage}
+                    open={snackAlert}
+                    closeHandler={() => this.setState({ snackAlert: false })}
+                  />
+                ) : null}
+              </LunchContext.Provider>
+            </div>
+          )}
+        </PersonContext.Consumer>
       </div>
     );
   }
 }
-
-LunchContainer.propTypes = {
-  auth: PropTypes.object.isRequired,
-  person: PropTypes.object.isRequired
-};
 
 export default withApollo(LunchContainer);

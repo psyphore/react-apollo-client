@@ -4,12 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 import { graphql } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import Avatar from '@material-ui/core/Avatar';
-import classNames from 'classnames';
 
 import { getMyAvatarQuery } from '../../graphql';
-
-const baseUrl = `${process.env.REACT_APP_GRAPHQL_URI}/media/`;
+import PersonChipImage from './PersonChipImage';
+import Tooltip from '../tooltip';
 
 const styles = theme => ({
   row: {
@@ -26,39 +24,21 @@ const styles = theme => ({
 });
 
 function ProfileButton(props) {
-  const { data, classes } = props
+  const { data, classes } = props;
   return (
     <div className={classes.row}>
       {data && data.me ? (
-        <Button
-          component={Link}
-          to="/me"
-          variant="fab"
-          color="primary"
-          aria-label="MyProfile"
-        >
-          {data.me.avatar ? (
-            <Avatar
-              alt={data.me.firstname + ' ' + data.me.lastname}
-              src={baseUrl + data.me.avatar}
-              className={classNames(
-                classes.avatar,
-                classes.bigAvatar
-              )}
-            />
-          ) : (
-            <Avatar
-              alt={data.me.firstname + ' ' + data.me.lastname}
-              className={classNames(
-                classes.avatar,
-                classes.bigAvatar
-              )}
-            >
-              {data.me.firstname.substring(0, 1) +
-                data.me.lastname.substring(0, 1)}
-            </Avatar>
-          )}
-        </Button>
+        <Tooltip title={data.me.firstname} placement="top">
+          <Button
+            component={Link}
+            to="/me"
+            variant="fab"
+            color="primary"
+            aria-label="MyProfile"
+          >
+            <PersonChipImage detail={data.me} />
+          </Button>
+        </Tooltip>
       ) : null}
     </div>
   );

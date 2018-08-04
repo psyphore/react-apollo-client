@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 
+import PersonContext from '../../HOC/personContext';
+import Team from './TeamList';
 import Person from '../../components/people/PersonCard';
-import PersonC from '../../components/people/PersonChip';
-import ProductSummaryList from '../../components/products/ProductSummaryCard';
+import ProductSummaryList from '../../components/products/ProductSummaryList';
+
 import { Lunch } from '../lunch';
+import { Leave } from '../leave';
 
 const styles = theme => ({
   root: {
@@ -35,6 +36,10 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
     color: theme.palette.text.secondary
+  },
+  quickAction: {
+    display: 'flex',
+    flex: 1
   }
 });
 
@@ -44,84 +49,70 @@ class ProfileContainer extends PureComponent {
 
     return (
       <div>
-        <Grid container spacing={8}>
-          <Grid item md={12}>
-            <Paper className={classes.actionPaper}>
-              <Lunch auth={auth} person={person} />
-            </Paper>
-          </Grid>
-          <Grid item md={3}>
-            <Paper className={classes.paper}>
+        <PersonContext.Provider
+          value={{ actions: {}, state: { person, auth } }}
+        >
+          <Grid container spacing={8} wrap="wrap" justify="space-evenly">
+            <Grid item md={12}>
+              <Paper className={classes.actionPaper}>
+                <div className={classes.quickAction}>
+                  <Lunch person={person} />
+                  <Leave person={person} />
+                </div>
+              </Paper>
+            </Grid>
+            <Grid item md={3}>
               <Person detail={person} />
-            </Paper>
-          </Grid>
-          <Grid item md={9}>
-            <Paper className={classes.paper}>
-              <div>
+            </Grid>
+            <Grid item md={9}>
+              <Grid container spacing={8} wrap="wrap" justify="space-evenly">
                 {person.manager ? (
-                  <div>
-                    <div className={classes.actionPaper}>
-                      <Typography variant="title" gutterBottom>
-                        Manager
-                      </Typography>
-                      <Divider />
-                    </div>
-                    <div className={classes.children}>
-                      <PersonC key={person.id} detail={person.manager} />
-                    </div>
-                  </div>
+                  <Grid item md={3}>
+                    <Paper className={classes.paper}>
+                      <Team
+                        title="Manager"
+                        collection={[person.manager]}
+                        classes={classes}
+                      />
+                    </Paper>
+                  </Grid>
                 ) : null}
                 {person.line && person.line.length !== 0 ? (
-                  <div>
-                    <div className={classes.actionPaper}>
-                      <Typography variant="title" gutterBottom>
-                        Reporting Line
-                      </Typography>
-                      <Divider />
-                    </div>
-                    <div className={classes.children}>
-                      {person.line.map(person => (
-                        <PersonC key={person.id} detail={person} />
-                      ))}
-                    </div>
-                  </div>
+                  <Grid item md={3}>
+                    <Paper className={classes.paper}>
+                      <Team
+                        title="Reporting Line"
+                        collection={person.line}
+                        classes={classes}
+                      />
+                    </Paper>
+                  </Grid>
                 ) : null}
                 {person.team && person.team.length !== 0 ? (
-                  <div>
-                    <div className={classes.actionPaper}>
-                      <Typography variant="title" gutterBottom>
-                        Team
-                      </Typography>
-                      <Divider />
-                    </div>
-                    <div className={classes.children}>
-                      {person.team.map(person => (
-                        <PersonC key={person.id} detail={person} />
-                      ))}
-                    </div>
-                  </div>
+                  <Grid item md={3}>
+                    <Paper className={classes.paper}>
+                      <Team
+                        title="My Team"
+                        collection={person.team}
+                        classes={classes}
+                      />
+                    </Paper>
+                  </Grid>
                 ) : null}
-                {(!person.line || person.line.length === 0) &&
-                (!person.team || person.team === 0) ? (
-                  <Typography variant="button" gutterBottom>
-                    No Associations
-                  </Typography>
+                {person.team && person.team.length !== 0 ? (
+                  <Grid item md={3}>
+                    <Paper className={classes.paper}>
+                      <ProductSummaryList
+                        products={person.products}
+                        title="My Products"
+                      />
+                    </Paper>
+                  </Grid>
                 ) : null}
-              </div>
-            </Paper>
-            <Paper className={classes.paper}>
-              <div>
-                <div className={classes.actionPaper}>
-                  <Typography variant="title" gutterBottom>
-                    Products
-                  </Typography>
-                  <Divider />
-                </div>
-                <ProductSummaryList products={person.products} />
-              </div>
-            </Paper>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
+        </PersonContext.Provider>
       </div>
     );
   }
@@ -133,3 +124,15 @@ ProfileContainer.propTypes = {
 };
 
 export default withStyles(styles)(ProfileContainer);
+/**
+ <Paper className={classes.paper}>
+                <div>
+                  {(!person.line || person.line.length === 0) &&
+                  (!person.team || person.team === 0) ? (
+                    <Typography variant="button" gutterBottom>
+                      No Associations
+                    </Typography>
+                  ) : null}
+                </div>
+              </Paper>
+ */

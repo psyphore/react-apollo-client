@@ -11,11 +11,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
 import Link from 'react-router-dom/Link';
-import Button from '@material-ui/core/Button'
 
-import PersonC from './PersonChip';
+import { LeaveContext } from '../../HOC';
+import SlideUp from '../transitions/SlideUp';
 
 const styles = {
   appBar: {
@@ -26,74 +25,66 @@ const styles = {
   }
 };
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
+function FullScreenDialog(props) {
+  const { classes } = props;
 
-class FullScreenDialog extends React.Component {
-  state = {
-    open: false
-  };
-
-  handleClickOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  render() {
-    const { classes, detail } = this.props;
-
-    return (
-      <div>
-        <Button detail={detail} onClick={this.handleClickOpen} />
-        <Dialog
-          fullScreen
-          open={this.state.open}
-          onClose={this.handleClose}
-          TransitionComponent={Transition}
-        >
-          <AppBar className={classes.appBar}>
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                onClick={this.handleClose}
-                aria-label="Close"
-              >
-                <CloseIcon />
-              </IconButton>
-              <Typography
-                variant="title"
-                color="inherit"
-                className={classes.flex}
-              >
-                {detail.firstname + ' ' + detail.lastname}
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <List>
-            <ListItem>
-              <ListItemText primary="email" secondary={detail.email} />
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <ListItemText primary="mobile" secondary={detail.mobile} />
-            </ListItem>
-            <ListItem>
-              <Link to={'/person/' + detail.id}>View</Link>
-            </ListItem>
-          </List>
-        </Dialog>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <LeaveContext.Consumer>
+        {({ state, actions, person }) => (
+          <Dialog
+            fullScreen
+            open={state.open}
+            onClose={actions.handleClose}
+            TransitionComponent={SlideUp}
+          >
+            <AppBar className={classes.appBar}>
+              <Toolbar>
+                <IconButton
+                  color="inherit"
+                  onClick={actions.handleClose}
+                  aria-label="Close"
+                >
+                  <CloseIcon />
+                </IconButton>
+                <Typography
+                  variant="title"
+                  color="inherit"
+                  className={classes.flex}
+                >
+                  {person
+                    ? person.firstname + ' ' + person.lastname
+                    : 'no person loaded'}
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            <List>
+              <ListItem>
+                <ListItemText
+                  primary="email"
+                  secondary={person ? person.email : ''}
+                />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText
+                  primary="mobile"
+                  secondary={person ? person.mobile : ''}
+                />
+              </ListItem>
+              <ListItem>
+                {person? (<Link to={'/person/' + person.id}>View</Link>):null}
+              </ListItem>
+            </List>
+          </Dialog>
+        )}
+      </LeaveContext.Consumer>
+    </div>
+  );
 }
 
 FullScreenDialog.propTypes = {
-  classes: PropTypes.object.isRequired,
-  detail: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired
 };
 
 const LeaveDialog = withStyles(styles)(FullScreenDialog);

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { NavLink } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { NavLink } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 
 import { Support } from '../support/';
@@ -54,5 +54,4 @@ AppHeaderBar.propTypes = {
   title: PropTypes.string.isRequired
 };
 
-const AppHeader = withStyles(styles)(AppHeaderBar);
-export default AppHeader;
+export default withStyles(styles)(AppHeaderBar);

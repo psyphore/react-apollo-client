@@ -1,8 +1,10 @@
-import React from 'react';
+import { createContext } from 'react';
 
 import { Auth } from '../services';
 
-export const AppContext = React.createContext({
+const AppContext = createContext({
   title: process.env.REACT_APP_NAME,
   auth: Auth
 });
+
+export default AppContext;

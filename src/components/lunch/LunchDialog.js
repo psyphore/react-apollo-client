@@ -11,17 +11,17 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-import Grade from '@material-ui/icons/Grade';
 import AddIcon from '@material-ui/icons/Add';
 import Check from '@material-ui/icons/Check';
 
 import SlideUp from '../transitions/SlideUp';
 import { Loader } from '../';
 import LunchList from './LunchList';
+import LunchTodayList from './LunchTodayList';
+import LunchContext from '../../HOC/lunchContext';
 
 const styles = theme => ({
   appBar: {
@@ -59,169 +59,188 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
     color: theme.palette.text.secondary
+  },
+  contentContainer: {
+    display: 'grid',
+    gridGap: '2.5px',
+    gridTemplateColumns: '1fr',
+    gridTemplateRows: '1fr',
+    alignItems: 'center',
+    width: '100vw',
+    maxWidth: '95vw',
+    margin: '0 auto',
+    [theme.breakpoints.down('md')]: { maxWidth: '85vw' },
+    [theme.breakpoints.down('sm')]: { maxWidth: '95vw' },
+    justifyItems: 'center'
+  },
+  contentOptions: {
+    display: 'flex',
+    flex: 1,
+    flexWrap: 'wrap'
+  },
+  contentOption: {
+    maxWidth: '95vw',
+    width: '100vw'
   }
 });
 
-function FullScreenDialog(props) {
-  const { classes, parentState, parentActions } = props;
+function DialogToolBar(props) {
+  const { actions, classes, state } = props;
+  return (
+    <Toolbar>
+      <IconButton color="inherit" aria-label="Close" onClick={actions.close}>
+        <CloseIcon />
+      </IconButton>
+      <Typography variant="title" color="inherit" className={classes.flex}>
+        {`${
+          state.today ? state.today.format('DD MMMM YYYY') + ' -' : ''
+        } Place Your Lunch Order`}
+      </Typography>
+      <Button
+        variant="fab"
+        color="primary"
+        aria-label="Lunch"
+        onClick={actions.placeOrder}
+      >
+        <AddIcon />
+      </Button>
+    </Toolbar>
+  );
+}
 
-  if (!parentActions && !parentState) return <div />;
+function DialogActions(props) {
+  return (
+    <Paper>
+      <Typography variant="subheading">
+        Actions: Paging to and from Google Sheets
+      </Typography>
+    </Paper>
+  );
+}
+
+function DialogSelection(props) {
+  const { classes, state } = props;
+  return (
+    <div>
+      {state.selection ? (
+        <Paper className={classes.contentOption}>
+          <List>
+            <ListItem>
+              <ListItemIcon>
+                <Check />
+              </ListItemIcon>
+              <ListItemText
+                primary={state.selection}
+                secondary="Current Selection"
+              />
+            </ListItem>
+          </List>
+        </Paper>
+      ) : null}
+    </div>
+  );
+}
+
+function DialogContent(props) {
+  const { classes, state, person, actions } = props;
+  return (
+    <div className={classes.contentContainer}>
+      <div>
+        {!state.fetching ? (
+          <Paper className={classes.contentOption}>
+            <LunchTodayList
+              meals={state.todaysOptions}
+              parentActions={actions}
+              title="Todays' Meals"
+            />
+          </Paper>
+        ) : null}
+      </div>
+      <div>
+        {state.customMeal ? (
+          <Paper className={classes.contentOption}>
+            <Typography variant="subheading">Custom Order:</Typography>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="customMeal"
+              label="Custom Meal Order"
+              type="text"
+              multiline
+              rowsMax={6}
+              fullWidth
+              onChange={e => actions.selection('selection', e.target.value)}
+            />
+          </Paper>
+        ) : null}
+        <DialogSelection classes={classes} state={state} />
+      </div>
+      <div>
+        {person && person.meals ? (
+          <Paper className={classes.contentOption}>
+            <LunchList
+              meals={person.meals.slice(0, 5)}
+              parentActions={actions}
+              title="my last 5 meals"
+              type="history"
+            />
+          </Paper>
+        ) : null}
+      </div>
+      <div>
+        {person && person.meals ? (
+          <Paper className={classes.contentOption}>
+            <LunchList
+              meals={person.meals.slice(0, 5)}
+              parentActions={actions}
+              title="todays' trends"
+              type="trend"
+            />
+          </Paper>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function FullScreenDialog(props) {
+  const { classes } = props;
 
   return (
     <div>
-      <Dialog
-        fullScreen
-        open={parentState.open}
-        onClose={parentActions.close}
-        TransitionComponent={SlideUp}
-      >
-        <AppBar className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="Close"
-              onClick={parentActions.close}
-            >
-              <CloseIcon />
-            </IconButton>
-            <Typography
-              variant="title"
-              color="inherit"
-              className={classes.flex}
-            >
-              {`${
-                parentState.today
-                  ? parentState.today.format('DD MMMM YYYY') + ' -'
-                  : ''
-              } Place Your Lunch Order`}
-            </Typography>
-            <Button
-              variant="fab"
-              color="primary"
-              aria-label="Lunch"
-              onClick={parentActions.placeOrder}
-            >
-              <AddIcon />
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <div className={classes.container}>
-          <div className={classes.header}>
-            <Paper>
-              <Typography variant="subheading">
-                Actions: Paging to and from Google Sheets
-              </Typography>
-            </Paper>
-          </div>
-          <div className={classes.content}>
-            <Grid container className={classes.root} spacing={8}>
-              <Grid item md={12}>
-                <Grid item md={5}>
-                  <Paper />
-                </Grid>
-              </Grid>
-              <Grid item md={12}>
-                {parentState.fetching ? <Loader /> : null}
-                <Grid item md={4}>
-                  {!parentState.fetching ? (
-                    <Paper>
-                      <List>
-                        {parentState.todaysOptions &&
-                        parentState.todaysOptions.length !== 0
-                          ? parentState.todaysOptions.map((meal, index) => (
-                              <ListItem
-                                button
-                                key={index}
-                                onClick={() => parentActions.selectMeal(meal)}
-                              >
-                                <ListItemIcon>
-                                  <Grade />
-                                </ListItemIcon>
-                                <ListItemText
-                                  primary={meal.name}
-                                  secondary={meal.type.replace(/_+/g, ' ')}
-                                />
-                              </ListItem>
-                            ))
-                          : null}
-                        <ListItem button onClick={parentActions.customMeal}>
-                          <ListItemIcon>
-                            <Grade />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary="Custom Meal Order"
-                            secondary="mix it up"
-                          />
-                        </ListItem>
-                      </List>
-                    </Paper>
-                  ) : null}
-                </Grid>
-                <Grid item md={4}>
-                  {parentState.customMeal ? (
-                    <Paper className={classes.paper}>
-                      <Typography variant="subheading">
-                        Custom Order:
-                      </Typography>
-                      <TextField
-                        autoFocus
-                        margin="dense"
-                        id="customMeal"
-                        label="Custom Meal Order"
-                        type="text"
-                        multiline
-                        rowsMax={6}
-                        fullWidth
-                        onChange={e =>
-                          parentActions.selection('selection', e.target.value)
-                        }
-                      />
-                    </Paper>
-                  ) : null}
-                </Grid>
-                <Grid item md={4}>
-                  {parentState.selection ? (
-                    <Paper className={classes.paper}>
-                      <List>
-                        <ListItem>
-                          <ListItemIcon>
-                            <Check />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={parentState.selection}
-                            secondary="Current Selection"
-                          />
-                        </ListItem>
-                      </List>
-                    </Paper>
-                  ) : null}
-                </Grid>
-                <Grid item md={4}>
-                  <LunchList
-                    meals={parentState.mealHistory.slice(0, 5)}
-                    parentActions={parentActions}
-                    title="last 5 meals"
-                  />
-                </Grid>
-                <Grid item md={4}>
-                  <LunchList
-                    meals={parentState.mealHistory.slice(0, 5)}
-                    parentActions={parentActions}
-                    title="todays' trends"
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-          </div>
-          <div className={classes.footer}>
-            <Paper>
-              <Typography variant="subheading">
-                Actions: Paging to and from Google Sheets
-              </Typography>
-            </Paper>
-          </div>
-        </div>
-      </Dialog>
+      <LunchContext.Consumer>
+        {({ state, actions, person }) => (
+          <Dialog
+            fullScreen
+            open={state.open}
+            onClose={actions.close}
+            TransitionComponent={SlideUp}
+          >
+            <AppBar className={classes.appBar}>
+              <DialogToolBar
+                actions={actions}
+                classes={classes}
+                state={state}
+              />
+            </AppBar>
+            <div className={classes.container}>
+              {state.fetching ? <Loader /> : null}
+              <div className={classes.header}>
+                <DialogActions />
+              </div>
+              <div className={classes.content}>
+                <DialogContent
+                  classes={classes}
+                  state={state}
+                  person={person}
+                  actions={actions}
+                />
+              </div>
+              <div className={classes.footer} />
+            </div>
+          </Dialog>
+        )}
+      </LunchContext.Consumer>
     </div>
   );
 }

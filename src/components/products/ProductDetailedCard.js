@@ -40,7 +40,7 @@ const styles = theme => ({
 
 class ProductDetailedCard extends PureComponent {
   render() {
-    const { classes, theme, product } = this.props;
+    const { classes, product } = this.props;
 
     return (
       <div>

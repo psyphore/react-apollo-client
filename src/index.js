@@ -5,7 +5,7 @@ import { ApolloProvider } from 'react-apollo';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { createClient, Auth } from './services/';
-import { AppContext } from './HOC/appContext';
+import { AppContext } from './HOC';
 
 const client = createClient(
   process.env.REACT_APP_GRAPHQL_URI,
