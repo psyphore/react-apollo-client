@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { object, string } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -16,21 +16,15 @@ const styles = theme => ({
   }
 });
 
-function CircularIndeterminate(props) {
-  const { classes} = props;
-  return (
-    <div className={classes.root}>
-      <CircularProgress
-          className={classes.progress}
-          thickness={7}
-        />
-    </div>
-  );
-}
+const CircularIndeterminate = ({ classes }) => (
+  <div className={classes.root}>
+    <CircularProgress className={classes.progress} thickness={7} />
+  </div>
+);
 
 CircularIndeterminate.propTypes = {
-  classes: PropTypes.object.isRequired,
-  type: PropTypes.string
+  classes: object.isRequired,
+  type: string
 };
 
 export default withStyles(styles)(CircularIndeterminate);

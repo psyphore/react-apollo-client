@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Fragment } from 'react';
+import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -25,67 +25,62 @@ const styles = {
   }
 };
 
-function FullScreenDialog(props) {
-  const { classes } = props;
-
-  return (
-    <div>
-      <LeaveContext.Consumer>
-        {({ state, actions, person }) => (
-          <Dialog
-            fullScreen
-            open={state.open}
-            onClose={actions.handleClose}
-            TransitionComponent={SlideUp}
-          >
-            <AppBar className={classes.appBar}>
-              <Toolbar>
-                <IconButton
-                  color="inherit"
-                  onClick={actions.handleClose}
-                  aria-label="Close"
-                >
-                  <CloseIcon />
-                </IconButton>
-                <Typography
-                  variant="title"
-                  color="inherit"
-                  className={classes.flex}
-                >
-                  {person
-                    ? person.firstname + ' ' + person.lastname
-                    : 'no person loaded'}
-                </Typography>
-              </Toolbar>
-            </AppBar>
-            <List>
-              <ListItem>
-                <ListItemText
-                  primary="email"
-                  secondary={person ? person.email : ''}
-                />
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemText
-                  primary="mobile"
-                  secondary={person ? person.mobile : ''}
-                />
-              </ListItem>
-              <ListItem>
-                {person? (<Link to={'/person/' + person.id}>View</Link>):null}
-              </ListItem>
-            </List>
-          </Dialog>
-        )}
-      </LeaveContext.Consumer>
-    </div>
-  );
-}
+const FullScreenDialog = ({ classes }) => (
+  <Fragment>
+    <LeaveContext.Consumer>
+      {({ state, actions, person }) => (
+        <Dialog
+          fullScreen
+          open={state.open}
+          onClose={actions.handleClose}
+          TransitionComponent={SlideUp}
+        >
+          <AppBar className={classes.appBar}>
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                onClick={actions.handleClose}
+                aria-label="Close"
+              >
+                <CloseIcon />
+              </IconButton>
+              <Typography
+                variant="title"
+                color="inherit"
+                className={classes.flex}
+              >
+                {person
+                  ? person.firstname + ' ' + person.lastname
+                  : 'no person loaded'}
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <List>
+            <ListItem>
+              <ListItemText
+                primary="email"
+                secondary={person ? person.email : ''}
+              />
+            </ListItem>
+            <Divider />
+            <ListItem>
+              <ListItemText
+                primary="mobile"
+                secondary={person ? person.mobile : ''}
+              />
+            </ListItem>
+            <ListItem>
+              {person ? <Link to={'/person/' + person.id}>View</Link> : null}
+            </ListItem>
+          </List>
+        </Dialog>
+      )}
+    </LeaveContext.Consumer>
+  </Fragment>
+);
 
 FullScreenDialog.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: object.isRequired
 };
 
-const LeaveDialog = withStyles(styles)(FullScreenDialog);
-export default LeaveDialog;
+export default withStyles(styles)(FullScreenDialog);

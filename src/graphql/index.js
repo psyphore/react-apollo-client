@@ -3,13 +3,23 @@ import {
   getPeopleQuery,
   getPersonQuery,
   getMeQuery,
-  getMyAvatarQuery
+  getMyAvatarQuery,
+  getMyNotificationsQuery
 } from './queries/person';
 import { getProductsQuery, getProductQuery } from './queries/product';
 import { searchQuery } from './queries/search';
-import { serverHits, notifications } from './subscriptions/subs';
+import {
+  serverHits,
+  notifications,
+  getMyNotifications
+} from './subscriptions/subs';
 import { leaveNotification } from './subscriptions/leave';
-import { todaysMeals } from './queries/lunch';
+import {
+  todaysMeals,
+  mealTrends,
+  myMealHistory,
+  recomendedMeals
+} from './queries/lunch';
 import { placeOrder } from './mutiations/order-lunch';
 import { supportRegister, currentSupportPerson } from './queries/support';
 
@@ -29,5 +39,10 @@ export {
   supportRegister,
   currentSupportPerson,
   getMeQuery,
-  getMyAvatarQuery
+  getMyAvatarQuery,
+  mealTrends,
+  myMealHistory,
+  recomendedMeals,
+  getMyNotificationsQuery,
+  getMyNotifications
 };

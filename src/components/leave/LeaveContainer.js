@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 
 import { withApollo } from 'react-apollo';
 import * as moment from 'moment';
@@ -41,7 +41,7 @@ class LeaveContainer extends PureComponent {
     };
 
     return (
-      <div>
+      <Fragment>
         <PersonContext.Consumer>
           {state => (
             <div>
@@ -61,7 +61,7 @@ class LeaveContainer extends PureComponent {
             </div>
           )}
         </PersonContext.Consumer>
-      </div>
+      </Fragment>
     );
   }
 }

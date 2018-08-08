@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
-export default function ErrorMessage(props) {
-  return <div>{JSON.stringify(props.error)}</div>;
-}
+const ErrorMessage = ({ error }) => (
+  <Fragment>{JSON.stringify(error)}</Fragment>
+);
+export default ErrorMessage;

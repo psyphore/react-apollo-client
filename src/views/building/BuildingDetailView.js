@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { graphql } from 'react-apollo';
 
 import { getBuildingQuery } from '../../graphql';
@@ -6,24 +6,21 @@ import BuildingContainerComponent from '../../components/buildings/BuildingConta
 import { Loader, ErrorMessage } from '../../components';
 
 const options = {
-  options: props => ({
+  options: ({ match }) => ({
     variables: {
-      id: props.match.params.id
+      id: match.params.id
     }
   })
 };
 
-function BuildingView(props) {
-  const { data } = props;
-  return (
-    <div>
-      {data && data.loading ? <Loader /> : null}
-      {data && data.error ? <ErrorMessage error={data.error} /> : null}
-      {data && !data.loading && !data.error ? (
-        <BuildingContainerComponent buildings={[data.building]} />
-      ) : null}
-    </div>
-  );
-}
+const BuildingView = ({ data }) => (
+  <Fragment>
+    {data && data.loading ? <Loader /> : null}
+    {data && data.error ? <ErrorMessage error={data.error} /> : null}
+    {data && !data.loading && !data.error ? (
+      <BuildingContainerComponent buildings={[data.building]} />
+    ) : null}
+  </Fragment>
+);
 
 export default graphql(getBuildingQuery, options)(BuildingView);

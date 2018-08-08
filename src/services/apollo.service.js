@@ -6,6 +6,7 @@ import { ApolloLink } from 'apollo-link';
 import { RetryLink } from 'apollo-link-retry';
 import { withClientState } from 'apollo-link-state';
 import { WebSocketLink } from 'apollo-link-ws';
+// import { SubscriptionClient } from 'subscriptions-transport-ws';
 
 import Auth from './security.service';
 
@@ -17,6 +18,13 @@ export const createClient = (uri, ws) => {
   const cache = new InMemoryCache();
 
   const stateLink = withClientState({ cache, defaults: defaultState });
+
+  // const wsClient = new SubscriptionClient(ws, {
+  //   reconnect: true,
+  //   connectionParams: () => ({ authToken: auth.getAuthorizationHeader() })
+  // });
+
+  // const wsLink = new WebSocketLink(wsClient);
 
   const wsLink = new WebSocketLink({
     uri: ws,

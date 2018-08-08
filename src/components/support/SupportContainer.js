@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { withApollo } from 'react-apollo';
 
 import { currentSupportPerson } from '../../graphql';
@@ -11,7 +11,7 @@ class SupportContainer extends PureComponent {
     this.state = {
       selectedValue: null,
       open: false,
-      fetching: true,
+      fetching: false,
       extensions: null
     };
 
@@ -64,15 +64,16 @@ class SupportContainer extends PureComponent {
   }
 
   render() {
+    const { fetching } = this.state;
     return (
-      <div>
-        <SupportButton clickHandler={this.handleClickOpen} />
+      <Fragment>
+        <SupportButton clickHandler={this.handleClickOpen} loading={fetching} />
         <SupportDialog
-          selectedValue={this.state.selectedValue || null}
           open={this.state.open}
           onClose={this.handleClose}
+          selectedValue={this.state.selectedValue || null}
         />
-      </div>
+      </Fragment>
     );
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -12,7 +12,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import WorkIcon from '@material-ui/icons/Work';
-import { LocationCitySharp } from '@material-ui/icons/';
+import LocationCitySharp from '@material-ui/icons/LocationCitySharp';
 
 import PersonCardImage from './PersonCardImage';
 
@@ -30,68 +30,64 @@ const styles = {
   }
 };
 
-function PersonCard(props) {
-  const { classes, detail } = props;
-
-  return (
-    <div className={classes.root}>
-      <Card className={classes.card}>
-        <PersonCardImage detail={detail} mediaClass={classes.media} />
-        <CardContent>
-          <Typography gutterBottom variant="headline" component="h1">
-            {detail.firstname + ' ' + detail.lastname}
-          </Typography>
-          <List>
-            {detail.title ? (
-              <ListItem>
-                <Avatar>
-                  <WorkIcon />
-                </Avatar>
-                <ListItemText primary={detail.title} />
-              </ListItem>
-            ) : null}
-            {detail.email ? (
-              <ListItem>
-                <Avatar>
-                  <Email />
-                </Avatar>
-                <ListItemText primary={detail.email} />
-              </ListItem>
-            ) : null}
-            {detail.mobile || detail.mobile === '0' ? (
-              <ListItem>
-                <Avatar>
-                  <Phone />
-                </Avatar>
-                <ListItemText primary={detail.mobile} />
-              </ListItem>
-            ) : null}
-            {detail.bio ? (
-              <ListItem>
-                <Avatar>
-                  <Details />
-                </Avatar>
-                <ListItemText primary={detail.bio} />
-              </ListItem>
-            ) : null}
-            {detail.building.map((building, index) => (
-              <ListItem key={index}>
-                <Avatar>
-                  <LocationCitySharp />
-                </Avatar>
-                <ListItemText primary={building.name} />
-              </ListItem>
-            ))}
-          </List>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+const PersonCard = ({ classes, detail }) => (
+  <div className={classes.root}>
+    <Card className={classes.card}>
+      <PersonCardImage detail={detail} mediaClass={classes.media} />
+      <CardContent>
+        <Typography gutterBottom variant="headline" component="h1">
+          {detail.firstname + ' ' + detail.lastname}
+        </Typography>
+        <List>
+          {detail.title ? (
+            <ListItem>
+              <Avatar>
+                <WorkIcon />
+              </Avatar>
+              <ListItemText primary={detail.title} />
+            </ListItem>
+          ) : null}
+          {detail.email ? (
+            <ListItem>
+              <Avatar>
+                <Email />
+              </Avatar>
+              <ListItemText primary={detail.email} />
+            </ListItem>
+          ) : null}
+          {detail.mobile || detail.mobile === '0' ? (
+            <ListItem>
+              <Avatar>
+                <Phone />
+              </Avatar>
+              <ListItemText primary={detail.mobile} />
+            </ListItem>
+          ) : null}
+          {detail.bio ? (
+            <ListItem>
+              <Avatar>
+                <Details />
+              </Avatar>
+              <ListItemText primary={detail.bio} />
+            </ListItem>
+          ) : null}
+          {detail.building.map((building, index) => (
+            <ListItem key={index}>
+              <Avatar>
+                <LocationCitySharp />
+              </Avatar>
+              <ListItemText primary={building.name} />
+            </ListItem>
+          ))}
+        </List>
+      </CardContent>
+    </Card>
+  </div>
+);
 
 PersonCard.propTypes = {
-  classes: PropTypes.object.isRequired,
-  detail: PropTypes.object.isRequired
+  classes: object.isRequired,
+  detail: object.isRequired
 };
 
 const Person = withStyles(styles)(PersonCard);

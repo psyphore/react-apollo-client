@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { object, arrayOf } from 'prop-types';
 import { withStyles } from '@material-ui/core';
 
 import PersonSummaryCard from './PersonSummaryCard';
@@ -18,21 +18,17 @@ const styles = theme => ({
   }
 });
 
-function PeopleContainer(props) {
-  const { classes, people } = props;
-  return (
-    <div className={classes.root}>
-      {people.map(person => (
-        <PersonSummaryCard key={person.id} person={person} />
-      ))}
-    </div>
-  );
-}
+const PeopleContainer = ({ classes, people }) => (
+  <div className={classes.root}>
+    {people.map(person => (
+      <PersonSummaryCard key={person.id} person={person} />
+    ))}
+  </div>
+);
 
 PeopleContainer.propTypes = {
-  classes: PropTypes.object.isRequired,
-  people: PropTypes.arrayOf(PropTypes.object).isRequired
+  classes: object.isRequired,
+  people: arrayOf(object).isRequired
 };
 
-const PeopleContainerComponent = withStyles(styles)(PeopleContainer);
-export default PeopleContainerComponent;
+export default withStyles(styles)(PeopleContainer);

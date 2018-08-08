@@ -1,30 +1,24 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Subscription } from 'react-apollo';
-import { withStyles } from '@material-ui/core/styles'
 
-import { lunchNotification } from '../../graphql/subscriptions/lunch'
+import { lunchNotification } from '../../graphql/subscriptions/lunch';
 
-const styles = {}
+export default props => (
+  <Fragment>
+    <Subscription subscription={lunchNotification} variables={props}>
+      {({ data, loading, error }) => (
+        <Fragment>
+          {loading ? <span>Loading</span> : null}
+          {error ? <span>{JSON.stringify(error)}</span> : null}
+          {data && data.notifications ? (
+            <span>{JSON.stringify(data)}</span>
+          ) : null}
+        </Fragment>
+      )}
+    </Subscription>
+  </Fragment>
+);
 
-function Notes(props) {
-  return (
-    <div>
-      <Subscription subscription={lunchNotification} variables={props}>
-        {({ data, loading, error }) => (
-          <div>
-            {loading ? <span>Loading</span> : null}
-            {error ? <span>{JSON.stringify(error)}</span> : null}
-            {data && data.notifications ? (
-              <span>{JSON.stringify(data)}</span>
-            ) : null}
-          </div>
-        )}
-      </Subscription>
-    </div>
-  );
-}
-
-export default withStyles(styles)(Notes);
 /**
  * lunchNotification will have the following shape
  * @example```

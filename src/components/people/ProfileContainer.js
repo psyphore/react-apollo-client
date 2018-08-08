@@ -1,5 +1,5 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent, Fragment } from 'react';
+import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -48,7 +48,7 @@ class ProfileContainer extends PureComponent {
     const { classes, person, auth } = this.props;
 
     return (
-      <div>
+      <Fragment>
         <PersonContext.Provider
           value={{ actions: {}, state: { person, auth } }}
         >
@@ -113,26 +113,14 @@ class ProfileContainer extends PureComponent {
             </Grid>
           </Grid>
         </PersonContext.Provider>
-      </div>
+      </Fragment>
     );
   }
 }
 
 ProfileContainer.propTypes = {
-  classes: PropTypes.object.isRequired,
-  person: PropTypes.object.isRequired
+  classes: object.isRequired,
+  person: object.isRequired
 };
 
 export default withStyles(styles)(ProfileContainer);
-/**
- <Paper className={classes.paper}>
-                <div>
-                  {(!person.line || person.line.length === 0) &&
-                  (!person.team || person.team === 0) ? (
-                    <Typography variant="button" gutterBottom>
-                      No Associations
-                    </Typography>
-                  ) : null}
-                </div>
-              </Paper>
- */

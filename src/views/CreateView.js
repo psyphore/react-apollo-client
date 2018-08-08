@@ -32,7 +32,7 @@ class CreateView extends React.PureComponent {
 
   render() {
     return (
-      <div>
+      <Fragment>
         <h1>Create</h1>
         <form
           ref={ref => (this.form = ref)}
@@ -41,7 +41,7 @@ class CreateView extends React.PureComponent {
           <textarea name="message" />
           <button type="submit">Submit</button>
         </form>
-      </div>
+      </Fragment>
     );
   }
 }

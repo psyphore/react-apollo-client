@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-const getPeopleQuery = gql`
+export const getPeopleQuery = gql`
   query($first: Int, $offset: Int) {
     people(first: $first, offset: $offset) {
       ...personFields
@@ -16,7 +16,7 @@ const getPeopleQuery = gql`
   }
 `;
 
-const getPersonQuery = gql`
+export const getPersonQuery = gql`
   query($id: ID!) {
     person(id: $id) {
       ...personFields
@@ -75,7 +75,7 @@ const getPersonQuery = gql`
   }
 `;
 
-const getMeQuery = gql`
+export const getMeQuery = gql`
   query {
     me {
       ...personFields
@@ -143,7 +143,7 @@ const getMeQuery = gql`
   }
 `;
 
-const getMyAvatarQuery = gql`
+export const getMyAvatarQuery = gql`
   query {
     me {
       id
@@ -154,4 +154,12 @@ const getMyAvatarQuery = gql`
   }
 `;
 
-export { getPeopleQuery, getPersonQuery, getMeQuery, getMyAvatarQuery };
+export const getMyNotificationsQuery = gql`
+  query($id: ID) {
+    myNotifications(id: $id) {
+      id
+      subject
+      body
+    }
+  }
+`;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { graphql } from 'react-apollo';
 
 import { getPeopleQuery } from '../../graphql';
@@ -14,17 +14,14 @@ const queryOptions = {
   })
 };
 
-function PeepsView(props) {
-  const { data } = props;
-  return (
-    <div>
-      {data && data.loading ? <Loader /> : null}
-      {data && data.error ? <ErrorMessage error={data.error} /> : null}
-      {data && !data.loading && !data.error ? (
-        <PeopleContainer people={data.people} />
-      ) : null}
-    </div>
-  );
-}
+const PeepsView = ({ data }) => (
+  <Fragment>
+    {data && data.loading ? <Loader /> : null}
+    {data && data.error ? <ErrorMessage error={data.error} /> : null}
+    {data && !data.loading && !data.error ? (
+      <PeopleContainer people={data.people} />
+    ) : null}
+  </Fragment>
+);
 
 export default graphql(getPeopleQuery, queryOptions)(PeepsView);

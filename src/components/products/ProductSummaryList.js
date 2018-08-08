@@ -21,28 +21,25 @@ const styles = theme => ({
   }
 });
 
-function ProductSummaryList(props) {
-  const { title, products, classes } = props;
-  return (
-    <div className={classes.root}>
-      <div className={classes.actionPaper}>
-        <Typography variant="title" gutterBottom>
-          {title}
-        </Typography>
-        <Divider />
-      </div>
-      <List>
-        {products.map(product => (
-          <ListItem key={product.id}>
-            <Avatar>
-              <WorkIcon />
-            </Avatar>
-            <ListItemText primary={product.name} />
-          </ListItem>
-        ))}
-      </List>
+const ProductSummaryList = ({ title, products, classes }) => (
+  <div className={classes.root}>
+    <div className={classes.actionPaper}>
+      <Typography variant="title" gutterBottom>
+        {title}
+      </Typography>
+      <Divider />
     </div>
-  );
-}
+    <List>
+      {products.map(product => (
+        <ListItem key={product.id}>
+          <Avatar>
+            <WorkIcon />
+          </Avatar>
+          <ListItemText primary={product.name} />
+        </ListItem>
+      ))}
+    </List>
+  </div>
+);
 
 export default withStyles(styles)(ProductSummaryList);

@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Fragment } from 'react';
+import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
@@ -23,34 +23,30 @@ const styles = theme => ({
   }
 });
 
-function PersonChip(props) {
-  const { classes, detail } = props;
-  return (
-    <div>
-      <Link to={'/person/' + detail.id} style={{ textDecoration: 'none' }}>
-        <Chip
-          avatar={
-            detail.avatar ? (
-              <Avatar size={classes.size} src={baseUrl + detail.avatar} />
-            ) : (
-              <Avatar sizes={classes.size}>
-                {detail.firstname.substring(0, 1) +
-                  detail.lastname.substring(0, 1)}
-              </Avatar>
-            )
-          }
-          label={detail.firstname + ' ' + detail.lastname}
-          className={classes.chip}
-        />
-      </Link>
-    </div>
-  );
-}
+const PersonChip = ({ classes, detail }) => (
+  <Fragment>
+    <Link to={'/person/' + detail.id} style={{ textDecoration: 'none' }}>
+      <Chip
+        avatar={
+          detail.avatar ? (
+            <Avatar size={classes.size} src={baseUrl + detail.avatar} />
+          ) : (
+            <Avatar sizes={classes.size}>
+              {detail.firstname.substring(0, 1) +
+                detail.lastname.substring(0, 1)}
+            </Avatar>
+          )
+        }
+        label={detail.firstname + ' ' + detail.lastname}
+        className={classes.chip}
+      />
+    </Link>
+  </Fragment>
+);
 
 PersonChip.propTypes = {
-  detail: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired
+  detail: object.isRequired,
+  classes: object.isRequired
 };
 
-const PersonC = withStyles(styles)(PersonChip);
-export default PersonC;
+export default withStyles(styles)(PersonChip);

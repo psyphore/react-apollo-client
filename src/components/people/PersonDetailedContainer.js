@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Fragment } from 'react';
+import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -35,70 +35,66 @@ const styles = theme => ({
   }
 });
 
-function PersonDetailedContainer(props) {
-  const { classes, person } = props;
-
-  return (
-    <div>
-      <Grid container spacing={8} wrap="wrap" justify="space-evenly">
-        <Grid item md={3}>
-          <Person detail={person} />
-        </Grid>
-        <Grid item md={9}>
-          <Grid container spacing={8} wrap="wrap" justify="space-evenly">
-            {person.manager ? (
-              <Grid item md={3}>
-                <Paper className={classes.paper}>
-                  <Team
-                    title="Manager"
-                    collection={[person.manager]}
-                    classes={classes}
-                  />
-                </Paper>
-              </Grid>
-            ) : null}
-            {person.line && person.line.length !== 0 ? (
-              <Grid item md={3}>
-                <Paper className={classes.paper}>
-                  <Team
-                    title="Reporting Line"
-                    collection={person.line}
-                    classes={classes}
-                  />
-                </Paper>
-              </Grid>
-            ) : null}
-            {person.team && person.team.length !== 0 ? (
-              <Grid item md={3}>
-                <Paper className={classes.paper}>
-                  <Team
-                    title="My Team"
-                    collection={person.team}
-                    classes={classes}
-                  />
-                </Paper>
-              </Grid>
-            ) : null}
-            {person.team && person.team.length !== 0 ? (
-              <Grid item md={3}>
-                <Paper className={classes.paper}>
-                  <ProductSummaryList
-                    products={person.products}
-                    title="My Products"
-                  />
-                </Paper>
-              </Grid>
-            ) : null}
-          </Grid>
+const PersonDetailedContainer = ({ classes, person }) => (
+  <Fragment>
+    <Grid container spacing={8} wrap="wrap" justify="space-evenly">
+      <Grid item md={3}>
+        <Person detail={person} />
+      </Grid>
+      <Grid item md={9}>
+        <Grid container spacing={8} wrap="wrap" justify="space-evenly">
+          {person.manager ? (
+            <Grid item md={3}>
+              <Paper className={classes.paper}>
+                <Team
+                  title="Manager"
+                  collection={[person.manager]}
+                  classes={classes}
+                />
+              </Paper>
+            </Grid>
+          ) : null}
+          {person.line && person.line.length !== 0 ? (
+            <Grid item md={3}>
+              <Paper className={classes.paper}>
+                <Team
+                  title="Reporting Line"
+                  collection={person.line}
+                  classes={classes}
+                />
+              </Paper>
+            </Grid>
+          ) : null}
+          {person.team && person.team.length !== 0 ? (
+            <Grid item md={3}>
+              <Paper className={classes.paper}>
+                <Team
+                  title="My Team"
+                  collection={person.team}
+                  classes={classes}
+                />
+              </Paper>
+            </Grid>
+          ) : null}
+          {person.team && person.team.length !== 0 ? (
+            <Grid item md={3}>
+              <Paper className={classes.paper}>
+                <ProductSummaryList
+                  products={person.products}
+                  title="My Products"
+                />
+              </Paper>
+            </Grid>
+          ) : null}
         </Grid>
       </Grid>
-    </div>
-  );
-}
+    </Grid>
+  </Fragment>
+);
 
 PersonDetailedContainer.propTypes = {
-  classes: PropTypes.object.isRequired,
-  person: PropTypes.object.isRequired
+  classes: object.isRequired,
+  person: object.isRequired
 };
 
 export default withStyles(styles)(PersonDetailedContainer);

@@ -1,9 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { bool, string, func, number, object } from 'prop-types';
 import { Snackbar } from '@material-ui/core';
 
-const SnackBar = props => {
-  const { open, message, duration, anchor, closeHandler } = props;
+const SnackBar = ({ open, message, duration, anchor, closeHandler }) => {
   const ao = anchor || {
       vertical: 'bottom',
       horizontal: 'left'
@@ -29,11 +28,11 @@ const SnackBar = props => {
 };
 
 SnackBar.propTypes = {
-  open: PropTypes.bool.isRequired,
-  message: PropTypes.string.isRequired,
-  closeHandler: PropTypes.func.isRequired,
-  duration: PropTypes.number,
-  anchor: PropTypes.object
+  open: bool.isRequired,
+  message: string.isRequired,
+  closeHandler: func.isRequired,
+  duration: number,
+  anchor: object
 };
 
 export default SnackBar;

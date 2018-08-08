@@ -19,3 +19,13 @@ export const serverHits = gql`
     }
   }
 `;
+
+export const getMyNotifications = gql`
+  subscription($id: ID) {
+    myNotifications(id: $id) {
+      id
+      subject
+      body
+    }
+  }
+`;

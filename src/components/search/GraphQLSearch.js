@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { withApollo } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -39,16 +39,61 @@ const styles = theme => ({
   }
 });
 
+const SearchInput = ({
+  classes: { paper },
+  actions: { search, change, clear },
+  state: { fetching, query }
+}) => (
+  <div className={paper}>
+    <Grid container justify="center" wrap="wrap" spacing={8}>
+      <Grid item xs={8}>
+        <TextField
+          autoFocus
+          disabled={fetching}
+          fullWidth
+          helperText="Search for person via title, first name, last name, branch name, branch address, product name"
+          id="full-width-search"
+          label="Search"
+          margin="normal"
+          onChange={e => change(e.target.value)}
+          onKeyPress={e => (e.key === 'Enter' ? search() : null)}
+          onFocusCapture={() => clear()}
+          value={query}
+        />
+      </Grid>
+      <Grid item xs={2}>
+        <Button
+          aria-label="search"
+          color="primary"
+          disabled={fetching}
+          onClick={search}
+          variant="fab"
+        >
+          <Search />
+        </Button>
+      </Grid>
+    </Grid>
+  </div>
+);
+
 class GraphQLSearch extends PureComponent {
-  state = {
-    query: '',
-    first: 100,
-    offset: 0,
-    result: null,
-    count: 0,
-    fetching: false,
-    extensions: null
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: '',
+      first: 100,
+      offset: 0,
+      result: null,
+      count: 0,
+      fetching: false,
+      extensions: null
+    };
+
+    this._reset = this._reset.bind(this);
+    this._executeSearch = this._executeSearch.bind(this);
+    this._handleInputChange = this._handleInputChange.bind(this);
+    this._handleInputClear = this._handleInputClear.bind(this);
+  }
 
   _reset = () => {
     this.setState({
@@ -100,45 +145,39 @@ class GraphQLSearch extends PureComponent {
     });
   };
 
+  _handleInputChange = value => {
+    this.setState({ query: value });
+  };
+
+  _handleInputClear = () => {
+    this.setState({ query: '' });
+  };
+
   render() {
     const { classes } = this.props;
-    const { query, errors, fetching, count, extensions } = this.state;
+    const { errors, fetching, count, result } = this.state;
+    const actions = {
+      reset: this._reset,
+      search: this._executeSearch,
+      change: this._handleInputChange,
+      clear: this._handleInputClear
+    };
 
     return (
-      <div>
-        <Grid container className={classes.root} spacing={8}>
+      <Fragment>
+        <Grid
+          container
+          className={classes.root}
+          spacing={8}
+          justify="center"
+          wrap="wrap"
+        >
           <Grid item xs={12}>
-            <div className={classes.paper}>
-              <Grid container justify="center" spacing={8}>
-                <Grid item xs={8}>
-                  <TextField
-                    id="full-width-search"
-                    label="Search"
-                    fullWidth
-                    helperText="Search for person via title, first name, last name, branch name, branch address, product name"
-                    margin="normal"
-                    onChange={e => this.setState({ query: e.target.value })}
-                    onKeyPress={e =>
-                      e.key === 'Enter' ? this._executeSearch() : null
-                    }
-                    onFocusCapture={() => this.setState({ query: '' })}
-                    disabled={fetching}
-                    value={query}
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <Button
-                    variant="fab"
-                    color="primary"
-                    aria-label="search"
-                    disabled={fetching}
-                    onClick={this._executeSearch}
-                  >
-                    <Search />
-                  </Button>
-                </Grid>
-              </Grid>
-            </div>
+            <SearchInput
+              actions={actions}
+              classes={classes}
+              state={this.state}
+            />
           </Grid>
 
           <Grid item md={12}>
@@ -153,21 +192,12 @@ class GraphQLSearch extends PureComponent {
                 <span />
               </Badge>
             ) : null}
-            {extensions ? (
-              <Badge
-                color="primary"
-                badgeContent={extensions.duration}
-                className={classes.badge.margin}
-              >
-                <span />
-              </Badge>
-            ) : null}
           </Grid>
 
           <Grid item md={12}>
-            {this.state.count !== 0 ? (
+            {result && result.length ? (
               <div className={classes.results}>
-                {this.state.result.map(res => (
+                {result.map(res => (
                   <Link
                     key={res.id}
                     to={'/person/' + res.id}
@@ -180,7 +210,7 @@ class GraphQLSearch extends PureComponent {
             ) : null}
           </Grid>
         </Grid>
-      </div>
+      </Fragment>
     );
   }
 }

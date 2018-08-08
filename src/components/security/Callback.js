@@ -4,14 +4,15 @@ import { Auth } from '../../services';
 
 const auth = new Auth();
 
-class Callback extends Component {
-  handleVerification = (location) => {
-    if (/access_token|id_token|error/.test(location.hash)) {
+export default class Callback extends Component {
+  handleVerification = ({ hash }) => {
+    if (/access_token|id_token|error/.test(hash)) {
       auth.handleAuthentication();
     }
   };
+
   componentDidMount() {
-    const { location } = this.props
+    const { location } = this.props;
     this.handleVerification(location);
   }
 
@@ -19,5 +20,3 @@ class Callback extends Component {
     return <Loader />;
   }
 }
-
-export default Callback;

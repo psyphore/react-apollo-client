@@ -2,15 +2,15 @@ import React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 
-export default props => {
+export default ({ timeout, title, placement, children }) => {
   return (
     <Tooltip
       TransitionComponent={Fade}
-      TransitionProps={{ timeout: props.timeout || 600 }}
-      title={props.title}
-      placement={props.placement}
+      TransitionProps={{ timeout: timeout || 600 }}
+      title={title}
+      placement={placement}
     >
-      {props.children}
+      {children}
     </Tooltip>
   );
 };

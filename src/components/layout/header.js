@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { object, string } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
@@ -29,29 +29,27 @@ const styles = {
   }
 };
 
-function AppHeaderBar(props) {
-  return (
-    <div className={props.classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <div className={props.classes.flex}>
-            <Button component={NavLink} to="/">
-              {props.title}
-            </Button>
-          </div>
-          <div className={props.classes.row}>
-            <Support />
-            <ProfileButton />
-          </div>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
-}
+const AppHeaderBar = ({ classes, title }) => (
+  <div className={classes.root}>
+    <AppBar position="static">
+      <Toolbar>
+        <div className={classes.flex}>
+          <Button component={NavLink} to="/">
+            {title}
+          </Button>
+        </div>
+        <div className={classes.row}>
+          <Support />
+          <ProfileButton />
+        </div>
+      </Toolbar>
+    </AppBar>
+  </div>
+);
 
 AppHeaderBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired
+  classes: object.isRequired,
+  title: string.isRequired
 };
 
 export default withStyles(styles)(AppHeaderBar);

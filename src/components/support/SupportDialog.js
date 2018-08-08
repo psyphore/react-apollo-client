@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import { object, func } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
@@ -41,13 +41,11 @@ class SupportDialog extends PureComponent {
     const { classes, onClose, selectedValue, ...other } = this.props;
     return (
       <Dialog
+        aria-labelledby="support-dialog"
         onClose={this.handleClose}
-        aria-labelledby="simple-dialog-title"
         {...other}
       >
-        <DialogTitle id="simple-dialog-title">
-          2nd Line Support Person
-        </DialogTitle>
+        <DialogTitle id="support-dialog">2nd Line Support Person</DialogTitle>
         <div>
           {selectedValue && selectedValue.person ? (
             <div onClick={() => this.handleListItemClick(selectedValue)}>
@@ -61,9 +59,9 @@ class SupportDialog extends PureComponent {
 }
 
 SupportDialog.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onClose: PropTypes.func,
-  selectedValue: PropTypes.object
+  classes: object.isRequired,
+  onClose: func,
+  selectedValue: object
 };
 
 export default withStyles(styles)(SupportDialog);

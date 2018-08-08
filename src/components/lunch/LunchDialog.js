@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Fragment } from 'react';
+import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -16,6 +16,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
 import Check from '@material-ui/icons/Check';
+import Grid from '@material-ui/core/Grid';
 
 import SlideUp from '../transitions/SlideUp';
 import { Loader } from '../';
@@ -84,169 +85,163 @@ const styles = theme => ({
   }
 });
 
-function DialogToolBar(props) {
-  const { actions, classes, state } = props;
-  return (
-    <Toolbar>
-      <IconButton color="inherit" aria-label="Close" onClick={actions.close}>
-        <CloseIcon />
-      </IconButton>
-      <Typography variant="title" color="inherit" className={classes.flex}>
-        {`${
-          state.today ? state.today.format('DD MMMM YYYY') + ' -' : ''
-        } Place Your Lunch Order`}
-      </Typography>
-      <Button
-        variant="fab"
-        color="primary"
-        aria-label="Lunch"
-        onClick={actions.placeOrder}
-      >
-        <AddIcon />
-      </Button>
-    </Toolbar>
-  );
-}
+const DialogToolBar = ({ actions, classes, state }) => (
+  <Toolbar>
+    <IconButton color="inherit" aria-label="Close" onClick={actions.close}>
+      <CloseIcon />
+    </IconButton>
+    <Typography variant="title" color="inherit" className={classes.flex}>
+      {`${
+        state.today ? state.today.format('DD MMMM YYYY') + ' -' : ''
+      } Place Your Lunch Order`}
+    </Typography>
+    <Button
+      aria-label="Lunch"
+      color="primary"
+      onClick={actions.placeOrder}
+      variant="fab"
+    >
+      <AddIcon />
+    </Button>
+  </Toolbar>
+);
 
-function DialogActions(props) {
-  return (
-    <Paper>
-      <Typography variant="subheading">
-        Actions: Paging to and from Google Sheets
-      </Typography>
-    </Paper>
-  );
-}
+const DialogActions = ({ nextDay, prevDay }) => (
+  <Paper>
+    <Typography variant="subheading">
+      Actions: Paging to and from Google Sheets
+    </Typography>
+    <Grid container spacing={8}>
+      <Grid item md={12}>
+        <Grid item md={6}>
+          <Button onClick={() => prevDay()}>Previous Day</Button>
+        </Grid>
+        <Grid item md={6}>
+          <Button onClick={() => nextDay()}>Next Day</Button>
+        </Grid>
+      </Grid>
+    </Grid>
+  </Paper>
+);
 
-function DialogSelection(props) {
-  const { classes, state } = props;
-  return (
-    <div>
-      {state.selection ? (
-        <Paper className={classes.contentOption}>
-          <List>
-            <ListItem>
-              <ListItemIcon>
-                <Check />
-              </ListItemIcon>
-              <ListItemText
-                primary={state.selection}
-                secondary="Current Selection"
-              />
-            </ListItem>
-          </List>
-        </Paper>
-      ) : null}
-    </div>
-  );
-}
+const DialogSelection = ({ classes, state }) => (
+  <Fragment>
+    {state.selection ? (
+      <Paper className={classes.contentOption}>
+        <List>
+          <ListItem>
+            <ListItemIcon>
+              <Check />
+            </ListItemIcon>
+            <ListItemText
+              primary={state.selection}
+              secondary="Current Selection"
+            />
+          </ListItem>
+        </List>
+      </Paper>
+    ) : null}
+  </Fragment>
+);
 
-function DialogContent(props) {
-  const { classes, state, person, actions } = props;
+const DialogContent = ({ classes, state, actions }) => {
+  const { history, customMeal, trending, fetching, todaysOptions } = state;
   return (
     <div className={classes.contentContainer}>
-      <div>
-        {!state.fetching ? (
+      <Fragment>
+        {!fetching ? (
           <Paper className={classes.contentOption}>
             <LunchTodayList
-              meals={state.todaysOptions}
+              meals={todaysOptions}
               parentActions={actions}
               title="Todays' Meals"
             />
           </Paper>
         ) : null}
-      </div>
-      <div>
-        {state.customMeal ? (
+      </Fragment>
+      <Fragment>
+        {customMeal ? (
           <Paper className={classes.contentOption}>
             <Typography variant="subheading">Custom Order:</Typography>
             <TextField
               autoFocus
+              fullWidth
               margin="dense"
+              multiline
               id="customMeal"
               label="Custom Meal Order"
               type="text"
-              multiline
               rowsMax={6}
-              fullWidth
               onChange={e => actions.selection('selection', e.target.value)}
             />
           </Paper>
         ) : null}
         <DialogSelection classes={classes} state={state} />
-      </div>
-      <div>
-        {person && person.meals ? (
+      </Fragment>
+      <Fragment>
+        {history && history.length !== 0 ? (
           <Paper className={classes.contentOption}>
             <LunchList
-              meals={person.meals.slice(0, 5)}
+              meals={history}
               parentActions={actions}
-              title="my last 5 meals"
+              title={`My last ${history.length} meals`}
               type="history"
             />
           </Paper>
         ) : null}
-      </div>
-      <div>
-        {person && person.meals ? (
+      </Fragment>
+      <Fragment>
+        {trending && trending.length !== 0 ? (
           <Paper className={classes.contentOption}>
             <LunchList
-              meals={person.meals.slice(0, 5)}
+              meals={trending}
               parentActions={actions}
-              title="todays' trends"
+              title={`Todays' top ${trending.length} trends`}
               type="trend"
             />
           </Paper>
         ) : null}
-      </div>
+      </Fragment>
     </div>
   );
-}
+};
 
-function FullScreenDialog(props) {
-  const { classes } = props;
-
-  return (
-    <div>
-      <LunchContext.Consumer>
-        {({ state, actions, person }) => (
-          <Dialog
-            fullScreen
-            open={state.open}
-            onClose={actions.close}
-            TransitionComponent={SlideUp}
-          >
-            <AppBar className={classes.appBar}>
-              <DialogToolBar
+const FullScreenDialog = ({ classes }) => (
+  <Fragment>
+    <LunchContext.Consumer>
+      {({ state, actions, person }) => (
+        <Dialog
+          fullScreen
+          onClose={actions.close}
+          open={state.open}
+          TransitionComponent={SlideUp}
+        >
+          <AppBar className={classes.appBar}>
+            <DialogToolBar actions={actions} classes={classes} state={state} />
+          </AppBar>
+          <div className={classes.container}>
+            {state.fetching ? <Loader /> : null}
+            <div className={classes.header}>
+              <DialogActions {...actions} />
+            </div>
+            <div className={classes.content}>
+              <DialogContent
                 actions={actions}
                 classes={classes}
+                person={person}
                 state={state}
               />
-            </AppBar>
-            <div className={classes.container}>
-              {state.fetching ? <Loader /> : null}
-              <div className={classes.header}>
-                <DialogActions />
-              </div>
-              <div className={classes.content}>
-                <DialogContent
-                  classes={classes}
-                  state={state}
-                  person={person}
-                  actions={actions}
-                />
-              </div>
-              <div className={classes.footer} />
             </div>
-          </Dialog>
-        )}
-      </LunchContext.Consumer>
-    </div>
-  );
-}
+            <div className={classes.footer} />
+          </div>
+        </Dialog>
+      )}
+    </LunchContext.Consumer>
+  </Fragment>
+);
 
 FullScreenDialog.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: object.isRequired
 };
 
 export default withStyles(styles)(FullScreenDialog);

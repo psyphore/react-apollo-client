@@ -8,3 +8,30 @@ export const todaysMeals = gql`
     }
   }
 `;
+
+export const myMealHistory = gql`
+  query($first: Int, $offset: Int) {
+    lunchHistory(first: $first, offset: $offset) {
+      id
+      content
+      date
+    }
+  }
+`;
+
+export const mealTrends = gql`
+  query($first: Int, $offset: Int) {
+    meals(fist: $first, offset: $offset) {
+      hits
+      name
+    }
+  }
+`;
+
+export const recomendedMeals = gql`
+  query($first: Int, $offset: Int) {
+    meals(fist: $first, offset: $offset) {
+      name
+    }
+  }
+`;
