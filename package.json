@@ -31,9 +31,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prod":"npm run build && serve -s -p 3082 build -d -n"
   },
   "resolutions": {
     "graphql": "git://github.com/graphql/graphql-js.git#npm"
-  }
+  },
+  "homepage": "http://sipholpt:3082/"
 }

@@ -52,16 +52,12 @@ class LunchContainer extends PureComponent {
   };
 
   handleNextDay = async () => {
-    // const { today } = this.state;
-    // this.setState({ today: today.add(1, 'd') });
-    this.setState((prevState, props) => ({ today: prevState.today.add(1, 'd') }));
+    this.setState(state => ({ today: state.today.add(1, 'd') }));
     await this.handleFetchingMealsOfTheDay();
   };
 
   handlePrevDay = async () => {
-    // const { today } = this.state;
-    // this.setState({ today: today.subtract(1, 'd') });
-    this.setState((prevState, props) => ({ today: prevState.today.subtract(1, 'd') }));
+    this.setState(state => ({ today: state.today.subtract(1, 'd') }));
     await this.handleFetchingMealsOfTheDay();
   };
 
