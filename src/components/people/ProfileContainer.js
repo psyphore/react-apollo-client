@@ -77,7 +77,7 @@ class DetailPanel extends PureComponent {
     const { expanded } = this.state;
     const {
       classes: {
-        DetailPanel: { root, heading, secondaryHeading }
+        DetailPanel: { root, heading }
       },
       title,
       subtitle,
@@ -91,10 +91,18 @@ class DetailPanel extends PureComponent {
           onChange={this.handleChange(title)}
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            {title && <Typography className={heading}>{title}</Typography>}
-            {subtitle && (
-              <Typography className={secondaryHeading}>{subtitle}</Typography>
-            )}
+            <span className={heading}>
+              {title && (
+                <Typography variant="title" component="h2">
+                  {title}
+                </Typography>
+              )}
+              {subtitle && (
+                <Typography variant="caption" component="h6">
+                  {subtitle}
+                </Typography>
+              )}
+            </span>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>{children}</ExpansionPanelDetails>
         </ExpansionPanel>
@@ -161,13 +169,13 @@ class ProfileContainer extends PureComponent {
                       title="My Team"
                       subtitle="The people I share the same manager with"
                     >
-                      <Paper className={classes.paper}>
-                        <Team
-                          title="My Team"
-                          collection={person.team}
-                          classes={classes}
-                        />
-                      </Paper>
+                      {/* <Paper className={classes.paper}> */}
+                      <Team
+                        title="My Team"
+                        collection={person.team}
+                        classes={classes}
+                      />
+                      {/* </Paper> */}
                     </DetailPanel>
                   </Grid>
                 ) : null}

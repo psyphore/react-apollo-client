@@ -104,13 +104,13 @@ class LunchContainer extends PureComponent {
     const { client } = this.props;
     const { today } = this.state;
 
-    this.setState({
+    this.setState(() => ({
       selection: null,
       todaysOptions: [],
       fetching: true,
       extensions: null,
       customMeal: false
-    });
+    }));
 
     const result = await client.query({
       query: todaysMeals,
@@ -118,7 +118,7 @@ class LunchContainer extends PureComponent {
     });
 
     if (result.errors) {
-      this.setState({
+      this.setState(() => ({
         selection: null,
         todaysOptions: [],
         errors: result.errors,
@@ -126,16 +126,16 @@ class LunchContainer extends PureComponent {
         extensions: result.extensions,
         snackAlert: false,
         snackMessage: null
-      });
+      }));
       return;
     }
 
-    this.setState({
+    this.setState(() => ({
       selection: null,
       todaysOptions: result.data.meals,
       fetching: false,
       extensions: result.extensions
-    });
+    }));
   };
 
   handleFetchingHistory = async () => {
@@ -151,9 +151,9 @@ class LunchContainer extends PureComponent {
       data: { lunchHistory }
     } = result;
 
-    this.setState({
+    this.setState(() => ({
       history: lunchHistory
-    });
+    }));
   };
 
   handleMealSelection = e => {
