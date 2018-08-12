@@ -32,7 +32,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "prod": "npm run build && serve -s build"
+    "prod": "npm run build && serve -s build -p 3082 -n -d"
   },
   "resolutions": {
     "graphql": "git://github.com/graphql/graphql-js.git#npm"
