@@ -3,6 +3,11 @@ import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import PersonContext from '../../HOC/personContext';
 import Team from './TeamList';
@@ -40,8 +45,63 @@ const styles = theme => ({
   quickAction: {
     display: 'flex',
     flex: 1
+  },
+  DetailPanel: {
+    root: {
+      width: '100%'
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      flexBasis: '33.33%',
+      flexShrink: 0
+    },
+    secondaryHeading: {
+      fontSize: theme.typography.pxToRem(15),
+      color: theme.palette.text.secondary
+    }
   }
 });
+
+class DetailPanel extends PureComponent {
+  state = {
+    expended: null
+  };
+
+  handleChange = panel => (event, expanded) => {
+    this.setState({
+      expanded: expanded ? panel : false
+    });
+  };
+
+  render() {
+    const { expanded } = this.state;
+    const {
+      classes: {
+        DetailPanel: { root, heading, secondaryHeading }
+      },
+      title,
+      subtitle,
+      children
+    } = this.props;
+
+    return (
+      <div className={root}>
+        <ExpansionPanel
+          expanded={expanded === title + ''.replace(/ +/g, '_')}
+          onChange={this.handleChange(title)}
+        >
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            {title && <Typography className={heading}>{title}</Typography>}
+            {subtitle && (
+              <Typography className={secondaryHeading}>{subtitle}</Typography>
+            )}
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>{children}</ExpansionPanelDetails>
+        </ExpansionPanel>
+      </div>
+    );
+  }
+}
 
 class ProfileContainer extends PureComponent {
   render() {
@@ -78,35 +138,53 @@ class ProfileContainer extends PureComponent {
                   </Grid>
                 ) : null}
                 {person.line && person.line.length !== 0 ? (
-                  <Grid item md={3}>
-                    <Paper className={classes.paper}>
-                      <Team
-                        title="Reporting Line"
-                        collection={person.line}
-                        classes={classes}
-                      />
-                    </Paper>
+                  <Grid item md={4}>
+                    <DetailPanel
+                      classes={classes}
+                      title="Reporting Line"
+                      subtitle="The team I manage"
+                    >
+                      <Paper className={classes.paper}>
+                        <Team
+                          title="Reporting Line"
+                          collection={person.line}
+                          classes={classes}
+                        />
+                      </Paper>
+                    </DetailPanel>
                   </Grid>
                 ) : null}
                 {person.team && person.team.length !== 0 ? (
-                  <Grid item md={3}>
-                    <Paper className={classes.paper}>
-                      <Team
-                        title="My Team"
-                        collection={person.team}
-                        classes={classes}
-                      />
-                    </Paper>
+                  <Grid item md={4}>
+                    <DetailPanel
+                      classes={classes}
+                      title="My Team"
+                      subtitle="The people I share the same manager with"
+                    >
+                      <Paper className={classes.paper}>
+                        <Team
+                          title="My Team"
+                          collection={person.team}
+                          classes={classes}
+                        />
+                      </Paper>
+                    </DetailPanel>
                   </Grid>
                 ) : null}
                 {person.team && person.team.length !== 0 ? (
-                  <Grid item md={3}>
-                    <Paper className={classes.paper}>
-                      <ProductSummaryList
-                        products={person.products}
-                        title="My Products"
-                      />
-                    </Paper>
+                  <Grid item md={4}>
+                    <DetailPanel
+                      classes={classes}
+                      title="My Products"
+                      subtitle="I know these products"
+                    >
+                      <Paper className={classes.paper}>
+                        <ProductSummaryList
+                          products={person.products}
+                          title="My Products"
+                        />
+                      </Paper>
+                    </DetailPanel>
                   </Grid>
                 ) : null}
               </Grid>

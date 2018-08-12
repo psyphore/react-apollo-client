@@ -1,157 +1,40 @@
 import gql from 'graphql-tag';
+import { semiPerson, fullPerson, expandedPerson } from '../fragments/person';
 
 export const getPeopleQuery = gql`
   query($first: Int, $offset: Int) {
     people(first: $first, offset: $offset) {
-      ...personFields
+      ...personSemiFields
     }
   }
-
-  fragment personFields on Person {
-    id
-    title
-    firstname
-    lastname
-    avatar
-  }
+  ${semiPerson}
 `;
 
 export const getPersonQuery = gql`
   query($id: ID!) {
     person(id: $id) {
-      ...personFields
-      products {
-        ...productField
-      }
-      building {
-        ...buildingField
-      }
+      ...personFullFields
     }
   }
-
-  fragment personFields on Person {
-    id
-    title
-    firstname
-    lastname
-    email
-    mobile
-    bio
-    avatar
-    manager {
-      ...otherPeopleFields
-    }
-    team {
-      ...otherPeopleFields
-    }
-    line {
-      ...otherPeopleFields
-    }
-  }
-
-  fragment otherPeopleFields on Person {
-    id
-    title
-    firstname
-    lastname
-    avatar
-  }
-
-  fragment productField on Product {
-    id
-    name
-    description
-    status
-    art
-    championCount
-    champions {
-      ...otherPeopleFields
-    }
-  }
-
-  fragment buildingField on Building {
-    name
-    address
-  }
+  ${fullPerson}
 `;
 
 export const getMeQuery = gql`
   query {
     me {
-      ...personFields
-      products {
-        ...productField
-      }
-      building {
-        ...buildingField
-      }
+      ...personExpandedFields
     }
   }
-
-  fragment personFields on Person {
-    id
-    title
-    firstname
-    lastname
-    email
-    mobile
-    bio
-    avatar
-    manager {
-      ...otherPeopleFields
-    }
-    team {
-      ...otherPeopleFields
-    }
-    line {
-      ...otherPeopleFields
-    }
-    meals {
-      ...mealFields
-    }
-  }
-
-  fragment otherPeopleFields on Person {
-    id
-    title
-    firstname
-    lastname
-    avatar
-  }
-
-  fragment productField on Product {
-    id
-    name
-    description
-    status
-    art
-    championCount
-    champions {
-      ...otherPeopleFields
-    }
-  }
-
-  fragment buildingField on Building {
-    name
-    address
-  }
-
-  fragment mealFields on MealHistory {
-    id
-    content
-    date
-  }
+  ${expandedPerson}
 `;
 
 export const getMyAvatarQuery = gql`
   query {
     me {
-      id
-      firstname
-      lastname
-      avatar
+      ...personSemiFields
     }
   }
+  ${semiPerson}
 `;
 
 export const getMyNotificationsQuery = gql`

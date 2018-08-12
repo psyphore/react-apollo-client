@@ -1,23 +1,22 @@
 import gql from 'graphql-tag';
-import { basic as pb } from './person';
+// import { basicPerson } from './person';
 
-export const full = gql`
-  ${pb}
-  fragment buildingFullFields on Building {
+export const basicBuilding = gql`
+  fragment buildingBasicFields on Building {
     id
     name
     address
     headcount
-    people {
-      ...personBasicFields
-    }
   }
 `;
 
-export const basic = gql`
-fragment buildingBasicFields on Building {
-    id
-    name
-    address
-    headcount
-`;
+// export const fullBuilding = gql`
+//   fragment buildingFullFields on Building {
+//     ...buildingBasicFields
+//     people {
+//       ...personBasicFields
+//     }
+//   }
+//   ${basicPerson}
+//   ${basicBuilding}
+// `;

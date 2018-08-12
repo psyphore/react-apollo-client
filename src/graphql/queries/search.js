@@ -1,19 +1,14 @@
 import gql from 'graphql-tag';
+import { semiPerson } from '../fragments/person';
 
 export const searchQuery = gql`
   query($query: BasicSearch!) {
     search(query: $query) {
       count
       data {
-        ...data
+        ...personSemiFields
       }
     }
   }
-
-  fragment data on Person {
-    id
-    firstname
-    lastname
-    avatar
-  }
+  ${semiPerson}
 `;

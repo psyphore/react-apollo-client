@@ -1,22 +1,26 @@
 import gql from 'graphql-tag';
+import {
+  mealOfTheDay,
+  mealHistoryBasic,
+  mealHistory
+} from '../fragments/lunch';
 
 export const todaysMeals = gql`
   query($date: String) {
     meals(date: $date) {
-      type
-      name
+      ...todaysMeals
     }
   }
+  ${mealOfTheDay}
 `;
 
 export const myMealHistory = gql`
   query($first: Int, $offset: Int) {
     lunchHistory(first: $first, offset: $offset) {
-      id
-      content
-      date
+      ...mealHistoryFields
     }
   }
+  ${mealHistory}
 `;
 
 export const mealTrends = gql`
@@ -31,7 +35,8 @@ export const mealTrends = gql`
 export const recomendedMeals = gql`
   query($first: Int, $offset: Int) {
     meals(fist: $first, offset: $offset) {
-      name
+      ...mealBasicFields
     }
   }
+  ${mealHistoryBasic}
 `;

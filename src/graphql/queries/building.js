@@ -1,42 +1,20 @@
 import gql from 'graphql-tag';
+import { basicBuilding } from '../fragments/building';
 
-const getBuildingsQuery = gql`
+export const getBuildingsQuery = gql`
   query($first: Int, $offset: Int) {
     buildings(first: $first, offset: $offset) {
-      ...buildingFields
+      ...buildingBasicFields
     }
   }
-
-  fragment buildingFields on Building {
-    id
-    name
-    address
-    headcount
-  }
+  ${basicBuilding}
 `;
 
-const getBuildingQuery = gql`
+export const getBuildingQuery = gql`
   query($id: ID, $name: String) {
     building(id: $id, name: $name) {
-      ...buildingFields
+      ...buildingBasicFields
     }
   }
-
-  fragment buildingFields on Building {
-    id
-    name
-    address
-    headcount
-    people {
-      ...personFields
-    }
-  }
-
-  fragment personFields on Person {
-    id
-    firstname
-    lastname
-  }
+  ${basicBuilding}
 `;
-
-export { getBuildingsQuery, getBuildingQuery };

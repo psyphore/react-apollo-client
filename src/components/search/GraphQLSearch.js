@@ -5,12 +5,13 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
-import Badge from '@material-ui/core/Badge';
+// import Badge from '@material-ui/core/Badge';
 import Link from 'react-router-dom/Link';
 
 import { searchQuery } from '../../graphql';
 import PersonSummaryCard from '../people/PersonSummaryCard';
 import { Loader, ErrorMessage } from '../index';
+import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -110,6 +111,8 @@ class GraphQLSearch extends PureComponent {
     const { query, first, offset } = this.state;
     const { client } = this.props;
 
+    let duration = new Date().getTime();
+
     this._reset();
 
     if (query && query.length === 0) {
@@ -128,11 +131,15 @@ class GraphQLSearch extends PureComponent {
       variables: { query: { query, first, offset } }
     });
 
+    duration -= new Date().getTime();
+
+    duration = (duration * -1) / 1000;
+
     if (result.errors) {
       this.setState({
         errors: result.errors,
         fetching: false,
-        extensions: result.extensions
+        extensions: duration
       });
       return;
     }
@@ -141,7 +148,7 @@ class GraphQLSearch extends PureComponent {
       result: result.data.search.data,
       count: result.data.search.count,
       fetching: false,
-      extensions: result.extensions
+      extensions: duration
     });
   };
 
@@ -155,7 +162,7 @@ class GraphQLSearch extends PureComponent {
 
   render() {
     const { classes } = this.props;
-    const { errors, fetching, count, result } = this.state;
+    const { errors, fetching, count, result, extensions } = this.state;
     const actions = {
       reset: this._reset,
       search: this._executeSearch,
@@ -184,14 +191,16 @@ class GraphQLSearch extends PureComponent {
             {fetching ? <Loader /> : null}
             {errors ? <ErrorMessage error={errors} /> : null}
             {count ? (
-              <Badge
-                color="primary"
-                badgeContent={count}
-                className={classes.badge.margin}
-              >
-                <span />
-              </Badge>
-            ) : null}
+              <Typography variant="headline" component="h5">
+                Results Found {count} in {JSON.stringify(extensions, null, 2)}
+              </Typography>
+            ) : // <Badge
+            //   color="primary"
+            //   badgeContent={count}
+            //   className={classes.badge.margin}
+            // >
+            // </Badge>
+            null}
           </Grid>
 
           <Grid item md={12}>
@@ -215,5 +224,4 @@ class GraphQLSearch extends PureComponent {
   }
 }
 
-GraphQLSearch = withApollo(GraphQLSearch);
-export default withStyles(styles)(GraphQLSearch);
+export default withStyles(styles)(withApollo(GraphQLSearch));

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { bool, string, func, number, object } from 'prop-types';
-import { Snackbar } from '@material-ui/core';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const SnackBar = ({ open, message, duration, anchor, closeHandler }) => {
   const ao = anchor || {
@@ -9,12 +11,12 @@ const SnackBar = ({ open, message, duration, anchor, closeHandler }) => {
     },
     dur = duration || 6000,
     cp = {
-      'aria-describedBy': 'message-id'
+      'aria-describedby': 'message-id'
     },
     msg = <span id="message-id">{message}</span>;
 
   return (
-    <div>
+    <Fragment>
       <Snackbar
         anchorOrigin={ao}
         open={open}
@@ -22,8 +24,18 @@ const SnackBar = ({ open, message, duration, anchor, closeHandler }) => {
         onClose={closeHandler}
         ContentProps={cp}
         message={msg}
+        action={[
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            onClick={closeHandler}
+          >
+            <CloseIcon />
+          </IconButton>
+        ]}
       />
-    </div>
+    </Fragment>
   );
 };
 

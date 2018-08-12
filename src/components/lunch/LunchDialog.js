@@ -10,6 +10,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
+import Before from '@material-ui/icons/NavigateBefore';
+import Next from '@material-ui/icons/NavigateNext';
 import Button from '@material-ui/core/Button';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Paper from '@material-ui/core/Paper';
@@ -23,6 +25,7 @@ import { Loader } from '../';
 import LunchList from './LunchList';
 import LunchTodayList from './LunchTodayList';
 import LunchContext from '../../HOC/lunchContext';
+import ToolTip from '../tooltip';
 
 const styles = theme => ({
   appBar: {
@@ -85,20 +88,24 @@ const styles = theme => ({
   }
 });
 
-const DialogToolBar = ({ actions, classes, state }) => (
+const DialogToolBar = ({
+  actions: { close, placeOrder },
+  classes: { flex },
+  state: { today }
+}) => (
   <Toolbar>
-    <IconButton color="inherit" aria-label="Close" onClick={actions.close}>
+    <IconButton color="inherit" aria-label="Close" onClick={close}>
       <CloseIcon />
     </IconButton>
-    <Typography variant="title" color="inherit" className={classes.flex}>
+    <Typography variant="title" color="inherit" className={flex}>
       {`${
-        state.today ? state.today.format('DD MMMM YYYY') + ' -' : ''
+        today ? today.format('DD MMMM YYYY') + ' -' : ''
       } Place Your Lunch Order`}
     </Typography>
     <Button
       aria-label="Lunch"
       color="primary"
-      onClick={actions.placeOrder}
+      onClick={placeOrder}
       variant="fab"
     >
       <AddIcon />
@@ -106,18 +113,38 @@ const DialogToolBar = ({ actions, classes, state }) => (
   </Toolbar>
 );
 
-const DialogActions = ({ nextDay, prevDay }) => (
+const DialogActions = ({ actions: { nextDay, prevDay }, state: { today } }) => (
   <Paper>
-    <Typography variant="subheading">
-      Actions: Paging to and from Google Sheets
-    </Typography>
-    <Grid container spacing={8}>
-      <Grid item md={12}>
-        <Grid item md={6}>
-          <Button onClick={() => prevDay()}>Previous Day</Button>
+    <Grid container spacing={8} wrap="wrap" justify="space-evenly">
+      <Grid item md={12} xs={12}>
+        <Grid item md={3}>
+          <ToolTip placement="top" title="Previous Day">
+            <Button
+              aria-label="PreviousDay"
+              color="primary"
+              onClick={() => prevDay()}
+              variant="fab"
+            >
+              <Before />
+            </Button>
+          </ToolTip>
         </Grid>
-        <Grid item md={6}>
-          <Button onClick={() => nextDay()}>Next Day</Button>
+        <Grid item md={3}>
+          <Typography variant="subheading" component="h3">
+            {today ? today.format('DD MMMM YYYY') : '?'}
+          </Typography>
+        </Grid>
+        <Grid item md={3}>
+          <ToolTip placement="top" title="Next Day">
+            <Button
+              aria-label="NextDay"
+              color="primary"
+              onClick={() => nextDay()}
+              variant="fab"
+            >
+              <Next />
+            </Button>
+          </ToolTip>
         </Grid>
       </Grid>
     </Grid>
@@ -222,7 +249,7 @@ const FullScreenDialog = ({ classes }) => (
           <div className={classes.container}>
             {state.fetching ? <Loader /> : null}
             <div className={classes.header}>
-              <DialogActions {...actions} />
+              <DialogActions actions={actions} state={state} />
             </div>
             <div className={classes.content}>
               <DialogContent

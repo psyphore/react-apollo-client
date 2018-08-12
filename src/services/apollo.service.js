@@ -51,8 +51,6 @@ export const createClient = (uri, ws) => {
   });
 
   const link = ApolloLink.from([
-    authMiddleware,
-    stateLink,
     onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors)
         graphQLErrors.map(({ message, locations, path }) =>
@@ -63,6 +61,8 @@ export const createClient = (uri, ws) => {
 
       if (networkError) console.error(`[Network error]: ${networkError}`);
     }),
+    authMiddleware,
+    stateLink,
     retryLink,
     httpLink,
     wsLink

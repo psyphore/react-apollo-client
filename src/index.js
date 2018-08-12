@@ -1,9 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
+import {
+  enableExperimentalFragmentVariables,
+  disableFragmentWarnings
+} from 'graphql-tag';
 
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
 import { createClient, Auth } from './services/';
 import { AppContext } from './HOC';
 
@@ -23,4 +26,5 @@ const Main = () => (
 );
 
 ReactDOM.render(<Main />, document.getElementById('root'));
-registerServiceWorker();
+enableExperimentalFragmentVariables();
+disableFragmentWarnings();

@@ -1,41 +1,20 @@
 import gql from 'graphql-tag';
+import { fullSupport, basicSupport } from '../fragments/support';
 
 export const currentSupportPerson = gql`
   query {
     watcher {
-      ...watch
+      ...supportFullFields
     }
   }
-
-  fragment watch on Support {
-    wk
-    from
-    to
-    person {
-      ...personFields
-    }
-  }
-
-  fragment personFields on Person {
-    id
-    title
-    firstname
-    lastname
-    avatar
-  }
+  ${fullSupport}
 `;
 
 export const supportRegister = gql`
   query($first: Int, $offset: Int) {
     watchers(first: $first, offset: $offset) {
-      ...watch
+      ...supportBasicFields
     }
   }
-
-  fragment watch on Support {
-    wk
-    from
-    to
-    person
-  }
+  ${basicSupport}
 `;

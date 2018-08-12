@@ -1,5 +1,4 @@
 import React, { PureComponent, Fragment } from 'react';
-
 import { withApollo } from 'react-apollo';
 import * as moment from 'moment';
 
@@ -19,7 +18,7 @@ class LunchContainer extends PureComponent {
       todaysOptions: [],
       fetching: false,
       extensions: null,
-      first: 10,
+      first: 5,
       offset: 0,
       history: [],
       trending: [],
@@ -35,15 +34,17 @@ class LunchContainer extends PureComponent {
     this.handleMealSelection = this.handleMealSelection.bind(this);
     this.handleCustomMeal = this.handleCustomMeal.bind(this);
     this.handleFetchingHistory = this.handleFetchingHistory.bind(this);
+    this.handleNextDay = this.handleNextDay.bind(this);
+    this.handlePrevDay = this.handlePrevDay.bind(this);
   }
 
   handleClickOpen = async () => {
-    this.setState({ open: true });
+    this.setState(() => ({ open: true, today: moment() }));
     await this.asyncFetcher();
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState(() => ({ open: false }));
   };
 
   asyncFetcher = async () => {
@@ -52,20 +53,20 @@ class LunchContainer extends PureComponent {
   };
 
   handleNextDay = async () => {
-    this.setState(state => ({ today: state.today.add(1, 'd') }));
+    let day = this.state.today.add(1, 'd');
+    this.setState(() => ({ today: day }));
     await this.handleFetchingMealsOfTheDay();
   };
 
   handlePrevDay = async () => {
-    this.setState(state => ({ today: state.today.subtract(1, 'd') }));
+    let day = this.state.today.subtract(1, 'd');
+    this.setState(() => ({ today: day }));
     await this.handleFetchingMealsOfTheDay();
   };
 
   handlePlaceOrder = async () => {
-    // do some fency stuff here
     const { client, person } = this.props;
 
-    // simulate posting meal order
     this.setState({
       fetching: true
     });
@@ -75,7 +76,7 @@ class LunchContainer extends PureComponent {
       variables: {
         body: {
           content: this.state.selection,
-          date: moment().format('DDMMYYYY'),
+          date: this.state.today.format('DDMMYYYY'),
           person: {
             id: person.id,
             firstname: person.firstname,
@@ -110,13 +111,6 @@ class LunchContainer extends PureComponent {
       extensions: null,
       customMeal: false
     });
-
-    // let isWeekend = moment().weekday() === 6 || moment().weekday() === 7;
-    // let day = isWeekend ? moment().weekday(1) : today;
-
-    // this.setState({
-    //   today: day
-    // });
 
     const result = await client.query({
       query: todaysMeals,
@@ -204,7 +198,9 @@ class LunchContainer extends PureComponent {
                   <SnackBar
                     message={snackMessage}
                     open={snackAlert}
-                    closeHandler={() => this.setState({ snackAlert: false })}
+                    closeHandler={() =>
+                      this.setState(() => ({ snackAlert: false }))
+                    }
                   />
                 ) : null}
               </LunchContext.Provider>

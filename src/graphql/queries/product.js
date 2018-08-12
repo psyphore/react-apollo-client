@@ -1,42 +1,17 @@
 import gql from 'graphql-tag';
 
-const getProductsQuery = gql`
+export const getProductsQuery = gql`
   query($first: Int, $offset: Int) {
     products(first: $first, offset: $offset) {
-      ...basicProductFields
+      ...productBasicFields
     }
-  }
-
-  fragment basicProductFields on Product {
-    id
-    name
-    description
-    status
   }
 `;
 
-const getProductQuery = gql`
+export const getProductQuery = gql`
   query($id: ID, $name: String) {
     products(id: $id, name: $name) {
-      ...basicProductFields
+      ...productFullFields
     }
-  }
-
-  fragment basicProductFields on Product {
-    id
-    name
-    description
-    status
-    champions {
-      ...basicPersonField
-    }
-  }
-
-  fragment basicPersonField on Person {
-    id
-    firstname
-    lastname
   }
 `;
-
-export { getProductsQuery, getProductQuery };

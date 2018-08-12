@@ -1,7 +1,8 @@
 import gql from 'graphql-tag';
-// import { basic as bb } from '../fragments/building';
+import { basicBuilding } from '../fragments/building';
+import { basicProduct } from '../fragments/product';
 
-export const basic = gql`
+export const basicPerson = gql`
   fragment personBasicFields on Person {
     id
     firstname
@@ -9,26 +10,21 @@ export const basic = gql`
   }
 `;
 
-export const semi = gql`
+export const semiPerson = gql`
   fragment personSemiFields on Person {
-    id
+    ...personBasicFields
     title
-    firstname
-    lastname
     avatar
   }
+  ${basicPerson}
 `;
 
-export const full = gql`
+export const fullPerson = gql`
   fragment personFullFields on Person {
-    id
-    title
-    firstname
-    lastname
+    ...personSemiFields
     email
     mobile
     bio
-    avatar
     manager {
       ...personSemiFields
     }
@@ -38,55 +34,21 @@ export const full = gql`
     line {
       ...personSemiFields
     }
+    building {
+      ...buildingBasicFields
+    }
+    products {
+      ...productBasicFields
+    }
   }
-
-  ${semi}
+  ${basicProduct}
+  ${basicBuilding}
+  ${semiPerson}
 `;
 
-export const exp = gql`
-  fragment personFields on Person {
-    id
-    title
-    firstname
-    lastname
-    email
-    mobile
-    bio
-    avatar
-    manager {
-      ...personSemiFields
-    }
-    team {
-      ...personSemiFields
-    }
-    line {
-      ...personSemiFields
-    }
-    meals {
-      ...mealFields
-    }
+export const expandedPerson = gql`
+  fragment personExpandedFields on Person {
+    ...personFullFields
   }
-
-  fragment productField on Product {
-    id
-    name
-    description
-    status
-    art
-    championCount
-    champions {
-      ...otherPeopleFields
-    }
-  }
-
-  fragment buildingField on Building {
-    name
-    address
-  }
-
-  fragment mealFields on Meal {
-    name
-  }
-
-  ${semi}
+  ${fullPerson}
 `;
