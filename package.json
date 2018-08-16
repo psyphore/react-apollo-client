@@ -32,7 +32,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "prod": "npm run build && serve -s build -p 3082 -n -d"
+    "prod": "npm run build && serve -s build -p 3082 -n -d",
+    "delete-maps": "npm run delete-map-files",
+    "delete-map-files": "find ./build -name '*.map' -delete",
+    "delete-references-to-map-files": "find ./build -regex '.*\\.\\(js\\|css\\)' -exec sed -i -E '\\/[\\*\\/]#\\ssourceMappingURL=main(\\.[0-9a-f]+)?\\.(css|js)\\.map(\\*\\/)?/g' {} +"
   },
   "resolutions": {
     "graphql": "git://github.com/graphql/graphql-js.git#npm"
