@@ -115,39 +115,31 @@ const DialogToolBar = ({
 
 const DialogActions = ({ actions: { nextDay, prevDay }, state: { today } }) => (
   <Paper>
-    <Grid container spacing={8} wrap="wrap" justify="space-evenly">
-      <Grid item md={12} xs={12}>
-        <Grid item md={3}>
-          <ToolTip placement="top" title="Previous Day">
-            <Button
-              aria-label="PreviousDay"
-              color="primary"
-              onClick={() => prevDay()}
-              variant="fab"
-            >
-              <Before />
-            </Button>
-          </ToolTip>
-        </Grid>
-        <Grid item md={3}>
-          <Typography variant="subheading" component="h3">
-            {today ? today.format('DD MMMM YYYY') : '?'}
-          </Typography>
-        </Grid>
-        <Grid item md={3}>
-          <ToolTip placement="top" title="Next Day">
-            <Button
-              aria-label="NextDay"
-              color="primary"
-              onClick={() => nextDay()}
-              variant="fab"
-            >
-              <Next />
-            </Button>
-          </ToolTip>
-        </Grid>
-      </Grid>
-    </Grid>
+    <div style={{ display: 'flex', flex: 1, justifyContent: 'space-evenly' }}>
+      <ToolTip placement="top" title="Previous Day">
+        <Button
+          aria-label="PreviousDay"
+          color="primary"
+          onClick={() => prevDay()}
+          variant="fab"
+        >
+          <Before />
+        </Button>
+      </ToolTip>
+      <Typography variant="headline" component="h3">
+        {today ? today.format('DD MMMM YYYY') : '?'}
+      </Typography>
+      <ToolTip placement="top" title="Next Day">
+        <Button
+          aria-label="NextDay"
+          color="primary"
+          onClick={() => nextDay()}
+          variant="fab"
+        >
+          <Next />
+        </Button>
+      </ToolTip>
+    </div>
   </Paper>
 );
 
