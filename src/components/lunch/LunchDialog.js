@@ -18,7 +18,6 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
 import Check from '@material-ui/icons/Check';
-import Grid from '@material-ui/core/Grid';
 
 import SlideUp from '../transitions/SlideUp';
 import { Loader } from '../';
