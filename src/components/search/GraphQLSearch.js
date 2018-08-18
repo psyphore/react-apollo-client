@@ -191,7 +191,7 @@ class GraphQLSearch extends PureComponent {
             {fetching ? <Loader /> : null}
             {errors ? <ErrorMessage error={errors} /> : null}
             {count ? (
-              <Typography variant="headline" component="h5">
+              <Typography variant="caption" component="p">
                 Results Found {count} in {JSON.stringify(extensions, null, 2)}
               </Typography>
             ) : // <Badge
@@ -216,6 +216,10 @@ class GraphQLSearch extends PureComponent {
                   </Link>
                 ))}
               </div>
+            ) : extensions ? (
+              <Typography variant="caption" component="p">
+                No Results Found.
+              </Typography>
             ) : null}
           </Grid>
         </Grid>

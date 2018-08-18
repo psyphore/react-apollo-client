@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { withApollo } from 'react-apollo';
 import * as moment from 'moment';
 
@@ -6,7 +6,7 @@ import LunchButton from './LunchButton';
 import LunchDialog from './LunchDialog';
 import SnackBar from '../alert/SnackBar';
 import { todaysMeals, placeOrder, myMealHistory } from '../../graphql';
-import { LunchContext, PersonContext } from '../../HOC';
+import { LunchContext } from '../../HOC';
 
 class LunchContainer extends PureComponent {
   constructor(props) {
@@ -89,11 +89,11 @@ class LunchContainer extends PureComponent {
     });
 
     if (result.data.placeOrder) {
-      this.setState({
+      this.setState(() => ({
         fetching: false,
         snackAlert: true,
         snackMessage: `Meal '${this.state.selection}' Placed Successfully`
-      });
+      }));
       setTimeout(() => {
         this.handleClose();
       }, 3000);
@@ -185,29 +185,19 @@ class LunchContainer extends PureComponent {
     };
 
     return (
-      <Fragment>
-        <PersonContext.Consumer>
-          {state => (
-            <div>
-              <LunchContext.Provider
-                value={{ actions, state: this.state, person: person }}
-              >
-                <LunchButton clickHandler={this.handleClickOpen} />
-                <LunchDialog />
-                {snackAlert ? (
-                  <SnackBar
-                    message={snackMessage}
-                    open={snackAlert}
-                    closeHandler={() =>
-                      this.setState(() => ({ snackAlert: false }))
-                    }
-                  />
-                ) : null}
-              </LunchContext.Provider>
-            </div>
-          )}
-        </PersonContext.Consumer>
-      </Fragment>
+      <LunchContext.Provider
+        value={{ actions, state: this.state, person: person }}
+      >
+        <LunchButton clickHandler={this.handleClickOpen} />
+        <LunchDialog />
+        {snackAlert && (
+          <SnackBar
+            message={snackMessage}
+            open={snackAlert}
+            closeHandler={() => this.setState(() => ({ snackAlert: false }))}
+          />
+        )}
+      </LunchContext.Provider>
     );
   }
 }

@@ -9,6 +9,7 @@ import {
 import App from './App';
 import { createClient, Auth } from './services/';
 import { AppContext } from './HOC';
+import { SharedSnackbarProvider } from './components/alert/SnackBarProvider';
 
 const client = createClient(
   process.env.REACT_APP_GRAPHQL_URI,
@@ -20,7 +21,9 @@ const Main = () => (
     <AppContext.Provider
       value={{ title: process.env.REACT_APP_NAME, auth: Auth }}
     >
-      <App />
+      <SharedSnackbarProvider>
+        <App />
+      </SharedSnackbarProvider>
     </AppContext.Provider>
   </ApolloProvider>
 );

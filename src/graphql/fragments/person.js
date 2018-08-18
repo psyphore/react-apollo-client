@@ -7,6 +7,7 @@ export const basicPerson = gql`
     id
     firstname
     lastname
+    knownAs
   }
 `;
 

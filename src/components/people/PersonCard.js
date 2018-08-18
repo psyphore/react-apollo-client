@@ -13,6 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import WorkIcon from '@material-ui/icons/Work';
 import LocationCitySharp from '@material-ui/icons/LocationCitySharp';
+import CalendarTodaySharp from '@material-ui/icons/CalendarTodaySharp';
 
 import PersonCardImage from './PersonCardImage';
 
@@ -35,8 +36,10 @@ const PersonCard = ({ classes, detail }) => (
     <Card className={classes.card}>
       <PersonCardImage detail={detail} mediaClass={classes.media} />
       <CardContent>
-        <Typography gutterBottom variant="headline" component="h1">
-          {detail.firstname + ' ' + detail.lastname}
+        <Typography gutterBottom variant="headline" component="h3">
+          {`${detail.firstname} ${
+            detail.knownAs ? `(${detail.knownAs})` : ''
+          } ${detail.lastname}`}
         </Typography>
         <List>
           {detail.title ? (
@@ -79,6 +82,14 @@ const PersonCard = ({ classes, detail }) => (
               <ListItemText primary={building.name} />
             </ListItem>
           ))}
+          <ListItem>
+            <Avatar>
+              <CalendarTodaySharp />
+            </Avatar>
+            <ListItemText secondary="Leave State">
+              {/* <LeaveIndicator id={detail.id} /> */}
+            </ListItemText>
+          </ListItem>
         </List>
       </CardContent>
     </Card>

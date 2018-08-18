@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { object } from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import { Auth } from '../services';
@@ -11,14 +11,10 @@ export default ProtectedComponent => {
       this.auth = new Auth();
     }
 
-    handleAuthentication() {
+    componentDidMount() {
       if (!this.auth.isAuthenticated()) {
         this.auth.login();
       }
-    }
-
-    componentDidMount() {
-      this.handleAuthentication();
     }
 
     render() {
@@ -28,7 +24,7 @@ export default ProtectedComponent => {
   }
 
   AuthHOC.contextTypes = {
-    router: PropTypes.object.isRequired
+    router: object.isRequired
   };
 
   return withRouter(AuthHOC);
