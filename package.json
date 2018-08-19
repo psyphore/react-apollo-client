@@ -34,7 +34,14 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "prod": "npm run build && serve -s build -p 3082 -n -d",
-    "validate": "npm outdated --depth 0"
+    "validate": "npm outdated --depth 0",
+    "docker:build": "docker build -t cardinal-ui-jhb .",
+    "docker:clean": "docker rm -f cardinal-ui-jhb || true",
+    "docker:run": "docker run -p 3082:3082 -d --name cardinal-ui-jhb cardinal-ui-jhb",
+    "docker:stop": "docker stop cardinal-ui-jhb",
+    "docker:start": "docker start cardinal-ui-jhb && npm run docker:logs",
+    "docker:logs": "docker logs -f cardinal-ui-jhb",
+    "docker:deploy": "npm run docker:build && npm run docker:clean && npm run docker:run"
   },
   "resolutions": {
     "graphql": "git://github.com/graphql/graphql-js.git#npm"
