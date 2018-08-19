@@ -39,7 +39,19 @@ class LunchContainer extends PureComponent {
   }
 
   handleClickOpen = async () => {
-    this.setState(() => ({ open: true, today: moment() }));
+    this.setState(() => ({
+      open: true,
+      today: moment(),
+      selection: null,
+      todaysOptions: [],
+      fetching: false,
+      extensions: null,
+      first: 5,
+      offset: 0,
+      history: [],
+      trending: [],
+      recommended: []
+    }));
     await this.asyncFetcher();
   };
 

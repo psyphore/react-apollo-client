@@ -14,6 +14,21 @@ const defaultState = {};
 
 const auth = new Auth();
 
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all'
+  },
+  query: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all'
+  },
+  mutate: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  }
+};
+
 export const createClient = (uri, ws) => {
   const cache = new InMemoryCache();
 
@@ -68,7 +83,7 @@ export const createClient = (uri, ws) => {
     wsLink
   ]);
 
-  const client = new ApolloClient({ link, cache });
+  const client = new ApolloClient({ link, cache, defaultOptions });
 
   return client;
 };
