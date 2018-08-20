@@ -10,8 +10,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import Before from '@material-ui/icons/NavigateBefore';
-import Next from '@material-ui/icons/NavigateNext';
+// import Before from '@material-ui/icons/NavigateBefore';
+// import Next from '@material-ui/icons/NavigateNext';
 import Button from '@material-ui/core/Button';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Paper from '@material-ui/core/Paper';
@@ -24,7 +24,8 @@ import { Loader } from '../';
 import LunchList from './LunchList';
 import LunchTodayList from './LunchTodayList';
 import LunchContext from '../../HOC/lunchContext';
-import ToolTip from '../tooltip';
+// import ToolTip from '../tooltip';
+import DatePicker from '../pickers/DatePicker';
 
 const styles = theme => ({
   appBar: {
@@ -112,10 +113,13 @@ const DialogToolBar = ({
   </Toolbar>
 );
 
-const DialogActions = ({ actions: { nextDay, prevDay }, state: { today } }) => (
+const DialogActions = ({
+  actions: { nextDay, prevDay, updateDay },
+  state: { today }
+}) => (
   <Paper>
     <div style={{ display: 'flex', flex: 1, justifyContent: 'space-evenly' }}>
-      <ToolTip placement="top" title="Previous Day">
+      {/* <ToolTip placement="top" title="Previous Day">
         <Button
           aria-label="PreviousDay"
           color="primary"
@@ -124,11 +128,16 @@ const DialogActions = ({ actions: { nextDay, prevDay }, state: { today } }) => (
         >
           <Before />
         </Button>
-      </ToolTip>
-      <Typography variant="headline" component="h3">
+      </ToolTip> */}
+      <DatePicker
+        label="Date"
+        onUpdate={e => updateDay(e)}
+        defaultValue={today.format('YYYY-MM-DD')}
+      />
+      {/* <Typography variant="headline" component="h3">
         {today ? today.format('DD MMMM YYYY') : '?'}
-      </Typography>
-      <ToolTip placement="top" title="Next Day">
+      </Typography> */}
+      {/* <ToolTip placement="top" title="Next Day">
         <Button
           aria-label="NextDay"
           color="primary"
@@ -137,7 +146,7 @@ const DialogActions = ({ actions: { nextDay, prevDay }, state: { today } }) => (
         >
           <Next />
         </Button>
-      </ToolTip>
+      </ToolTip> */}
     </div>
   </Paper>
 );

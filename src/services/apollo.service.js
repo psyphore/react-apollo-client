@@ -16,13 +16,13 @@ const auth = new Auth();
 
 const defaultOptions = {
   watchQuery: {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   },
-  query: {
-    fetchPolicy: 'network-only',
-    errorPolicy: 'all'
-  },
+  // query: {
+  //   fetchPolicy: 'cache-and-network',
+  //   errorPolicy: 'all'
+  // },
   mutate: {
     fetchPolicy: 'no-cache',
     errorPolicy: 'all'

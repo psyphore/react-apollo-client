@@ -36,6 +36,7 @@ class LunchContainer extends PureComponent {
     this.handleFetchingHistory = this.handleFetchingHistory.bind(this);
     this.handleNextDay = this.handleNextDay.bind(this);
     this.handlePrevDay = this.handlePrevDay.bind(this);
+    this.handleUpdateDay = this.handleUpdateDay.bind(this);
   }
 
   handleClickOpen = async () => {
@@ -76,6 +77,18 @@ class LunchContainer extends PureComponent {
     await this.handleFetchingMealsOfTheDay();
   };
 
+  handleUpdateDay = async value => {
+    let day = moment(value, 'YYYY-MM-DD');
+
+    !day.isValid()
+      ? this.setState(() => ({ today: moment() }))
+      : this.setState(() => ({ today: day }));
+
+    setTimeout(() => {
+      this.handleFetchingMealsOfTheDay();
+    }, 199);
+  };
+
   handlePlaceOrder = async () => {
     const { client, person } = this.props;
 
@@ -106,9 +119,13 @@ class LunchContainer extends PureComponent {
         snackAlert: true,
         snackMessage: `Meal '${this.state.selection}' Placed Successfully`
       }));
-      setTimeout(() => {
-        this.handleClose();
-      }, 3000);
+
+      await this.handleFetchingHistory();
+
+      // setTimeout(() => {
+      //   // this.handleClose();
+      //   // await this.handleFetchingHistory();
+      // }, 3000);
     }
   };
 
@@ -126,7 +143,8 @@ class LunchContainer extends PureComponent {
 
     const result = await client.query({
       query: todaysMeals,
-      variables: { date: today.format('DDMMYYYY') }
+      variables: { date: today.format('DDMMYYYY') },
+      options: { fetchPolicy: 'network-only' }
     });
 
     if (result.errors) {
@@ -193,7 +211,8 @@ class LunchContainer extends PureComponent {
       placeOrder: this.handlePlaceOrder,
       selection: (prop, value) => this.setState({ [prop]: value }),
       nextDay: this.handleNextDay,
-      prevDay: this.handlePrevDay
+      prevDay: this.handlePrevDay,
+      updateDay: this.handleUpdateDay
     };
 
     return (
