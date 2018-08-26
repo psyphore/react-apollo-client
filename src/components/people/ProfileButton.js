@@ -131,7 +131,7 @@ class ProfileButton extends PureComponent {
           placement="top"
         >
           <Badge
-            badgeContent={messages.length || 4}
+            badgeContent={messages.length || 0}
             color="primary"
             classes={{ badge: classes.badge }}
           >

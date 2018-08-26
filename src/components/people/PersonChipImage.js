@@ -11,7 +11,7 @@ export default ({ detail, sizeClass }) => (
         alt={detail.firstname + ' ' + detail.lastname}
         className={classNames({ margin: 10 }, { width: 60, height: 60 })}
         size={sizeClass || 60}
-        src={baseUrl + detail.avatar}
+        src={`${baseUrl + detail.avatar}/${60}/${60}`}
       />
     ) : (
       <Avatar

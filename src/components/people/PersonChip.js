@@ -29,7 +29,10 @@ const PersonChip = ({ classes, detail }) => (
       <Chip
         avatar={
           detail.avatar ? (
-            <Avatar size={classes.size} src={baseUrl + detail.avatar} />
+            <Avatar
+              size={classes.size}
+              src={`${baseUrl + detail.avatar}/${60}/${60}`}
+            />
           ) : (
             <Avatar sizes={classes.size}>
               {detail.firstname.substring(0, 1) +
