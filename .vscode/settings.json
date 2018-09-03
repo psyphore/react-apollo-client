@@ -31,5 +31,6 @@
   "terminal.integrated.rendererType": "dom",
   "emmet.excludeLanguages": ["typescript", "typescriptreact", "javascript"],
   "workbench.editor.showTabs": true,
-  "breadcrumbs.enabled": true
+  "breadcrumbs.enabled": true,
+  "editor.fontFamily": "'Fira Code', monospace"
 }

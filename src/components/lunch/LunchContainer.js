@@ -122,10 +122,9 @@ class LunchContainer extends PureComponent {
 
       await this.handleFetchingHistory();
 
-      // setTimeout(() => {
-      //   // this.handleClose();
-      //   // await this.handleFetchingHistory();
-      // }, 3000);
+      setTimeout(async () => {
+        await this.handleFetchingHistory();
+      }, 2500);
     }
   };
 
@@ -160,9 +159,13 @@ class LunchContainer extends PureComponent {
       return;
     }
 
+    let cleanMeals = result.data.meals.map(({ type, name }) => {
+      return { type: type.replace(/_+/g, ' '), name: name };
+    });
+
     this.setState(() => ({
       selection: null,
-      todaysOptions: result.data.meals,
+      todaysOptions: cleanMeals,
       fetching: false,
       extensions: result.extensions
     }));
@@ -174,7 +177,8 @@ class LunchContainer extends PureComponent {
 
     const result = await client.query({
       query: myMealHistory,
-      variables: { first, offset }
+      variables: { first, offset },
+      options: { fetchPolicy: 'network-only' }
     });
 
     const {
@@ -187,16 +191,16 @@ class LunchContainer extends PureComponent {
   };
 
   handleMealSelection = e => {
-    this.setState({
-      selection: e.name
-    });
+    this.setState(() => ({
+      selection: e.name === 'nothing yet' ? e.type.replace(/_+/g, ' ') : e.name
+    }));
   };
 
   handleCustomMeal = () => {
-    this.setState({
+    this.setState(() => ({
       customMeal: !this.state.customMeal,
       selection: null
-    });
+    }));
   };
 
   render() {

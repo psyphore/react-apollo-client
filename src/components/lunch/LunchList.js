@@ -5,6 +5,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { HistorySharp, TrendingUpSharp } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
+// import Moment from 'react-moment';
+// <Moment format="DD MMM YYYY">{date}</Moment>
 
 export default ({ meals, parentActions: { selectMeal }, title, type }) => {
   return (
