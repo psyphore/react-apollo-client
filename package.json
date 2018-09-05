@@ -2,6 +2,15 @@
   "name": "frontend",
   "version": "1.0.0",
   "private": true,
+  "author": {
+    "name": "Sipho Hlophe",
+    "email": "psyphore@gmail.com",
+    "url": "https://psyphore.github.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psyphore/react-apollo-client.git"
+  },
   "dependencies": {
     "@material-ui/core": "3.0.1",
     "@material-ui/icons": "3.0.1",
@@ -15,7 +24,7 @@
     "apollo-link-state": "0.4.1",
     "apollo-link-ws": "1.0.8",
     "auth0-js": "9.7.3",
-    "graphql": "git://github.com/graphql/graphql-js.git#npm",
+    "graphql": "14.0.0",
     "graphql-tag": "2.9.2",
     "moment": "2.22.2",
     "react": "16.4.2",
@@ -45,7 +54,7 @@
     "docker:deploy": "npm run docker:build && npm run docker:clean && npm run docker:run"
   },
   "resolutions": {
-    "graphql": "git://github.com/graphql/graphql-js.git#npm"
+    "graphql": "14.0.0"
   },
   "homepage": "http://sipholpt:3082/"
 }
