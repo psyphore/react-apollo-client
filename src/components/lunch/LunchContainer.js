@@ -18,7 +18,7 @@ class LunchContainer extends PureComponent {
       todaysOptions: [],
       fetching: false,
       extensions: null,
-      first: 5,
+      first: 10,
       offset: 0,
       history: [],
       trending: [],
@@ -47,7 +47,7 @@ class LunchContainer extends PureComponent {
       todaysOptions: [],
       fetching: false,
       extensions: null,
-      first: 5,
+      first: 10,
       offset: 0,
       history: [],
       trending: [],
@@ -77,8 +77,8 @@ class LunchContainer extends PureComponent {
     await this.handleFetchingMealsOfTheDay();
   };
 
-  handleUpdateDay = async value => {
-    let day = moment(value, 'YYYY-MM-DD');
+  handleUpdateDay = value => {
+    let day = moment(value);
 
     !day.isValid()
       ? this.setState(() => ({ today: moment() }))

@@ -13,7 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import WorkIcon from '@material-ui/icons/Work';
 import LocationCitySharp from '@material-ui/icons/LocationCitySharp';
-import CalendarTodaySharp from '@material-ui/icons/CalendarTodaySharp';
+// import CalendarTodaySharp from '@material-ui/icons/CalendarTodaySharp';
 
 import PersonCardImage from './PersonCardImage';
 
@@ -37,28 +37,28 @@ const PersonCard = ({ classes, detail }) => (
       <PersonCardImage detail={detail} mediaClass={classes.media} />
       <CardContent>
         <Typography gutterBottom variant="headline" component="h3">
-          {`${detail.firstname} ${
-            detail.knownAs ? `(${detail.knownAs})` : ''
-          } ${detail.lastname}`}
+          {`${detail.firstname}${
+            detail.knownAs ? ` (${detail.knownAs}) ` : ' '
+          }${detail.lastname}`}
         </Typography>
         <List>
-          {detail.title ? (
+          {detail.title && (
             <ListItem>
               <Avatar>
                 <WorkIcon />
               </Avatar>
               <ListItemText primary={detail.title} />
             </ListItem>
-          ) : null}
-          {detail.email ? (
+          )}
+          {detail.email && (
             <ListItem>
               <Avatar>
                 <Email />
               </Avatar>
               <ListItemText primary={detail.email} />
             </ListItem>
-          ) : null}
-          {detail.mobile || detail.mobile === '0' ? (
+          )}
+          {detail.mobile && detail.mobile !== '0' ? (
             <ListItem>
               <Avatar>
                 <Phone />
@@ -66,14 +66,14 @@ const PersonCard = ({ classes, detail }) => (
               <ListItemText primary={detail.mobile} />
             </ListItem>
           ) : null}
-          {detail.bio ? (
+          {detail.bio && (
             <ListItem>
               <Avatar>
                 <Details />
               </Avatar>
               <ListItemText primary={detail.bio} />
             </ListItem>
-          ) : null}
+          )}
           {detail.building.map((building, index) => (
             <ListItem key={index}>
               <Avatar>
@@ -82,14 +82,12 @@ const PersonCard = ({ classes, detail }) => (
               <ListItemText primary={building.name} />
             </ListItem>
           ))}
-          <ListItem>
+          {/* <ListItem>
             <Avatar>
               <CalendarTodaySharp />
             </Avatar>
-            <ListItemText secondary="Leave State">
-              {/* <LeaveIndicator id={detail.id} /> */}
-            </ListItemText>
-          </ListItem>
+            <ListItemText secondary="Leave State" />
+          </ListItem> */}
         </List>
       </CardContent>
     </Card>

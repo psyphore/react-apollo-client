@@ -6,4 +6,4 @@ export { default as ErrorMessage } from './error/index';
 export { default as AppFooter } from './layout/footer';
 export { default as Callback } from './security/Callback';
 export { default as AlertMessage } from './alert/SnackBar';
-export { default as DatePicker } from './pickers/DatePicker';
+export { default as DatePicker } from './pickers/MUIDatePicker';

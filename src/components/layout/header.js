@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { object, string } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 
 import { Support } from '../support/';
 import ProfileButton from '../people/ProfileButton';
+import { AppConsumer } from '../../HOC';
 
 const styles = {
   root: {
@@ -39,8 +40,18 @@ const AppHeaderBar = ({ classes, title }) => (
           </Button>
         </div>
         <div className={classes.row}>
-          <Support />
-          <ProfileButton />
+          <AppConsumer>
+            {({ auth }) => (
+              <Fragment>
+                {auth().isAuthenticated() && (
+                  <Fragment>
+                    <Support />
+                    <ProfileButton />
+                  </Fragment>
+                )}
+              </Fragment>
+            )}
+          </AppConsumer>
         </div>
       </Toolbar>
     </AppBar>

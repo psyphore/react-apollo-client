@@ -9,7 +9,7 @@ import { primaryTheme } from './themes/primary-theme';
 import { AppHeader, AppFooter } from './components';
 import AppRoutes from './routes/index.routes';
 import { history } from './services/';
-import { AppContext } from './HOC';
+import { AppConsumer } from './HOC';
 
 const styles = theme => ({
   container: {
@@ -41,7 +41,7 @@ const styles = theme => ({
 const App = ({ classes }) => (
   <MuiThemeProvider theme={primaryTheme}>
     <CssBaseline />
-    <AppContext.Consumer>
+    <AppConsumer>
       {({ title }) => (
         <Router history={history}>
           <div className={classes.container}>
@@ -57,7 +57,7 @@ const App = ({ classes }) => (
           </div>
         </Router>
       )}
-    </AppContext.Consumer>
+    </AppConsumer>
   </MuiThemeProvider>
 );
 

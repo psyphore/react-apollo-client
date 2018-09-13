@@ -13,9 +13,11 @@ import PersonContext from '../../HOC/personContext';
 import Team from './TeamList';
 import Person from '../../components/people/PersonCard';
 import ProductSummaryList from '../../components/products/ProductSummaryList';
+import { MessageList } from '../../components/notifications/NotificationContainer';
+import { DontReadTheComments } from '../../components/notifications/NotesSubscriptions';
 
 import { Lunch } from '../lunch';
-import { Leave } from '../leave';
+// import { Leave } from '../leave';
 
 const styles = theme => ({
   root: {
@@ -125,7 +127,7 @@ class ProfileContainer extends PureComponent {
               <Paper className={classes.actionPaper}>
                 <div className={classes.quickAction}>
                   <Lunch person={person} />
-                  <Leave person={person} />
+                  {/* <Leave person={person} /> */}
                 </div>
               </Paper>
             </Grid>
@@ -133,7 +135,7 @@ class ProfileContainer extends PureComponent {
               <Person detail={person} />
             </Grid>
             <Grid item md={9}>
-              <Grid container spacing={8} wrap="wrap" justify="space-evenly">
+              <Grid container spacing={8} wrap="wrap" justify="flex-start">
                 {person.manager ? (
                   <Grid item md={3}>
                     <Paper className={classes.paper}>
@@ -195,6 +197,19 @@ class ProfileContainer extends PureComponent {
                     </DetailPanel>
                   </Grid>
                 ) : null}
+              </Grid>
+              <Grid container spacing={8} wrap="wrap" justify="flex-start">
+                <Grid item md={12}>
+                  <DetailPanel
+                    classes={classes}
+                    title="Alerts"
+                    subtitle="My notifications"
+                  >
+                    <Paper className={classes.actionPaper}>
+                      <DontReadTheComments repoFullName="github.io" />
+                    </Paper>
+                  </DetailPanel>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

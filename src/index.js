@@ -7,8 +7,8 @@ import {
 } from 'graphql-tag';
 
 import App from './App';
-import { createClient, Auth } from './services/';
-import { AppContext } from './HOC';
+import { createClient } from './services';
+import { AppProvider, NotificationProvider } from './HOC';
 import { SharedSnackbarProvider } from './components/alert/SnackBarProvider';
 
 const client = createClient(
@@ -18,13 +18,13 @@ const client = createClient(
 
 const Main = () => (
   <ApolloProvider client={client}>
-    <AppContext.Provider
-      value={{ title: process.env.REACT_APP_NAME, auth: Auth }}
-    >
-      <SharedSnackbarProvider>
-        <App />
-      </SharedSnackbarProvider>
-    </AppContext.Provider>
+    <AppProvider>
+      <NotificationProvider>
+        <SharedSnackbarProvider>
+          <App />
+        </SharedSnackbarProvider>
+      </NotificationProvider>
+    </AppProvider>
   </ApolloProvider>
 );
 

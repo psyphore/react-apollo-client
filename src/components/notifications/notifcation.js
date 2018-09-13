@@ -8,11 +8,9 @@ export default props => (
     <Subscription subscription={lunchNotification} variables={props}>
       {({ data, loading, error }) => (
         <Fragment>
-          {loading ? <span>Loading</span> : null}
-          {error ? <span>{JSON.stringify(error)}</span> : null}
-          {data && data.notifications ? (
-            <span>{JSON.stringify(data)}</span>
-          ) : null}
+          {loading && <span>Loading</span>}
+          {error && <span>{JSON.stringify(error)}</span>}
+          {data && data.notifications && <span>{JSON.stringify(data)}</span>}
         </Fragment>
       )}
     </Subscription>

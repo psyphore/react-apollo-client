@@ -10,8 +10,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-// import Before from '@material-ui/icons/NavigateBefore';
-// import Next from '@material-ui/icons/NavigateNext';
 import Button from '@material-ui/core/Button';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Paper from '@material-ui/core/Paper';
@@ -24,8 +22,7 @@ import { Loader } from '../';
 import LunchList from './LunchList';
 import LunchTodayList from './LunchTodayList';
 import LunchContext from '../../HOC/lunchContext';
-// import ToolTip from '../tooltip';
-import DatePicker from '../pickers/DatePicker';
+import MUIDatePicker from '../pickers/MUIDatePicker';
 
 const styles = theme => ({
   appBar: {
@@ -119,34 +116,11 @@ const DialogActions = ({
 }) => (
   <Paper>
     <div style={{ display: 'flex', flex: 1, justifyContent: 'space-evenly' }}>
-      {/* <ToolTip placement="top" title="Previous Day">
-        <Button
-          aria-label="PreviousDay"
-          color="primary"
-          onClick={() => prevDay()}
-          variant="fab"
-        >
-          <Before />
-        </Button>
-      </ToolTip> */}
-      <DatePicker
+      <MUIDatePicker
         label="Date"
-        onUpdate={e => updateDay(e)}
-        defaultValue={today.format('YYYY-MM-DD')}
+        onUpdate={updateDay}
+        defaultValue={today.format()}
       />
-      {/* <Typography variant="headline" component="h3">
-        {today ? today.format('DD MMMM YYYY') : '?'}
-      </Typography> */}
-      {/* <ToolTip placement="top" title="Next Day">
-        <Button
-          aria-label="NextDay"
-          color="primary"
-          onClick={() => nextDay()}
-          variant="fab"
-        >
-          <Next />
-        </Button>
-      </ToolTip> */}
     </div>
   </Paper>
 );

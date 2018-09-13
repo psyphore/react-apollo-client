@@ -3,7 +3,7 @@ import { string, object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-import * as moment from 'moment';
+import Moment from 'react-moment';
 
 const styles = theme => ({
   root: {
@@ -15,7 +15,8 @@ const AppFooterBar = ({ classes, title }) => (
   <div className={classes.root}>
     <Divider />
     <Typography variant="subheading" gutterBottom>
-      {title + ' - ' + moment().format('YYYY')}
+      {title + ' - '}
+      <Moment format="YYYY">{new Date()}</Moment>
     </Typography>
   </div>
 );

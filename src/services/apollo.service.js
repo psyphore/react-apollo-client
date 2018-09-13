@@ -2,44 +2,36 @@ import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
-import { ApolloLink } from 'apollo-link';
+import { ApolloLink, split } from 'apollo-link';
 import { RetryLink } from 'apollo-link-retry';
 import { withClientState } from 'apollo-link-state';
 import { WebSocketLink } from 'apollo-link-ws';
-// import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { getMainDefinition } from 'apollo-utilities';
 
 import Auth from './security.service';
 
 const defaultState = {};
 
-const auth = new Auth();
-
 const defaultOptions = {
   watchQuery: {
     fetchPolicy: 'cache-and-network',
+    errorPolicy: 'ignore'
+  },
+  query: {
+    fetchPolicy: 'network-only',
     errorPolicy: 'all'
   },
-  // query: {
-  //   fetchPolicy: 'cache-and-network',
-  //   errorPolicy: 'all'
-  // },
   mutate: {
-    fetchPolicy: 'no-cache',
     errorPolicy: 'all'
   }
 };
+
+const auth = new Auth();
 
 export const createClient = (uri, ws) => {
   const cache = new InMemoryCache();
 
   const stateLink = withClientState({ cache, defaults: defaultState });
-
-  // const wsClient = new SubscriptionClient(ws, {
-  //   reconnect: true,
-  //   connectionParams: () => ({ authToken: auth.getAuthorizationHeader() })
-  // });
-
-  // const wsLink = new WebSocketLink(wsClient);
 
   const wsLink = new WebSocketLink({
     uri: ws,
@@ -65,25 +57,40 @@ export const createClient = (uri, ws) => {
     return forward(operation);
   });
 
-  const link = ApolloLink.from([
-    onError(({ graphQLErrors, networkError }) => {
-      if (graphQLErrors)
-        graphQLErrors.map(({ message, locations, path }) =>
-          console.error(
-            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-          )
-        );
+  const errorHandler = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+      graphQLErrors.map(({ message, locations, path }) =>
+        console.error(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        )
+      );
 
-      if (networkError) console.error(`[Network error]: ${networkError}`);
-    }),
+    if (networkError) console.error(`[Network error]: ${networkError}`);
+  });
+
+  const splitter = split(
+    ({ query }) => {
+      const { kind, operation } = getMainDefinition(query);
+      return kind === 'OperationDefinition' && operation === 'subscription';
+    },
+    wsLink,
+    httpLink
+  );
+
+  const link = ApolloLink.from([
+    errorHandler,
     authMiddleware,
     stateLink,
     retryLink,
-    httpLink,
-    wsLink
+    splitter
   ]);
 
-  const client = new ApolloClient({ link, cache, defaultOptions });
-
-  return client;
+  return new ApolloClient({
+    link,
+    cache,
+    defaultOptions,
+    queryDeduplication: true,
+    ssrMode: false,
+    connectToDevTools: true
+  });
 };

@@ -1,16 +1,12 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
+import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { graphql, compose, withApollo } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Badge from '@material-ui/core/Badge';
 
-import {
-  getMyAvatarQuery,
-  getMyNotifications,
-  getMyNotificationsQuery
-} from '../../graphql';
+import { getMyAvatarQuery } from '../../graphql';
 import PersonChipImage from './PersonChipImage';
 import Tooltip from '../tooltip';
 import AppBarButtonLoader from '../loader/AppBarButtonLoader';
@@ -41,131 +37,47 @@ const styles = theme => ({
   }
 });
 
-class ProfileButton extends PureComponent {
-  state = {
-    hasMoreItems: true,
-    messages: [],
-    id: null
-  };
-
-  async componentWillMount() {
-    const {
-      data: { me, loading }
-    } = this.props;
-
-    if (!loading) this.setState((prevState, props) => ({ id: me.id }));
-
-    // this.unsubscribe = this.subscribe();
-    await this.notifications();
-  }
-
-  componentWillUnmount() {
-    // if (this.unsubscribe) {
-    //   this.unsubscribe();
-    // }
-  }
-
-  async notifications() {
-    const { client } = this.props;
-    const result = await client.query({
-      query: getMyNotificationsQuery,
-      variables: { id: this.state.id || 'p41' }
-    });
-
-    const {
-      data: { myNotifications }
-    } = result;
-
-    console.log(myNotifications);
-
-    // subscribeToMore({
-    //   document: getMyNotifications,
-    //   variables: { id: 'p41' },
-    //   updateQuery: (prev, { subscriptionData }) => {
-    //     const { data } = subscriptionData;
-    //     if (!data) return prev;
-    //     return {
-    //       ...prev,
-    //       messages: [data.myNotifications, ...prev.messages]
-    //     };
-    //   }
-    // });
-  }
-
-  subscribe = () =>
-    this.props.data.subscribeToMore({
-      document: getMyNotifications,
-      variables: { id: this.state.id || 'p41' },
-      updateQuery: (prev, { subscriptionData }) => {
-        const { data } = subscriptionData;
-        if (!data) {
-          this.setState((prevState, data) => ({
-            message: prevState
-          }));
-          return prev;
-        }
-
-        this.setState((prevState, data) => ({
-          messages: data.myNotifications || prevState
-        }));
-
-        return {
-          // ...prev,
-          // ...prev.messages
-          messages: [data.myNotifications]
-        };
-      }
-    });
-
-  render() {
-    const {
-      data: { me, loading },
-      classes
-    } = this.props;
-    const { messages } = this.state;
-
-    return (
-      <div className={classes.row}>
-        <Tooltip
-          title={me && me.firstname ? me.firstname : 'My Profile'}
-          placement="top"
-        >
-          <Badge
-            badgeContent={messages.length || 0}
-            color="primary"
-            classes={{ badge: classes.badge }}
-          >
-            <Button
-              component={Link}
-              disabled={loading}
-              to="/me"
-              variant="fab"
-              color="primary"
-            >
-              {loading ? (
-                <AppBarButtonLoader />
-              ) : (
-                me && <PersonChipImage detail={me} />
-              )}
-            </Button>
-          </Badge>
-        </Tooltip>
-      </div>
-    );
-  }
-}
-
-ProfileButton.propTypes = {
-  data: PropTypes.object,
-  classes: PropTypes.object
+const gqlOptions = {
+  options: () => ({
+    fetchPolicy: 'network-only',
+    variables: {}
+  })
 };
 
-export default compose(
-  withApollo,
-  graphql(getMyAvatarQuery, {
-    options: () => ({
-      fetchPolicy: 'network-only',
-      variables: {}
-    })
-  })
-)(withStyles(styles)(ProfileButton));
+const ProfileButton = ({ data: { me, loading }, classes }) => (
+  <div className={classes.row}>
+    <Tooltip
+      title={me && me.firstname ? me.firstname : 'My Profile'}
+      placement="top"
+    >
+      <Badge
+        badgeContent={0}
+        color="primary"
+        classes={{ badge: classes.badge }}
+      >
+        <Button
+          component={Link}
+          disabled={loading}
+          to="/me"
+          variant="fab"
+          color="primary"
+        >
+          {loading ? (
+            <AppBarButtonLoader />
+          ) : (
+            me && <PersonChipImage detail={me} />
+          )}
+        </Button>
+      </Badge>
+    </Tooltip>
+  </div>
+);
+
+ProfileButton.propTypes = {
+  data: object.isRequired,
+  classes: object
+};
+
+export default graphql(getMyAvatarQuery, gqlOptions)(
+  withStyles(styles)(ProfileButton)
+);
