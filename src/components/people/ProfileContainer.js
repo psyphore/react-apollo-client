@@ -13,11 +13,9 @@ import PersonContext from '../../HOC/personContext';
 import Team from './TeamList';
 import Person from '../../components/people/PersonCard';
 import ProductSummaryList from '../../components/products/ProductSummaryList';
-import { MessageList } from '../../components/notifications/NotificationContainer';
-import { DontReadTheComments } from '../../components/notifications/NotesSubscriptions';
+// import { DontReadTheComments } from '../../components/notifications/NotesSubscriptions';
 
 import { Lunch } from '../lunch';
-// import { Leave } from '../leave';
 
 const styles = theme => ({
   root: {
@@ -116,18 +114,15 @@ class DetailPanel extends PureComponent {
 class ProfileContainer extends PureComponent {
   render() {
     const { classes, person, auth } = this.props;
-
+    const { Provider } = PersonContext;
     return (
       <Fragment>
-        <PersonContext.Provider
-          value={{ actions: {}, state: { person, auth } }}
-        >
+        <Provider value={{ actions: {}, state: { person, auth } }}>
           <Grid container spacing={8} wrap="wrap" justify="space-evenly">
             <Grid item md={12}>
               <Paper className={classes.actionPaper}>
                 <div className={classes.quickAction}>
                   <Lunch person={person} />
-                  {/* <Leave person={person} /> */}
                 </div>
               </Paper>
             </Grid>
@@ -171,13 +166,11 @@ class ProfileContainer extends PureComponent {
                       title="My Team"
                       subtitle="The people I share the same manager with"
                     >
-                      {/* <Paper className={classes.paper}> */}
                       <Team
                         title="My Team"
                         collection={person.team}
                         classes={classes}
                       />
-                      {/* </Paper> */}
                     </DetailPanel>
                   </Grid>
                 ) : null}
@@ -198,7 +191,7 @@ class ProfileContainer extends PureComponent {
                   </Grid>
                 ) : null}
               </Grid>
-              <Grid container spacing={8} wrap="wrap" justify="flex-start">
+              {/* <Grid container spacing={8} wrap="wrap" justify="flex-start">
                 <Grid item md={12}>
                   <DetailPanel
                     classes={classes}
@@ -210,10 +203,10 @@ class ProfileContainer extends PureComponent {
                     </Paper>
                   </DetailPanel>
                 </Grid>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Grid>
-        </PersonContext.Provider>
+        </Provider>
       </Fragment>
     );
   }

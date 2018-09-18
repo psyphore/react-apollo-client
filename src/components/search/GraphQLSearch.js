@@ -5,13 +5,13 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
-// import Badge from '@material-ui/core/Badge';
 import Link from 'react-router-dom/Link';
+import dayJS from 'dayjs';
+import { Typography } from '@material-ui/core';
 
 import { searchQuery } from '../../graphql';
 import PersonSummaryCard from '../people/PersonSummaryCard';
 import { Loader, ErrorMessage } from '../index';
-import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -52,7 +52,7 @@ const SearchInput = ({
           autoFocus
           disabled={fetching}
           fullWidth
-          helperText="Search for person via title, first name, last name, branch name, branch address, product name"
+          helperText="Search for person via title, first name, last name, branch name, branch address, product name. (case sensitive for now)"
           id="full-width-search"
           label="Search"
           margin="normal"
@@ -85,9 +85,9 @@ class GraphQLSearch extends PureComponent {
       first: 100,
       offset: 0,
       result: null,
-      count: 0,
+      count: null,
       fetching: false,
-      extensions: null
+      lapsedTime: null
     };
 
     this._reset = this._reset.bind(this);
@@ -101,9 +101,9 @@ class GraphQLSearch extends PureComponent {
       first: 100,
       offset: 0,
       result: null,
-      count: 0,
+      count: null,
       fetching: false,
-      extensions: null
+      lapsedTime: null
     });
   };
 
@@ -111,7 +111,7 @@ class GraphQLSearch extends PureComponent {
     const { query, first, offset } = this.state;
     const { client } = this.props;
 
-    let duration = new Date().getTime();
+    let duration = dayJS();
 
     this._reset();
 
@@ -131,15 +131,13 @@ class GraphQLSearch extends PureComponent {
       variables: { query: { query, first, offset } }
     });
 
-    duration -= new Date().getTime();
-
-    duration = (duration * -1) / 1000;
+    let diff = dayJS().diff(duration, 'second', true);
 
     if (result.errors) {
       this.setState({
         errors: result.errors,
         fetching: false,
-        extensions: duration
+        lapsedTime: diff
       });
       return;
     }
@@ -148,7 +146,7 @@ class GraphQLSearch extends PureComponent {
       result: result.data.search.data,
       count: result.data.search.count,
       fetching: false,
-      extensions: duration
+      lapsedTime: diff
     });
   };
 
@@ -162,7 +160,7 @@ class GraphQLSearch extends PureComponent {
 
   render() {
     const { classes } = this.props;
-    const { errors, fetching, count, result, extensions } = this.state;
+    const { errors, fetching, count, result, lapsedTime } = this.state;
     const actions = {
       reset: this._reset,
       search: this._executeSearch,
@@ -188,19 +186,13 @@ class GraphQLSearch extends PureComponent {
           </Grid>
 
           <Grid item md={12}>
-            {fetching ? <Loader /> : null}
-            {errors ? <ErrorMessage error={errors} /> : null}
-            {count ? (
-              <Typography variant="caption" component="p">
-                Results Found {count} in {JSON.stringify(extensions, null, 2)}
+            {fetching && <Loader />}
+            {errors && <ErrorMessage error={errors} />}
+            {count && (
+              <Typography variant="caption" component="span">
+                Results Found {count} in {lapsedTime} seconds.
               </Typography>
-            ) : // <Badge
-            //   color="primary"
-            //   badgeContent={count}
-            //   className={classes.badge.margin}
-            // >
-            // </Badge>
-            null}
+            )}
           </Grid>
 
           <Grid item md={12}>
@@ -216,7 +208,7 @@ class GraphQLSearch extends PureComponent {
                   </Link>
                 ))}
               </div>
-            ) : extensions ? (
+            ) : lapsedTime ? (
               <Typography variant="caption" component="p">
                 No Results Found.
               </Typography>

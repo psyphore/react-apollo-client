@@ -2,7 +2,7 @@ import React from 'react';
 import { IconButton, Snackbar } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 
-import { SharedSnackbarConsumer } from './SharedSnackbar.context';
+import { SharedSnackbarConsumer } from './SnackBarProvider';
 
 const SharedSnackbar = () => (
   <SharedSnackbarConsumer>
@@ -10,7 +10,7 @@ const SharedSnackbar = () => (
       <Snackbar
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'left'
         }}
         open={snackbarIsOpen}
         autoHideDuration={6000}
@@ -19,7 +19,7 @@ const SharedSnackbar = () => (
         action={[
           <IconButton key="close" color="inherit" onClick={closeSnackbar}>
             <Close />
-          </IconButton>,
+          </IconButton>
         ]}
       />
     )}

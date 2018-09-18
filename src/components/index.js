@@ -7,3 +7,4 @@ export { default as AppFooter } from './layout/footer';
 export { default as Callback } from './security/Callback';
 export { default as AlertMessage } from './alert/SnackBar';
 export { default as DatePicker } from './pickers/MUIDatePicker';
+export { default as FileManager } from './fileManager/index';

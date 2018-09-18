@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import { object, arrayOf } from 'prop-types';
 import { withStyles } from '@material-ui/core';
 import './index.css';
 import BuildingSummaryCard from './BuildingSummaryCard';
@@ -30,9 +30,8 @@ class BuildingContainer extends PureComponent {
 }
 
 BuildingContainer.propTypes = {
-  classes: PropTypes.object.isRequired,
-  buildings: PropTypes.arrayOf(PropTypes.object).isRequired
+  classes: object.isRequired,
+  buildings: arrayOf(object).isRequired
 };
 
-const BuildingContainerComponent = withStyles(styles)(BuildingContainer);
-export default BuildingContainerComponent;
+export default withStyles(styles)(BuildingContainer);

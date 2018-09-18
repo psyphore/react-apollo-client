@@ -13,6 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import WorkIcon from '@material-ui/icons/Work';
 import LocationCitySharp from '@material-ui/icons/LocationCitySharp';
+import Link from 'react-router-dom/Link';
 // import CalendarTodaySharp from '@material-ui/icons/CalendarTodaySharp';
 
 import PersonCardImage from './PersonCardImage';
@@ -76,9 +77,15 @@ const PersonCard = ({ classes, detail }) => (
           )}
           {detail.building.map((building, index) => (
             <ListItem key={index}>
-              <Avatar>
-                <LocationCitySharp />
-              </Avatar>
+              <Link
+                key={index}
+                to={'/building/' + building.name}
+                style={{ textDecoration: 'none' }}
+              >
+                <Avatar>
+                  <LocationCitySharp />
+                </Avatar>
+              </Link>
               <ListItemText primary={building.name} />
             </ListItem>
           ))}

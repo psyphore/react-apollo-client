@@ -76,7 +76,7 @@ const PersonDetailedContainer = ({ classes, person }) => (
               </Paper>
             </Grid>
           ) : null}
-          {person.team && person.team.length !== 0 ? (
+          {person.products && person.products.length !== 0 ? (
             <Grid item md={3}>
               <Paper className={classes.paper}>
                 <ProductSummaryList

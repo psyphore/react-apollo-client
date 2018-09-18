@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { basicProduct, semiProduct } from '../fragments/product';
 
 export const getProductsQuery = gql`
   query($first: Int, $offset: Int) {
@@ -6,12 +7,20 @@ export const getProductsQuery = gql`
       ...productBasicFields
     }
   }
+  ${basicProduct}
 `;
 
 export const getProductQuery = gql`
-  query($id: ID, $name: String) {
-    products(id: $id, name: $name) {
-      ...productFullFields
+  query($name: String) {
+    product(title: $name) {
+      ...productSemiFields
+      champions {
+        id
+        firstname
+        lastname
+        avatar
+      }
     }
   }
+  ${semiProduct}
 `;

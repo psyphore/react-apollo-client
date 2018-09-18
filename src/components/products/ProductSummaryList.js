@@ -7,6 +7,7 @@ import Avatar from '@material-ui/core/Avatar';
 import WorkIcon from '@material-ui/icons/Work';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -32,9 +33,15 @@ const ProductSummaryList = ({ title, products, classes }) => (
     <List>
       {products.map(product => (
         <ListItem key={product.id}>
-          <Avatar>
-            <WorkIcon />
-          </Avatar>
+          <Link
+            key={product.id}
+            to={'/product/' + product.name}
+            style={{ textDecoration: 'none' }}
+          >
+            <Avatar>
+              <WorkIcon />
+            </Avatar>
+          </Link>
           <ListItemText primary={product.name} />
         </ListItem>
       ))}

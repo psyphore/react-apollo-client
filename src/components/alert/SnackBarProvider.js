@@ -1,16 +1,12 @@
 import React, { createContext, PureComponent } from 'react';
 
-const SharedSnackbarContext = createContext();
+const Context = createContext();
 
-export class SharedSnackbarProvider extends PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isOpen: false,
-      message: ''
-    };
-  }
+class ProviderComponent extends PureComponent {
+  state = {
+    isOpen: false,
+    message: ''
+  };
 
   openSnackbar = message => {
     this.setState({
@@ -29,9 +25,10 @@ export class SharedSnackbarProvider extends PureComponent {
   render() {
     const { children } = this.props;
     const { isOpen } = this.state;
+    const { Provider } = Context;
 
     return (
-      <SharedSnackbarContext.Provider
+      <Provider
         value={{
           openSnackbar: this.openSnackbar,
           closeSnackbar: this.closeSnackbar,
@@ -40,9 +37,10 @@ export class SharedSnackbarProvider extends PureComponent {
         }}
       >
         {children}
-      </SharedSnackbarContext.Provider>
+      </Provider>
     );
   }
 }
 
-export const SharedSnackbarConsumer = SharedSnackbarContext.Consumer;
+export const SharedSnackbarConsumer = Context.Consumer;
+export const SharedSnackbarProvider = ProviderComponent;
