@@ -1,18 +1,15 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import PersonContext from '../../HOC/personContext';
 import Team from './TeamList';
-import Person from '../../components/people/PersonCard';
-import ProductSummaryList from '../../components/products/ProductSummaryList';
+import Person from '../people/PersonCard';
+import ProductSummaryList from '../products/ProductSummaryList';
+import DetailPanel from '../panel';
+
 // import { DontReadTheComments } from '../../components/notifications/NotesSubscriptions';
 
 import { Lunch } from '../lunch';
@@ -29,8 +26,8 @@ const styles = theme => ({
     gridGap: '5px',
     gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
     gridAutoRows: '50px',
-    alignContent: 'space-around',
-    alignItems: 'center'
+    alignContent: 'space-evenly',
+    alignItems: 'start'
   },
   actionPaper: {
     padding: theme.spacing.unit * 2,
@@ -62,87 +59,38 @@ const styles = theme => ({
   }
 });
 
-class DetailPanel extends PureComponent {
-  state = {
-    expended: null
-  };
-
-  handleChange = panel => (event, expanded) => {
-    this.setState({
-      expanded: expanded ? panel : false
-    });
-  };
-
-  render() {
-    const { expanded } = this.state;
-    const {
-      classes: {
-        DetailPanel: { root, heading }
-      },
-      title,
-      subtitle,
-      children
-    } = this.props;
-
-    return (
-      <div className={root}>
-        <ExpansionPanel
-          expanded={expanded === title + ''.replace(/ +/g, '_')}
-          onChange={this.handleChange(title)}
-        >
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <span className={heading}>
-              {title && (
-                <Typography variant="title" component="h2">
-                  {title}
-                </Typography>
-              )}
-              {subtitle && (
-                <Typography variant="caption" component="h6">
-                  {subtitle}
-                </Typography>
-              )}
-            </span>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>{children}</ExpansionPanelDetails>
-        </ExpansionPanel>
-      </div>
-    );
-  }
-}
-
 class ProfileContainer extends PureComponent {
   render() {
     const { classes, person, auth } = this.props;
     const { Provider } = PersonContext;
     return (
-      <Fragment>
-        <Provider value={{ actions: {}, state: { person, auth } }}>
-          <Grid container spacing={8} wrap="wrap" justify="space-evenly">
-            <Grid item md={12}>
-              <Paper className={classes.actionPaper}>
-                <div className={classes.quickAction}>
-                  <Lunch person={person} />
-                </div>
-              </Paper>
-            </Grid>
-            <Grid item md={3}>
-              <Person detail={person} />
-            </Grid>
-            <Grid item md={9}>
-              <Grid container spacing={8} wrap="wrap" justify="flex-start">
-                {person.manager ? (
-                  <Grid item md={3}>
-                    <Paper className={classes.paper}>
-                      <Team
-                        title="Manager"
-                        collection={[person.manager]}
-                        classes={classes}
-                      />
-                    </Paper>
-                  </Grid>
-                ) : null}
-                {person.line && person.line.length !== 0 ? (
+      <Provider value={{ actions: {}, state: { person, auth } }}>
+        <Grid container spacing={8} wrap="wrap" justify="space-evenly">
+          <Grid item md={12}>
+            <Paper className={classes.actionPaper}>
+              <div className={classes.quickAction}>
+                <Lunch person={person} />
+              </div>
+            </Paper>
+          </Grid>
+          <Grid item md={3}>
+            <Person detail={person} />
+          </Grid>
+          <Grid item md={9}>
+            <Grid container spacing={8} wrap="wrap" justify="flex-start">
+              {person.manager && (
+                <Grid item md={3}>
+                  <Paper className={classes.paper}>
+                    <Team
+                      title="Manager"
+                      collection={[person.manager]}
+                      classes={classes}
+                    />
+                  </Paper>
+                </Grid>
+              )}
+              {person.line &&
+                person.line.length !== 0 && (
                   <Grid item md={4}>
                     <DetailPanel
                       classes={classes}
@@ -151,15 +99,16 @@ class ProfileContainer extends PureComponent {
                     >
                       <Paper className={classes.paper}>
                         <Team
-                          title="Reporting Line"
+                          title=""
                           collection={person.line}
                           classes={classes}
                         />
                       </Paper>
                     </DetailPanel>
                   </Grid>
-                ) : null}
-                {person.team && person.team.length !== 0 ? (
+                )}
+              {person.team &&
+                person.team.length !== 0 && (
                   <Grid item md={4}>
                     <DetailPanel
                       classes={classes}
@@ -167,31 +116,27 @@ class ProfileContainer extends PureComponent {
                       subtitle="The people I share the same manager with"
                     >
                       <Team
-                        title="My Team"
+                        title=""
                         collection={person.team}
                         classes={classes}
                       />
                     </DetailPanel>
                   </Grid>
-                ) : null}
-                {person.team && person.team.length !== 0 ? (
+                )}
+              {person.products &&
+                person.products.length !== 0 && (
                   <Grid item md={4}>
                     <DetailPanel
                       classes={classes}
                       title="My Products"
                       subtitle="I know these products"
                     >
-                      <Paper className={classes.paper}>
-                        <ProductSummaryList
-                          products={person.products}
-                          title="My Products"
-                        />
-                      </Paper>
+                      <ProductSummaryList title="" products={person.products} />
                     </DetailPanel>
                   </Grid>
-                ) : null}
-              </Grid>
-              {/* <Grid container spacing={8} wrap="wrap" justify="flex-start">
+                )}
+            </Grid>
+            {/* <Grid container spacing={8} wrap="wrap" justify="flex-start">
                 <Grid item md={12}>
                   <DetailPanel
                     classes={classes}
@@ -204,10 +149,9 @@ class ProfileContainer extends PureComponent {
                   </DetailPanel>
                 </Grid>
               </Grid> */}
-            </Grid>
           </Grid>
-        </Provider>
-      </Fragment>
+        </Grid>
+      </Provider>
     );
   }
 }

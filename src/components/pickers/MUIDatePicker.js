@@ -1,6 +1,6 @@
 import React from 'react';
 import { string, func } from 'prop-types';
-import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 import { InlineDatePicker } from 'material-ui-pickers/DatePicker';
 import {
@@ -8,17 +8,19 @@ import {
   ChevronRightSharp,
   CalendarTodaySharp
 } from '@material-ui/icons';
-import Moment from 'moment';
+import DayJS from 'dayjs';
 
 const MUIDatePicker = ({ defaultValue, label, onUpdate }) => (
-  <MuiPickersUtilsProvider utils={MomentUtils}>
+  <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <InlineDatePicker
       adornmentPosition="start"
       disablePast={true}
       disableFuture={false}
-      maxDate={Moment().add('months', 2)}
-      format="DD MMM YYYY"
-      keyboard
+      maxDate={DayJS()
+        .add(2, 'week')
+        .toISOString()}
+      format="dd MMMM YYYY"
+      keyboard={false}
       keyboardIcon={<CalendarTodaySharp />}
       rightArrowIcon={<ChevronRightSharp />}
       leftArrowIcon={<ChevronLeftSharp />}

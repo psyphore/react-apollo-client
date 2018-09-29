@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 
-const ErrorMessage = ({ error }) => (
-  <Fragment>{JSON.stringify(error)}</Fragment>
-);
+const ErrorMessage = ({ error }) => <Fragment>{error.Message}</Fragment>;
+
 export default ErrorMessage;

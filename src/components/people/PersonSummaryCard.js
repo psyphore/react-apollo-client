@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -19,21 +19,22 @@ const styles = {
     left: '50%'
   },
   cardContent: {
-    textAlign: 'center'
+    textAlign: 'left',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   }
 };
 
 const PersonSummaryCard = ({ classes, person }) => (
-  <Fragment>
-    <Card className={classes.card}>
-      <PersonCardImage detail={person} mediaClass={classes.media} />
-      <CardContent className={classes.cardContent}>
-        <Typography gutterBottom variant="headline" component="h4">
-          {person.firstname + ' ' + person.lastname}
-        </Typography>
-      </CardContent>
-    </Card>
-  </Fragment>
+  <Card className={classes.card}>
+    <PersonCardImage detail={person} mediaClass={classes.media} />
+    <CardContent className={classes.cardContent}>
+      <Typography gutterBottom variant="headline" component="h4">
+        {person.firstname + ' ' + person.lastname}
+      </Typography>
+    </CardContent>
+  </Card>
 );
 
 PersonSummaryCard.propTypes = {

@@ -83,7 +83,7 @@ const PersonCard = ({ classes, detail }) => (
                 style={{ textDecoration: 'none' }}
               >
                 <Avatar>
-                  <LocationCitySharp />
+                  <LocationCitySharp color="action" />
                 </Avatar>
               </Link>
               <ListItemText primary={building.name} />

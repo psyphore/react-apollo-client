@@ -52,7 +52,7 @@ const SearchInput = ({
           autoFocus
           disabled={fetching}
           fullWidth
-          helperText="Search for person via title, first name, last name, branch name, branch address, product name. (case sensitive for now)"
+          helperText="Search for person via title, first name, last name, branch name, branch address, product name."
           id="full-width-search"
           label="Search"
           margin="normal"
@@ -87,7 +87,8 @@ class GraphQLSearch extends PureComponent {
       result: null,
       count: null,
       fetching: false,
-      lapsedTime: null
+      lapsedTime: null,
+      errors: null
     };
 
     this._reset = this._reset.bind(this);
@@ -103,7 +104,8 @@ class GraphQLSearch extends PureComponent {
       result: null,
       count: null,
       fetching: false,
-      lapsedTime: null
+      lapsedTime: null,
+      errors: null
     });
   };
 

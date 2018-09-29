@@ -119,7 +119,7 @@ const DialogActions = ({
       <MUIDatePicker
         label="Date"
         onUpdate={updateDay}
-        defaultValue={today.format()}
+        defaultValue={today.toISOString()}
       />
     </div>
   </Paper>

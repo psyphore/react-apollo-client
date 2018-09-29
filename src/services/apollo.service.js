@@ -7,6 +7,7 @@ import { RetryLink } from 'apollo-link-retry';
 import { withClientState } from 'apollo-link-state';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+// import { BatchHttpLink } from "apollo-link-batch-http";
 
 import Auth from './security.service';
 
@@ -32,6 +33,9 @@ export const createClient = (uri, ws) => {
   const cache = new InMemoryCache();
 
   const stateLink = withClientState({ cache, defaults: defaultState });
+
+  // https://blog.apollographql.com/batching-client-graphql-queries-a685f5bcd41b
+  // const batchHttpLink = new BatchHttpLink({ uri, headers: { batch: "true " } });
 
   const wsLink = new WebSocketLink({
     uri: ws,

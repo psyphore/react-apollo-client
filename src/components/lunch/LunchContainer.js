@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { withApollo } from 'react-apollo';
-import * as moment from 'moment';
+import dayJS from 'dayjs';
 
 import LunchButton from './LunchButton';
 import LunchDialog from './LunchDialog';
@@ -14,7 +14,7 @@ class LunchContainer extends PureComponent {
     this.state = {
       open: false,
       selection: null,
-      today: moment(),
+      today: dayJS(),
       todaysOptions: [],
       fetching: false,
       extensions: null,
@@ -42,7 +42,7 @@ class LunchContainer extends PureComponent {
   handleClickOpen = async () => {
     this.setState(() => ({
       open: true,
-      today: moment(),
+      today: dayJS(),
       selection: null,
       todaysOptions: [],
       fetching: false,
@@ -78,10 +78,10 @@ class LunchContainer extends PureComponent {
   };
 
   handleUpdateDay = value => {
-    let day = moment(value);
+    let day = dayJS(value);
 
     !day.isValid()
-      ? this.setState(() => ({ today: moment() }))
+      ? this.setState(() => ({ today: dayJS() }))
       : this.setState(() => ({ today: day }));
 
     setTimeout(() => {
@@ -101,7 +101,7 @@ class LunchContainer extends PureComponent {
       variables: {
         body: {
           content: this.state.selection,
-          date: this.state.today.format('DDMMYYYY'),
+          date: this.state.today.toISOString(),
           person: {
             id: person.id,
             firstname: person.firstname,
@@ -142,7 +142,7 @@ class LunchContainer extends PureComponent {
 
     const result = await client.query({
       query: todaysMeals,
-      variables: { date: today.format('DDMMYYYY') },
+      variables: { date: today.toISOString() },
       options: { fetchPolicy: 'network-only' }
     });
 

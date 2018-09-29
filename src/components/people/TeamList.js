@@ -1,25 +1,21 @@
 import React, { Fragment } from 'react';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 
 import PersonC from './PersonChip';
+import TitleRender from '../title';
 
-export default ({ classes, title, collection }) => (
-  <Fragment>
-    {collection && collection.length !== 0 ? (
-      <div>
-        <div className={classes.actionPaper}>
-          <Typography variant="title" gutterBottom>
-            {title}
-          </Typography>
-          <Divider />
-        </div>
-        <div className={classes.children}>
-          {collection.map(person => (
-            <PersonC key={person.id} detail={person} />
-          ))}
-        </div>
-      </div>
-    ) : null}
-  </Fragment>
+const BodyRender = ({ children, collection }) => (
+  <div className={children}>
+    {collection.map(person => (
+      <PersonC key={person.id} detail={person} />
+    ))}
+  </div>
 );
+
+export default ({ classes, title, collection }) =>
+  collection &&
+  collection.length !== 0 && (
+    <Fragment>
+      <TitleRender title={title} action={classes.actionPaper} />
+      <BodyRender collection={collection} children={classes.children} />
+    </Fragment>
+  );

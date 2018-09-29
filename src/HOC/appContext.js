@@ -37,7 +37,7 @@ class ProviderComponent extends Component {
   };
 
   async componentDidMount() {
-    console.log(`current app state: ${JSON.stringify(this.state, null, 2)}`);
+    //console.log(`current app state: ${JSON.stringify(this.state, null, 2)}`);
   }
 
   render() {

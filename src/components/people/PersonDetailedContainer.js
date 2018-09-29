@@ -1,11 +1,11 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-import Person from '../../components/people/PersonCard';
-import ProductSummaryList from '../../components/products/ProductSummaryList';
+import Person from '../people/PersonCard';
+import ProductSummaryList from '../products/ProductSummaryList';
 import Team from './TeamList';
 
 const styles = theme => ({
@@ -20,8 +20,8 @@ const styles = theme => ({
     gridGap: '5px',
     gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
     gridAutoRows: '50px',
-    alignContent: 'space-around',
-    alignItems: 'center'
+    alignContent: 'space-evenly',
+    alignItems: 'start'
   },
   actionPaper: {
     padding: theme.spacing.unit * 2,
@@ -36,25 +36,25 @@ const styles = theme => ({
 });
 
 const PersonDetailedContainer = ({ classes, person }) => (
-  <Fragment>
-    <Grid container spacing={8} wrap="wrap" justify="space-evenly">
-      <Grid item md={3}>
-        <Person detail={person} />
-      </Grid>
-      <Grid item md={9}>
-        <Grid container spacing={8} wrap="wrap" justify="space-evenly">
-          {person.manager ? (
-            <Grid item md={3}>
-              <Paper className={classes.paper}>
-                <Team
-                  title="Manager"
-                  collection={[person.manager]}
-                  classes={classes}
-                />
-              </Paper>
-            </Grid>
-          ) : null}
-          {person.line && person.line.length !== 0 ? (
+  <Grid container spacing={8} wrap="wrap" justify="space-evenly">
+    <Grid item md={3}>
+      <Person detail={person} />
+    </Grid>
+    <Grid item md={9}>
+      <Grid container spacing={8} wrap="wrap" justify="space-evenly">
+        {person.manager && (
+          <Grid item md={3}>
+            <Paper className={classes.paper}>
+              <Team
+                title="Manager"
+                collection={[person.manager]}
+                classes={classes}
+              />
+            </Paper>
+          </Grid>
+        )}
+        {person.line &&
+          person.line.length !== 0 && (
             <Grid item md={3}>
               <Paper className={classes.paper}>
                 <Team
@@ -64,8 +64,9 @@ const PersonDetailedContainer = ({ classes, person }) => (
                 />
               </Paper>
             </Grid>
-          ) : null}
-          {person.team && person.team.length !== 0 ? (
+          )}
+        {person.team &&
+          person.team.length !== 0 && (
             <Grid item md={3}>
               <Paper className={classes.paper}>
                 <Team
@@ -75,8 +76,9 @@ const PersonDetailedContainer = ({ classes, person }) => (
                 />
               </Paper>
             </Grid>
-          ) : null}
-          {person.products && person.products.length !== 0 ? (
+          )}
+        {person.products &&
+          person.products.length !== 0 && (
             <Grid item md={3}>
               <Paper className={classes.paper}>
                 <ProductSummaryList
@@ -85,11 +87,10 @@ const PersonDetailedContainer = ({ classes, person }) => (
                 />
               </Paper>
             </Grid>
-          ) : null}
-        </Grid>
+          )}
       </Grid>
     </Grid>
-  </Fragment>
+  </Grid>
 );
 
 PersonDetailedContainer.propTypes = {
