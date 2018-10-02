@@ -7,6 +7,7 @@ import { RetryLink } from 'apollo-link-retry';
 import { withClientState } from 'apollo-link-state';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { createUploadLink } from 'apollo-upload-client';
 // import { BatchHttpLink } from "apollo-link-batch-http";
 
 import Auth from './security.service';
@@ -47,7 +48,12 @@ export const createClient = (uri, ws) => {
     }
   });
 
-  const httpLink = new HttpLink({ uri: uri, credentials: 'same-origin' });
+  const uploadLink = createUploadLink({
+    credentials: 'same-origin',
+    uri
+  });
+
+  const httpLink = new HttpLink({ uri, credentials: 'same-origin' });
 
   const retryLink = new RetryLink({ delay: 5000, attempts: 2 });
 
@@ -86,6 +92,7 @@ export const createClient = (uri, ws) => {
     authMiddleware,
     stateLink,
     retryLink,
+    uploadLink,
     splitter
   ]);
 

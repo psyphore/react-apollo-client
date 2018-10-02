@@ -5,17 +5,17 @@ import TitleRender from '../title';
 
 const BodyRender = ({ children, collection }) => (
   <div className={children}>
-    {collection.map(person => (
-      <PersonC key={person.id} detail={person} />
+    {collection.map((person, index) => (
+      <PersonC key={person.id + index} detail={person} />
     ))}
   </div>
 );
 
-export default ({ classes, title, collection }) =>
+export default ({ classes: { actionPaper, children }, title, collection }) =>
   collection &&
   collection.length !== 0 && (
     <Fragment>
-      <TitleRender title={title} action={classes.actionPaper} />
-      <BodyRender collection={collection} children={classes.children} />
+      <TitleRender title={title} action={actionPaper} />
+      <BodyRender collection={collection} children={children} />
     </Fragment>
   );

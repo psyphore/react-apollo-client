@@ -1,5 +1,5 @@
 import React from 'react';
-import { object } from 'prop-types';
+import { object, element } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -32,10 +32,20 @@ const styles = {
   }
 };
 
-const PersonCard = ({ classes, detail }) => (
+const clickHandler = (e, child) => {
+  if (!child) return;
+  e.preventDefault();
+  debugger;
+  //child.click();
+};
+
+const PersonCard = ({ classes, detail, children }) => (
   <div className={classes.root}>
     <Card className={classes.card}>
-      <PersonCardImage detail={detail} mediaClass={classes.media} />
+      <div onClick={e => clickHandler(e, children)}>
+        <PersonCardImage detail={detail} mediaClass={classes.media} />
+      </div>
+      {/* {children} */}
       <CardContent>
         <Typography gutterBottom variant="headline" component="h3">
           {`${detail.firstname}${
@@ -103,7 +113,8 @@ const PersonCard = ({ classes, detail }) => (
 
 PersonCard.propTypes = {
   classes: object.isRequired,
-  detail: object.isRequired
+  detail: object.isRequired,
+  UploadAvatar: element
 };
 
 const Person = withStyles(styles)(PersonCard);

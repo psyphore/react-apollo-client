@@ -1,48 +1,25 @@
-import { getBuildingsQuery, getBuildingQuery } from './queries/building';
-import {
+export { getBuildingsQuery, getBuildingQuery } from './queries/building';
+export {
   getPeopleQuery,
   getPersonQuery,
   getMeQuery,
   getMyAvatarQuery,
   getMyNotificationsQuery
 } from './queries/person';
-import { getProductsQuery, getProductQuery } from './queries/product';
-import { searchQuery } from './queries/search';
-import {
+export { getProductsQuery, getProductQuery } from './queries/product';
+export { searchQuery } from './queries/search';
+export {
   serverHits,
   notifications,
   getMyNotifications
 } from './subscriptions/subs';
-import { leaveNotification } from './subscriptions/leave';
-import {
+export { leaveNotification } from './subscriptions/leave';
+export {
   todaysMeals,
   mealTrends,
   myMealHistory,
   recomendedMeals
 } from './queries/lunch';
-import { placeOrder } from './mutiations/order-lunch';
-import { supportRegister, currentSupportPerson } from './queries/support';
-
-export {
-  getBuildingQuery,
-  getBuildingsQuery,
-  getPeopleQuery,
-  getPersonQuery,
-  getProductsQuery,
-  getProductQuery,
-  searchQuery,
-  serverHits,
-  notifications,
-  leaveNotification,
-  todaysMeals,
-  placeOrder,
-  supportRegister,
-  currentSupportPerson,
-  getMeQuery,
-  getMyAvatarQuery,
-  mealTrends,
-  myMealHistory,
-  recomendedMeals,
-  getMyNotificationsQuery,
-  getMyNotifications
-};
+export { placeOrder } from './mutiations/order-lunch';
+export { supportRegister, currentSupportPerson } from './queries/support';
+export { upload_file, upload_files } from './mutiations/media-upload';

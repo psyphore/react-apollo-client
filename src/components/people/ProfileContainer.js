@@ -9,6 +9,7 @@ import Team from './TeamList';
 import Person from '../people/PersonCard';
 import ProductSummaryList from '../products/ProductSummaryList';
 import DetailPanel from '../panel';
+import { UploadOneFile, UploadFile } from '../media';
 
 // import { DontReadTheComments } from '../../components/notifications/NotesSubscriptions';
 
@@ -74,7 +75,9 @@ class ProfileContainer extends PureComponent {
             </Paper>
           </Grid>
           <Grid item md={3}>
-            <Person detail={person} />
+            <Person detail={person}>
+              <UploadFile ref="up" />
+            </Person>
           </Grid>
           <Grid item md={9}>
             <Grid container spacing={8} wrap="wrap" justify="flex-start">
