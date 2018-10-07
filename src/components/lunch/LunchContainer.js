@@ -1,10 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { withApollo } from 'react-apollo';
 import dayJS from 'dayjs';
 
 import LunchButton from './LunchButton';
 import LunchDialog from './LunchDialog';
-import SnackBar from '../alert/SnackBar';
+import { SharedSnackbarConsumer } from '../alert/SnackBarProvider';
 import { todaysMeals, placeOrder, myMealHistory } from '../../graphql';
 import { LunchContext } from '../../HOC';
 
@@ -223,15 +223,15 @@ class LunchContainer extends PureComponent {
       <LunchContext.Provider
         value={{ actions, state: this.state, person: person }}
       >
-        <LunchButton clickHandler={this.handleClickOpen} />
-        <LunchDialog />
-        {snackAlert && (
-          <SnackBar
-            message={snackMessage}
-            open={snackAlert}
-            closeHandler={() => this.setState(() => ({ snackAlert: false }))}
-          />
-        )}
+        <SharedSnackbarConsumer>
+          {({ openSnackbar }) => (
+            <Fragment>
+              <LunchButton clickHandler={this.handleClickOpen} />
+              <LunchDialog />
+              {snackAlert && openSnackbar(snackMessage)}
+            </Fragment>
+          )}
+        </SharedSnackbarConsumer>
       </LunchContext.Provider>
     );
   }

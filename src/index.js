@@ -10,6 +10,7 @@ import App from './App';
 import { createClient } from './services';
 import { AppProvider, NotificationProvider } from './HOC';
 import { SharedSnackbarProvider } from './components/alert/SnackBarProvider';
+import { SharedFileManagerProvider } from './components/fileManager/FileManagerProvider';
 
 const client = createClient(
   process.env.REACT_APP_GRAPHQL_URI,
@@ -19,11 +20,13 @@ const client = createClient(
 const Main = () => (
   <ApolloProvider client={client}>
     <AppProvider>
-      <NotificationProvider>
-        <SharedSnackbarProvider>
-          <App />
-        </SharedSnackbarProvider>
-      </NotificationProvider>
+      <SharedFileManagerProvider>
+        <NotificationProvider>
+          <SharedSnackbarProvider>
+            <App />
+          </SharedSnackbarProvider>
+        </NotificationProvider>
+      </SharedFileManagerProvider>
     </AppProvider>
   </ApolloProvider>
 );

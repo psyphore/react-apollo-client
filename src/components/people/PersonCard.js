@@ -1,5 +1,5 @@
 import React from 'react';
-import { object, element } from 'prop-types';
+import { object, bool } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -13,10 +13,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import WorkIcon from '@material-ui/icons/Work';
 import LocationCitySharp from '@material-ui/icons/LocationCitySharp';
+import { PhotoRounded } from '@material-ui/icons/';
 import Link from 'react-router-dom/Link';
 // import CalendarTodaySharp from '@material-ui/icons/CalendarTodaySharp';
 
 import PersonCardImage from './PersonCardImage';
+import { SharedFileManagerConsumer } from '../fileManager/FileManagerProvider';
+import { UploadFile } from '../media';
 
 const styles = {
   root: {
@@ -32,20 +35,15 @@ const styles = {
   }
 };
 
-const clickHandler = (e, child) => {
-  if (!child) return;
-  e.preventDefault();
-  debugger;
-  //child.click();
+const avatarUpdateCallback = e => {
+  console.log(e);
+  window.location.reload();
 };
 
-const PersonCard = ({ classes, detail, children }) => (
+const PersonCard = ({ classes, detail, update = false }) => (
   <div className={classes.root}>
     <Card className={classes.card}>
-      <div onClick={e => clickHandler(e, children)}>
-        <PersonCardImage detail={detail} mediaClass={classes.media} />
-      </div>
-      {/* {children} */}
+      <PersonCardImage detail={detail} mediaClass={classes.media} />
       <CardContent>
         <Typography gutterBottom variant="headline" component="h3">
           {`${detail.firstname}${
@@ -99,6 +97,28 @@ const PersonCard = ({ classes, detail, children }) => (
               <ListItemText primary={building.name} />
             </ListItem>
           ))}
+          {update && (
+            <SharedFileManagerConsumer>
+              {value => (
+                <UploadFile
+                  parentId={detail.id}
+                  label="Person"
+                  callback={avatarUpdateCallback}
+                  activate={update}
+                >
+                  <ListItem>
+                    <Avatar>
+                      <PhotoRounded color="action" />
+                    </Avatar>
+                    <ListItemText
+                      primary="Update your avatar"
+                      secondary="Click here or drop your file here. (.jpg and .png only)"
+                    />
+                  </ListItem>
+                </UploadFile>
+              )}
+            </SharedFileManagerConsumer>
+          )}
           {/* <ListItem>
             <Avatar>
               <CalendarTodaySharp />
@@ -114,7 +134,7 @@ const PersonCard = ({ classes, detail, children }) => (
 PersonCard.propTypes = {
   classes: object.isRequired,
   detail: object.isRequired,
-  UploadAvatar: element
+  update: bool
 };
 
 const Person = withStyles(styles)(PersonCard);

@@ -5,6 +5,12 @@ export { default as GraphQLSearch } from './search/GraphQLSearch';
 export { default as ErrorMessage } from './error/index';
 export { default as AppFooter } from './layout/footer';
 export { default as Callback } from './security/Callback';
-export { default as AlertMessage } from './alert/SnackBar';
+export {
+  SharedSnackbarConsumer,
+  SharedSnackbarProvider
+} from './alert/SnackBarProvider';
 export { default as DatePicker } from './pickers/MUIDatePicker';
-export { default as FileManager } from './fileManager/index';
+export {
+  SharedFileManagerConsumer,
+  SharedFileManagerProvider
+} from './fileManager/FileManagerProvider';

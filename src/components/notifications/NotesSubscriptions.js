@@ -3,17 +3,22 @@ import { Subscription } from 'react-apollo';
 import Typography from '@material-ui/core/Typography';
 
 import { lunchNotification } from '../../graphql/subscriptions/lunch';
+import { SharedSnackbarConsumer } from '../alert/SnackBarProvider';
 
 const Message = ({ loading, data }) => (
   <Fragment>
     {!loading &&
       data && (
-        <Fragment>
-          <Typography variant="title" component="h4">
-            {data.subject}
-          </Typography>
-          {/* <pre>{JSON.parse(data.body)}</pre> */}
-        </Fragment>
+        <SharedSnackbarConsumer>
+          {({ openSnackbar }) => (
+            <Fragment>
+              <Typography variant="title" component="h4">
+                {data.subject}
+              </Typography>
+              {data.message && openSnackbar(data.message)}
+            </Fragment>
+          )}
+        </SharedSnackbarConsumer>
       )}
   </Fragment>
 );

@@ -1,50 +1,72 @@
 import React, { PureComponent } from 'react';
+import { string, func, bool } from 'prop-types';
 import { Mutation } from 'react-apollo';
+import Dropzone from 'react-dropzone';
+
 import { upload_file, upload_files } from '../../graphql';
 
-const singleFileUploadHandler = (
-  {
-    target: {
-      validity,
-      files: [file]
-    }
+const style = {
+  root: {
+    position: 'relative',
+    borderWidth: '0.7px',
+    borderColor: 'rgb(102, 102, 102)',
+    borderStyle: 'dashed',
+    borderRadius: '5px'
   },
-  uploader
-) => {
-  validity.valid && uploader({ variables: { file } });
+  activeStyle: {},
+  rejectStyle: {}
 };
 
-const multiFileUploadHandler = ({ target: { validity, files } }, uploader) => {
-  validity.valid && uploader({ variables: { files } });
-};
+export class UploadMultipleFiles extends PureComponent {
+  static propType = {
+    parentId: string.isRequired,
+    label: string.isRequired,
+    callback: func
+  };
 
-export const UploadOneFile = () => (
-  <Mutation mutation={upload_file}>
-    {uploadFile => (
-      <input
-        type="file"
-        required
-        onChange={e => singleFileUploadHandler(e, uploadFile)}
-      />
-    )}
-  </Mutation>
-);
+  multiFileUploadHandler = ({ target: { validity, files } }, uploader) => {
+    const { parentId, label } = this.props;
+    const link = {
+      parentId,
+      label,
+      files
+    };
+    validity.valid && uploader({ variables: { link } });
+  };
 
-export const UploadMultipleFiles = () => (
-  <Mutation mutation={upload_files}>
-    {uploadFiles => (
-      <input
-        type="file"
-        multiple
-        required
-        onChange={e => multiFileUploadHandler(e, uploadFiles)}
-      />
-    )}
-  </Mutation>
-);
+  render() {
+    return (
+      <Mutation mutation={upload_files}>
+        {uploadFiles => (
+          <input
+            type="file"
+            multiple
+            required
+            onChange={e => this.multiFileUploadHandler(e, uploadFiles)}
+          />
+        )}
+      </Mutation>
+    );
+  }
+}
 
 export class UploadFile extends PureComponent {
-  fileUploadHandler = (
+  static propType = {
+    parentId: string.isRequired,
+    label: string.isRequired,
+    callback: func,
+    activate: bool
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      accepted: [],
+      rejected: []
+    };
+  }
+
+  fileUploadHandler = async (
     {
       target: {
         validity,
@@ -53,25 +75,39 @@ export class UploadFile extends PureComponent {
     },
     uploader
   ) => {
-    validity.valid && uploader({ variables: { file } });
-  };
-
-  triggerUpload = () => {
-    const { in1 } = this.refs;
     debugger;
-    in1.click();
+    const { parentId, label, callback } = this.props;
+    const link = {
+      parentId,
+      label,
+      file
+    };
+    const res =
+      validity.valid &&
+      (await uploader({
+        variables: {
+          link
+        }
+      }));
+    callback && callback(res.data);
   };
 
   render() {
+    const { children } = this.props;
     return (
       <Mutation mutation={upload_file}>
         {uploadFile => (
-          <input
-            ref="in1"
-            type="file"
-            required
+          <Dropzone
+            accept="image/jpeg, image/png"
+            style={style.root}
+            multiple={false}
+            onDrop={(accepted, rejected) => {
+              this.setState(() => ({ accepted, rejected }));
+            }}
             onChange={e => this.fileUploadHandler(e, uploadFile)}
-          />
+          >
+            {children}
+          </Dropzone>
         )}
       </Mutation>
     );

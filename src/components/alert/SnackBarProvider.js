@@ -1,6 +1,12 @@
 import React, { createContext, PureComponent } from 'react';
+import SharedSnackbar from './SharedSnackBar';
 
-const Context = createContext();
+const Context = createContext({
+  openSnackbar: () => null,
+  closeSnackbar: () => null,
+  snackbarIsOpen: false,
+  message: null
+});
 
 class ProviderComponent extends PureComponent {
   state = {
@@ -9,17 +15,17 @@ class ProviderComponent extends PureComponent {
   };
 
   openSnackbar = message => {
-    this.setState({
+    this.setState(() => ({
       message,
       isOpen: true
-    });
+    }));
   };
 
   closeSnackbar = () => {
-    this.setState({
+    this.setState(() => ({
       message: '',
       isOpen: false
-    });
+    }));
   };
 
   render() {
@@ -36,6 +42,7 @@ class ProviderComponent extends PureComponent {
           message: this.state.message
         }}
       >
+        <SharedSnackbar />
         {children}
       </Provider>
     );

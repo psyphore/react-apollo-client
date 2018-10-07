@@ -9,9 +9,8 @@ import Team from './TeamList';
 import Person from '../people/PersonCard';
 import ProductSummaryList from '../products/ProductSummaryList';
 import DetailPanel from '../panel';
-import { UploadOneFile, UploadFile } from '../media';
 
-// import { DontReadTheComments } from '../../components/notifications/NotesSubscriptions';
+import { DontReadTheComments } from '../../components/notifications/NotesSubscriptions';
 
 import { Lunch } from '../lunch';
 
@@ -75,9 +74,7 @@ class ProfileContainer extends PureComponent {
             </Paper>
           </Grid>
           <Grid item md={3}>
-            <Person detail={person}>
-              <UploadFile ref="up" />
-            </Person>
+            <Person detail={person} update={true} />
           </Grid>
           <Grid item md={9}>
             <Grid container spacing={8} wrap="wrap" justify="flex-start">
@@ -139,19 +136,11 @@ class ProfileContainer extends PureComponent {
                   </Grid>
                 )}
             </Grid>
-            {/* <Grid container spacing={8} wrap="wrap" justify="flex-start">
-                <Grid item md={12}>
-                  <DetailPanel
-                    classes={classes}
-                    title="Alerts"
-                    subtitle="My notifications"
-                  >
-                    <Paper className={classes.actionPaper}>
-                      <DontReadTheComments repoFullName="github.io" />
-                    </Paper>
-                  </DetailPanel>
-                </Grid>
-              </Grid> */}
+            <Grid container spacing={8} wrap="wrap" justify="flex-start">
+              <Grid item md={4}>
+                <DontReadTheComments repoFullName="psyphore.github.io" />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Provider>

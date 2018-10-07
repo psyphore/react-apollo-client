@@ -43,7 +43,7 @@ export const createClient = (uri, ws) => {
     options: {
       reconnect: true,
       connectionParams: {
-        authToken: auth.getAuthorizationHeader()
+        authorization: auth.getAuthorizationHeader()
       }
     }
   });
