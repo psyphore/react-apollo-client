@@ -13,8 +13,27 @@ const style = {
     borderStyle: 'dashed',
     borderRadius: '5px'
   },
-  activeStyle: {},
-  rejectStyle: {}
+  activeStyle: {
+    position: 'relative',
+    borderWidth: '1.1px',
+    borderColor: 'rgb(112, 177, 210)',
+    borderStyle: 'dashed',
+    borderRadius: '5px'
+  },
+  acceptStyle: {
+    position: 'relative',
+    borderWidth: '1.7px',
+    borderColor: 'rgb(0, 255, 0)',
+    borderStyle: 'solid',
+    borderRadius: '5px'
+  },
+  rejectStyle: {
+    position: 'relative',
+    borderWidth: '1.7px',
+    borderColor: 'rgb(255, 0, 0)',
+    borderStyle: 'solid',
+    borderRadius: '5px'
+  }
 };
 
 export class UploadMultipleFiles extends PureComponent {
@@ -61,29 +80,55 @@ export class UploadFile extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      accept: 'image/jpeg, image/png',
       accepted: [],
-      rejected: []
+      rejected: [],
+      dropzoneActive: false
     };
+
+    this.onDragEnter = this.onDragEnter.bind(this);
+    this.onDragLeave = this.onDragLeave.bind(this);
+    this.onDrop = this.onDrop.bind(this);
+    this.applyMimeTypes = this.applyMimeTypes.bind(this);
+    this.dzHandler = this.dzHandler.bind(this);
   }
 
-  fileUploadHandler = async (
-    {
-      target: {
-        validity,
-        files: [file]
-      }
-    },
-    uploader
-  ) => {
-    debugger;
+  onDragEnter() {
+    this.setState(() => ({
+      dropzoneActive: true
+    }));
+  }
+
+  onDragLeave() {
+    this.setState(() => ({
+      dropzoneActive: false
+    }));
+  }
+
+  onDrop(accepted, rejected) {
+    this.setState(() => ({
+      accepted,
+      rejected,
+      dropzoneActive: false
+    }));
+  }
+
+  applyMimeTypes(event) {
+    this.setState(() => ({
+      accept: event.target.value
+    }));
+  }
+
+  dzHandler = async uploader => {
     const { parentId, label, callback } = this.props;
+    const { accepted } = this.state;
     const link = {
       parentId,
       label,
-      file
+      file: accepted[0]
     };
     const res =
-      validity.valid &&
+      link.file &&
       (await uploader({
         variables: {
           link
@@ -94,17 +139,19 @@ export class UploadFile extends PureComponent {
 
   render() {
     const { children } = this.props;
+    const { accept } = this.state;
     return (
       <Mutation mutation={upload_file}>
         {uploadFile => (
           <Dropzone
-            accept="image/jpeg, image/png"
+            accept={accept}
             style={style.root}
+            activeStyle={style.activeStyle}
+            acceptStyle={style.acceptStyle}
+            rejectStyle={style.rejectStyle}
             multiple={false}
-            onDrop={(accepted, rejected) => {
-              this.setState(() => ({ accepted, rejected }));
-            }}
-            onChange={e => this.fileUploadHandler(e, uploadFile)}
+            onDropAccepted={() => this.dzHandler(uploadFile)}
+            onDrop={this.onDrop}
           >
             {children}
           </Dropzone>
