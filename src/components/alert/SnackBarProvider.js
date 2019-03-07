@@ -1,12 +1,7 @@
 import React, { createContext, PureComponent } from 'react';
 import SharedSnackbar from './SharedSnackBar';
 
-const Context = createContext({
-  openSnackbar: () => null,
-  closeSnackbar: () => null,
-  snackbarIsOpen: false,
-  message: null
-});
+const Context = createContext();
 
 class ProviderComponent extends PureComponent {
   state = {
@@ -14,7 +9,17 @@ class ProviderComponent extends PureComponent {
     message: ''
   };
 
+  counter = 0;
+
+  snackCount = () => {
+    console.group('Snackbar Activation');
+    this.counter += 1;
+    console.log(this.counter);
+    console.groupEnd();
+  };
+
   openSnackbar = message => {
+    this.snackCount();
     this.setState(() => ({
       message,
       isOpen: true
@@ -23,14 +28,14 @@ class ProviderComponent extends PureComponent {
 
   closeSnackbar = () => {
     this.setState(() => ({
-      message: '',
+      message: null,
       isOpen: false
     }));
   };
 
   render() {
     const { children } = this.props;
-    const { isOpen } = this.state;
+    const { isOpen, message } = this.state;
     const { Provider } = Context;
 
     return (
@@ -39,7 +44,7 @@ class ProviderComponent extends PureComponent {
           openSnackbar: this.openSnackbar,
           closeSnackbar: this.closeSnackbar,
           snackbarIsOpen: isOpen,
-          message: this.state.message
+          message: message
         }}
       >
         <SharedSnackbar />

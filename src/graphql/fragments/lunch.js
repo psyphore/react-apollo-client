@@ -12,6 +12,7 @@ export const mealHistory = gql`
     id
     content
     date
+    by
   }
 `;
 

@@ -1,8 +1,8 @@
 {
   "npm-scripts.showStartNotification": false,
   "window.zoomLevel": 0.75,
-  "editor.fontSize": 18,
-  "terminal.integrated.fontSize": 17,
+  "editor.fontSize": 12,
+  "terminal.integrated.fontSize": 12,
   "editor.formatOnSave": true,
   "files.exclude": {
     "**/.git": true,
@@ -32,5 +32,8 @@
   "emmet.excludeLanguages": ["typescript", "typescriptreact", "javascript"],
   "workbench.editor.showTabs": true,
   "breadcrumbs.enabled": true,
-  "editor.fontFamily": "'Fira Code', monospace"
+  "editor.fontFamily": "Fira Code",
+  "terminal.integrated.fontFamily": "Fira Code",
+  "terminal.integrated.fontWeightBold": "normal",
+  "terminal.integrated.shell.windows": "C:\\WINDOWS\\sysnative\\cmd.exe"
 }

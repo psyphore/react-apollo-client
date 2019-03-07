@@ -1,24 +1,28 @@
 import React, { Fragment } from 'react';
 import { object } from 'prop-types';
-import { graphql } from 'react-apollo';
+import { Query } from 'react-apollo';
 
 import { getMeQuery } from '../../graphql';
-import { Loader, ErrorMessage } from '../../components';
+import { Loader, ErrorBoundary } from '../../components';
 import ProfileContainer from '../../components/people/ProfileContainer';
 
-const ProfileView = ({ data, auth }) => (
-  <Fragment>
-    {data && data.loading ? <Loader /> : null}
-    {data && data.error ? <ErrorMessage error={data.error} /> : null}
-    {data && !data.loading && !data.error ? (
-      <ProfileContainer auth={auth} person={data.me} />
-    ) : null}
-  </Fragment>
+const ProfileView = ({ auth }) => (
+  <Query query={getMeQuery}>
+    {({ loading, error, data: { me }, refetch }) => (
+      <ErrorBoundary>
+        <Fragment>
+          {loading ? <Loader /> : null}
+          {!loading && !error && (
+            <ProfileContainer auth={auth} person={me} refetch={refetch} />
+          )}
+        </Fragment>
+      </ErrorBoundary>
+    )}
+  </Query>
 );
 
 ProfileView.propTypes = {
-  classes: object,
-  data: object.isRequired
+  classes: object
 };
 
-export default graphql(getMeQuery, {})(ProfileView);
+export default ProfileView;

@@ -11,7 +11,7 @@ export default ({ clickHandler }) => (
       onClick={clickHandler}
       variant="fab"
     >
-      <AddShoppingCart />
+      <AddShoppingCart color="action" />
     </Button>
   </Tooltip>
 );

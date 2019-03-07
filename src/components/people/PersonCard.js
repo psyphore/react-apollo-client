@@ -13,41 +13,25 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import WorkIcon from '@material-ui/icons/Work';
 import LocationCitySharp from '@material-ui/icons/LocationCitySharp';
-import { PhotoRounded } from '@material-ui/icons/';
+import { EditAttributesSharp } from '@material-ui/icons/';
 import Link from 'react-router-dom/Link';
-// import CalendarTodaySharp from '@material-ui/icons/CalendarTodaySharp';
+
+import { personCardStyle } from '../../assets/jss';
 
 import PersonCardImage from './PersonCardImage';
-import { SharedFileManagerConsumer } from '../fileManager/FileManagerProvider';
-import { UploadFile } from '../media';
 
-const styles = {
-  root: {
-    marginTop: '1%',
-    marginLeft: '8%'
-  },
-  card: {
-    maxWidth: 345
-  },
-  media: {
-    height: 15,
-    paddingTop: '56.25%' // 16:9
-  }
-};
-
-const avatarUpdateCallback = e => {
-  console.log(e);
-  window.location.reload();
-};
+import EditProfile from './ProfileEditDialog';
 
 const PersonCard = ({ classes, detail, update = false }) => (
   <div className={classes.root}>
     <Card className={classes.card}>
       <PersonCardImage detail={detail} mediaClass={classes.media} />
       <CardContent>
-        <Typography gutterBottom variant="headline" component="h3">
+        <Typography gutterBottom variant="h5" component="h3">
           {`${detail.firstname}${
-            detail.knownAs ? ` (${detail.knownAs}) ` : ' '
+            detail.knownAs && detail.knownAs.trim().length > 0
+              ? ` (${detail.knownAs}) `
+              : ' '
           }${detail.lastname}`}
         </Typography>
         <List>
@@ -97,34 +81,22 @@ const PersonCard = ({ classes, detail, update = false }) => (
               <ListItemText primary={building.name} />
             </ListItem>
           ))}
-          {update && (
-            <SharedFileManagerConsumer>
-              {value => (
-                <UploadFile
-                  parentId={detail.id}
-                  label="Person"
-                  callback={avatarUpdateCallback}
-                  activate={update}
-                >
-                  <ListItem>
-                    <Avatar>
-                      <PhotoRounded color="action" />
-                    </Avatar>
-                    <ListItemText
-                      primary="Update your avatar"
-                      secondary="Click here or drop your file here. (.jpg and .png only)"
-                    />
-                  </ListItem>
-                </UploadFile>
-              )}
-            </SharedFileManagerConsumer>
-          )}
           {/* <ListItem>
             <Avatar>
               <CalendarTodaySharp />
             </Avatar>
             <ListItemText secondary="Leave State" />
           </ListItem> */}
+          {update && (
+            <EditProfile detail={detail}>
+              <ListItem>
+                <Avatar>
+                  <EditAttributesSharp color="action" />
+                </Avatar>
+                <ListItemText primary="Edit Profile" />
+              </ListItem>
+            </EditProfile>
+          )}
         </List>
       </CardContent>
     </Card>
@@ -137,5 +109,4 @@ PersonCard.propTypes = {
   update: bool
 };
 
-const Person = withStyles(styles)(PersonCard);
-export default Person;
+export default withStyles(personCardStyle)(PersonCard);

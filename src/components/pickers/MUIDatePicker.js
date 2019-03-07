@@ -1,7 +1,7 @@
 import React from 'react';
 import { string, func } from 'prop-types';
-import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+import DateFnsUtils from '@date-io/date-fns';
+import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
 import { InlineDatePicker } from 'material-ui-pickers/DatePicker';
 import {
   ChevronLeftSharp,

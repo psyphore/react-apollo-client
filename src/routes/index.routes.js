@@ -1,6 +1,6 @@
 import React from 'react';
 import Loadable from 'react-loadable';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import withAuthorization from '../HOC/withAuth';
 import Loader from '../components/loader/NavLoader';
@@ -32,7 +32,8 @@ const SecurityCallback = Loadable({
 
 export default () => (
   <Switch>
-    <Route exact path="/" component={withAuthorization(Home)} />
+    <Route exact path="/me" component={withAuthorization(MyProfile)} />
+    <Route exact path="/search" component={withAuthorization(Home)} />
     <Route
       exact
       path="/person/:id"
@@ -48,7 +49,7 @@ export default () => (
       path="/product/:name"
       component={withAuthorization(ProductPeopleView)}
     />
-    <Route exact path="/me" component={withAuthorization(MyProfile)} />
     <Route exact path="/callback" component={SecurityCallback} />
+    <Redirect to="/me" />
   </Switch>
 );

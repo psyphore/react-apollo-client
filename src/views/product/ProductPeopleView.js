@@ -3,7 +3,7 @@ import { graphql } from 'react-apollo';
 
 import { getProductQuery } from '../../graphql';
 import ProductPeopleContainer from '../../components/products/ProductPeopleContainer';
-import { Loader, ErrorMessage } from '../../components';
+import { Loader, ErrorBoundary } from '../../components';
 
 const options = {
   options: ({ match }) => ({
@@ -14,13 +14,14 @@ const options = {
 };
 
 const ProductPeopleView = ({ data: { error, loading, product } }) => (
-  <Fragment>
-    {loading && <Loader />}
-    {error && <ErrorMessage error={error} />}
-    {!loading &&
-      !error &&
-      product && <ProductPeopleContainer product={product} />}
-  </Fragment>
+  <ErrorBoundary>
+    <Fragment>
+      {loading && <Loader />}
+      {!loading &&
+        !error &&
+        product && <ProductPeopleContainer product={product} />}
+    </Fragment>
+  </ErrorBoundary>
 );
 
 export default graphql(getProductQuery, options)(ProductPeopleView);

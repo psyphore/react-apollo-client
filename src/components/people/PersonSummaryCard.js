@@ -7,30 +7,13 @@ import Typography from '@material-ui/core/Typography';
 
 import PersonCardImage from './PersonCardImage';
 
-const styles = {
-  card: {
-    maxWidth: 345
-  },
-  media: {
-    height: 0,
-    paddingTop: '56.25%' // 16:9
-  },
-  avatar: {
-    left: '50%'
-  },
-  cardContent: {
-    textAlign: 'left',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis'
-  }
-};
+import { personSummaryCardStyle } from '../../assets/jss';
 
 const PersonSummaryCard = ({ classes, person }) => (
   <Card className={classes.card}>
     <PersonCardImage detail={person} mediaClass={classes.media} />
     <CardContent className={classes.cardContent}>
-      <Typography gutterBottom variant="headline" component="h4">
+      <Typography gutterBottom variant="h6">
         {person.firstname + ' ' + person.lastname}
       </Typography>
     </CardContent>
@@ -43,4 +26,6 @@ PersonSummaryCard.propTypes = {
   person: object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(PersonSummaryCard);
+export default withStyles(personSummaryCardStyle, { withTheme: true })(
+  PersonSummaryCard
+);

@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 
 import { withApollo } from 'react-apollo';
-import * as moment from 'moment';
+import dayJS from 'dayjs';
 
 import LeaveButton from './LeaveButton';
 import LeaveDialog from './LeaveDialog';
@@ -14,7 +14,7 @@ class LeaveContainer extends PureComponent {
     this.state = {
       open: false,
       selection: null,
-      today: moment(),
+      today: dayJS(),
       todaysOptions: [],
       fetching: false,
       extensions: null

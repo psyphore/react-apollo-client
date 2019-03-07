@@ -1,8 +1,6 @@
 import { createContext } from 'react';
 
-const LunchContext = createContext({
-  actions: {},
-  state: {}
-});
+const LunchContext = createContext();
 
-export default LunchContext;
+export const LunchProvider = LunchContext.Provider;
+export const SharedLunchConumer = LunchContext.Consumer;

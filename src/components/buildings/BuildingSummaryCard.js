@@ -40,14 +40,11 @@ class BuildingSummaryCard extends PureComponent {
             className={classes.badge.margin}
           >
             <Card className={classes.card}>
-              {/* <CardMedia className={classes.media}
-                  src={<Avatar className={classes.avatar}>H</Avatar>}
-                /> */}
               <CardContent>
-                <Typography gutterBottom variant="headline" component="h3">
+                <Typography gutterBottom variant="h3">
                   {building.name}
                 </Typography>
-                <Typography variant="subheading" color="textSecondary">
+                <Typography variant="subtitle1" color="textSecondary">
                   {building.address}
                 </Typography>
               </CardContent>

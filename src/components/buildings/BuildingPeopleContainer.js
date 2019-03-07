@@ -5,7 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import Link from 'react-router-dom/Link';
 import { Typography } from '@material-ui/core';
 
-import PersonSummaryCard from '../people/PersonSummaryCard';
+// import PersonSummaryCard from '../people/PersonSummaryCard';
+import PersonSummaryCard from '../people/PersonSummaryCard.1';
 
 const styles = theme => ({
   root: {
@@ -44,13 +45,9 @@ const BuildingPersonContainer = ({ building, classes }) => (
       wrap="wrap"
     >
       <Grid item md={12}>
-        <Typography variant="headline" component="h4">
-          {building.name}
-        </Typography>
-        <Typography variant="subheading" component="p">
-          {building.address}
-        </Typography>
-        <Typography variant="caption" component="p">
+        <Typography variant="h5">{building.name}</Typography>
+        <Typography variant="subtitle1">{building.address}</Typography>
+        <Typography variant="caption">
           {'Head count: ' + building.headcount}
         </Typography>
       </Grid>

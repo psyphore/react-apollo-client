@@ -6,7 +6,8 @@ import LunchButton from './LunchButton';
 import LunchDialog from './LunchDialog';
 import { SharedSnackbarConsumer } from '../alert/SnackBarProvider';
 import { todaysMeals, placeOrder, myMealHistory } from '../../graphql';
-import { LunchContext } from '../../HOC';
+import { LunchProvider } from '../../HOC';
+import ErrorBoundary from '../error';
 
 class LunchContainer extends PureComponent {
   constructor(props) {
@@ -18,25 +19,16 @@ class LunchContainer extends PureComponent {
       todaysOptions: [],
       fetching: false,
       extensions: null,
-      first: 10,
+      first: 5,
       offset: 0,
       history: [],
       trending: [],
-      recommended: []
+      recommended: [],
+      snackAlert: false,
+      snackMessage: null,
+      ownAcc: [],
+      onBehalfOf: null
     };
-
-    this.handleClickOpen = this.handleClickOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handlePlaceOrder = this.handlePlaceOrder.bind(this);
-    this.handleFetchingMealsOfTheDay = this.handleFetchingMealsOfTheDay.bind(
-      this
-    );
-    this.handleMealSelection = this.handleMealSelection.bind(this);
-    this.handleCustomMeal = this.handleCustomMeal.bind(this);
-    this.handleFetchingHistory = this.handleFetchingHistory.bind(this);
-    this.handleNextDay = this.handleNextDay.bind(this);
-    this.handlePrevDay = this.handlePrevDay.bind(this);
-    this.handleUpdateDay = this.handleUpdateDay.bind(this);
   }
 
   handleClickOpen = async () => {
@@ -47,11 +39,15 @@ class LunchContainer extends PureComponent {
       todaysOptions: [],
       fetching: false,
       extensions: null,
-      first: 10,
+      first: 5,
       offset: 0,
       history: [],
       trending: [],
-      recommended: []
+      recommended: [],
+      snackAlert: false,
+      snackMessage: null,
+      ownAcc: [],
+      onBehalfOf: null
     }));
     await this.asyncFetcher();
   };
@@ -90,35 +86,42 @@ class LunchContainer extends PureComponent {
   };
 
   handlePlaceOrder = async () => {
-    const { client, person } = this.props;
+    const { client } = this.props;
+    const { selection, today } = this.state;
 
     this.setState({
       fetching: true
     });
 
+    // todo: use token instead of person object
     const result = await client.mutate({
       mutation: placeOrder,
       variables: {
         body: {
-          content: this.state.selection,
-          date: this.state.today.toISOString(),
-          person: {
-            id: person.id,
-            firstname: person.firstname,
-            lastname: person.lastname,
-            mobile: person.mobile,
-            email: person.email
-          }
+          content: selection,
+          date: today.toISOString()
         }
       }
     });
 
     if (result.data.placeOrder) {
-      this.setState(() => ({
-        fetching: false,
-        snackAlert: true,
-        snackMessage: `Meal '${this.state.selection}' Placed Successfully`
-      }));
+      console.log('meal placement set state called');
+      setTimeout(() => {
+        console.log(result.data.placeOrder);
+        this.setState(state => ({
+          fetching: !state.fetching,
+          snackAlert: !state.snackAlert,
+          snackMessage: `Meal '${selection}' Placed Successfully`
+        }));
+        setTimeout(() => {
+          this.setState(() => ({
+            fetching: false,
+            snackAlert: false,
+            snackMessage: null,
+            selection: null
+          }));
+        }, 6000);
+      }, 1000);
 
       await this.handleFetchingHistory();
 
@@ -154,7 +157,8 @@ class LunchContainer extends PureComponent {
         fetching: false,
         extensions: result.extensions,
         snackAlert: false,
-        snackMessage: null
+        snackMessage: null,
+        ownAcc: []
       }));
       return;
     }
@@ -190,9 +194,32 @@ class LunchContainer extends PureComponent {
     }));
   };
 
+  nextHistoryBatch = async () => {
+    this.setState((state, props) => ({
+      offset: state.offset + 1 > 10 ? 10 : state.offset + 1
+    }));
+
+    await this.handleFetchingHistory();
+  };
+
+  prevHistoryBatch = async () => {
+    this.setState((state, props) => ({
+      offset: state.offset - 1 < 0 ? 0 : state.offset - 1
+    }));
+
+    await this.handleFetchingHistory();
+  };
+
   handleMealSelection = e => {
     this.setState(() => ({
       selection: e.name === 'nothing yet' ? e.type.replace(/_+/g, ' ') : e.name
+    }));
+  };
+
+  handleMealSelectionForSomeoneElse = e => {
+    console.log(e);
+    this.setState(() => ({
+      onBehalfOf: e.id
     }));
   };
 
@@ -200,6 +227,12 @@ class LunchContainer extends PureComponent {
     this.setState(() => ({
       customMeal: !this.state.customMeal,
       selection: null
+    }));
+  };
+
+  handleOwnAccount = item => {
+    this.setState(state => ({
+      ownAcc: [...state.ownAcc].push(item)
     }));
   };
 
@@ -216,23 +249,27 @@ class LunchContainer extends PureComponent {
       selection: (prop, value) => this.setState({ [prop]: value }),
       nextDay: this.handleNextDay,
       prevDay: this.handlePrevDay,
-      updateDay: this.handleUpdateDay
+      updateDay: this.handleUpdateDay,
+      nextHistory: this.nextHistoryBatch,
+      prevHistory: this.prevHistoryBatch,
+      ownAccount: this.handleOwnAccount,
+      selectOnBehalfOf: this.handleMealSelectionForSomeoneElse
     };
 
     return (
-      <LunchContext.Provider
-        value={{ actions, state: this.state, person: person }}
-      >
-        <SharedSnackbarConsumer>
-          {({ openSnackbar }) => (
-            <Fragment>
-              <LunchButton clickHandler={this.handleClickOpen} />
-              <LunchDialog />
-              {snackAlert && openSnackbar(snackMessage)}
-            </Fragment>
-          )}
-        </SharedSnackbarConsumer>
-      </LunchContext.Provider>
+      <ErrorBoundary>
+        <LunchProvider value={{ actions, state: this.state, person: person }}>
+          <SharedSnackbarConsumer>
+            {({ openSnackbar }) => (
+              <Fragment>
+                <LunchButton clickHandler={this.handleClickOpen} />
+                <LunchDialog />
+                {snackAlert && openSnackbar(snackMessage)}
+              </Fragment>
+            )}
+          </SharedSnackbarConsumer>
+        </LunchProvider>
+      </ErrorBoundary>
     );
   }
 }

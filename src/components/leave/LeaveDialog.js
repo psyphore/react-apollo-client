@@ -45,7 +45,7 @@ const FullScreenDialog = ({ classes }) => (
                 <CloseIcon />
               </IconButton>
               <Typography
-                variant="title"
+                variant="h6"
                 color="inherit"
                 className={classes.flex}
               >

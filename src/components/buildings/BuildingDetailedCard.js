@@ -44,14 +44,9 @@ class BuildingDetailedCard extends PureComponent {
     return (
       <div>
         <Card className={classes.card}>
-          {/* <CardMedia
-              className={classes.cover}
-              image={person.avatar}
-              title={person.firstname + ' ' + person.lastname}
-            /> */}
           <div className={classes.details}>
             <CardContent className={classes.content}>
-              <Typography variant="headline">{building.name}</Typography>
+              <Typography variant="h5">{building.name}</Typography>
             </CardContent>
             <div className={classes.controls}>
               <Link to={'/building/' + building.id}>

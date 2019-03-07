@@ -9,12 +9,15 @@ import Typography from '@material-ui/core/Typography';
 export default ({
   meals,
   parentActions: { selectMeal, customMeal },
-  title
+  title,
+  classes: { text }
 }) => (
   <Fragment>
-    <Typography variant="title" gutterBottom>
-      {title}
-    </Typography>
+    <div className={text}>
+      <Typography variant="h6" gutterBottom>
+        {title}
+      </Typography>
+    </div>
     <List>
       {meals &&
         meals.map((meal, index) => (

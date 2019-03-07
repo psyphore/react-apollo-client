@@ -6,6 +6,13 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+const style = {
+  root: {
+    display: 'block',
+    padding: '8px 24px 24px'
+  }
+};
+
 class PanelRender extends PureComponent {
   state = {
     expended: null
@@ -21,7 +28,7 @@ class PanelRender extends PureComponent {
     const { expanded } = this.state;
     const {
       classes: {
-        DetailPanel: { root, heading }
+        detailPanel: { root, heading }
       },
       title,
       subtitle,
@@ -36,19 +43,15 @@ class PanelRender extends PureComponent {
         >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <span className={heading}>
-              {title && (
-                <Typography variant="title" component="h2">
-                  {title}
-                </Typography>
-              )}
+              {title && <Typography variant="h5">{title}</Typography>}
               {subtitle && (
-                <Typography variant="caption" component="h6">
-                  {subtitle}
-                </Typography>
+                <Typography variant="caption">{subtitle}</Typography>
               )}
             </span>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>{children}</ExpansionPanelDetails>
+          <ExpansionPanelDetails style={style.root}>
+            {children}
+          </ExpansionPanelDetails>
         </ExpansionPanel>
       </div>
     );

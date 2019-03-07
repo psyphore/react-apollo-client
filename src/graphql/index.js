@@ -6,6 +6,7 @@ export {
   getMyAvatarQuery,
   getMyNotificationsQuery
 } from './queries/person';
+export { updateMe } from './mutiations/profile-update';
 export { getProductsQuery, getProductQuery } from './queries/product';
 export { searchQuery } from './queries/search';
 export {

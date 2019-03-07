@@ -7,7 +7,7 @@ const TitleRender = ({ action, title }) =>
   title &&
   title.trim().length !== 0 && (
     <div className={action}>
-      <Typography variant="title" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         {title}
       </Typography>
       <Divider />

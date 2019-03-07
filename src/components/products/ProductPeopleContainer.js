@@ -5,7 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import Link from 'react-router-dom/Link';
 import { Typography } from '@material-ui/core';
 
-import PersonSummaryCard from '../people/PersonSummaryCard';
+// import PersonSummaryCard from '../people/PersonSummaryCard';
+import PersonSummaryCard from '../people/PersonSummaryCard.1';
 
 const styles = theme => ({
   root: {
@@ -44,7 +45,7 @@ const ProductPeopleContainer = ({ product, classes }) => (
       wrap="wrap"
     >
       <Grid item md={12}>
-        <Typography variant="headline" component="h4">
+        <Typography variant="h5" component="h4">
           {product.name}
         </Typography>
         {/* <Typography variant="subheading" component="p">

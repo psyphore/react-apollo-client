@@ -42,7 +42,7 @@ const ProductDetailedCard = ({ classes, product }) => (
     <Card className={classes.card}>
       <div className={classes.details}>
         <CardContent className={classes.content}>
-          <Typography variant="headline">{product.name}</Typography>
+          <Typography variant="h5">{product.name}</Typography>
         </CardContent>
         <div className={classes.controls}>
           <Link to={'/building/' + product.id} styles={classes.link}>

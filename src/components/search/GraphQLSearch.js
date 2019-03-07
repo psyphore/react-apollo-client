@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { withApollo } from 'react-apollo';
+import { Query } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -9,45 +9,22 @@ import Link from 'react-router-dom/Link';
 import dayJS from 'dayjs';
 import { Typography } from '@material-ui/core';
 
-import { searchQuery } from '../../graphql';
-import PersonSummaryCard from '../people/PersonSummaryCard';
-import { Loader, ErrorMessage } from '../index';
+import { searchStyle } from '../../assets/jss';
 
-const styles = theme => ({
-  root: {
-    flexGrow: 1
-  },
-  results: {
-    display: 'grid',
-    gridGap: '5px',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(275px, 1fr))',
-    gridAutoRows: '240px',
-    alignItems: 'center',
-    width: '100vw',
-    maxWidth: '91vw',
-    margin: '0 auto',
-    [theme.breakpoints.down('md')]: { maxWidth: '85vw' },
-    [theme.breakpoints.down('sm')]: { maxWidth: '95vw' }
-  },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary
-  },
-  badge: {
-    margin: theme.spacing.unit * 2,
-    padding: `0 ${theme.spacing.unit * 2}px`
-  }
-});
+import { searchQuery } from '../../graphql';
+// import PersonSummaryCard from '../people/PersonSummaryCard';
+import PersonSummaryCard from '../people/PersonSummaryCard.1';
+import { Loader, ErrorBoundary } from '../index';
 
 const SearchInput = ({
-  classes: { paper },
+  classes: { paper, text },
   actions: { search, change, clear },
-  state: { fetching, query }
+  state: { fetching, count, lapsedTime, query },
+  mutator
 }) => (
   <div className={paper}>
     <Grid container justify="center" wrap="wrap" spacing={8}>
-      <Grid item xs={8}>
+      <Grid item xs={8} sm={8} md={8}>
         <TextField
           autoFocus
           disabled={fetching}
@@ -57,25 +34,60 @@ const SearchInput = ({
           label="Search"
           margin="normal"
           onChange={e => change(e.target.value)}
-          onKeyPress={e => (e.key === 'Enter' ? search() : null)}
+          onKeyPress={e => (e.key === 'Enter' ? search(mutator) : null)}
           onFocusCapture={() => clear()}
           value={query}
+          required
         />
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={2} sm={2} md={2}>
         <Button
           aria-label="search"
           color="primary"
           disabled={fetching}
-          onClick={search}
+          onClick={() => search(mutator)}
           variant="fab"
         >
           <Search />
         </Button>
       </Grid>
+      <Grid item xs={12} sm={12} md={12}>
+        {fetching && <Loader />}
+        {count && (
+          <div className={text}>
+            <Typography variant="caption">
+              Results Found {count} in {lapsedTime} seconds.
+            </Typography>
+          </div>
+        )}
+      </Grid>
     </Grid>
   </div>
 );
+
+const SearchResult = ({ classes, state: { result, lapsedTime } }) => {
+  return (
+    <Fragment>
+      {result && result.length ? (
+        <div className={classes.results}>
+          {result.map(res => (
+            <Link
+              key={res.id}
+              to={'/person/' + res.id}
+              style={{ textDecoration: 'none' }}
+            >
+              <PersonSummaryCard person={res} />
+            </Link>
+          ))}
+        </div>
+      ) : lapsedTime ? (
+        <div className={classes.text}>
+          <Typography variant="caption">No Results Found.</Typography>
+        </div>
+      ) : null}
+    </Fragment>
+  );
+};
 
 class GraphQLSearch extends PureComponent {
   constructor(props) {
@@ -99,7 +111,7 @@ class GraphQLSearch extends PureComponent {
 
   _reset = () => {
     this.setState({
-      first: 100,
+      first: 99999,
       offset: 0,
       result: null,
       count: null,
@@ -109,9 +121,8 @@ class GraphQLSearch extends PureComponent {
     });
   };
 
-  _executeSearch = async () => {
+  _executeSearch = async mutator => {
     const { query, first, offset } = this.state;
-    const { client } = this.props;
 
     let duration = dayJS();
 
@@ -128,28 +139,30 @@ class GraphQLSearch extends PureComponent {
       fetching: true
     });
 
-    const result = await client.query({
+    const { data, errors } = await mutator({
       query: searchQuery,
       variables: { query: { query, first, offset } }
     });
 
     let diff = dayJS().diff(duration, 'second', true);
 
-    if (result.errors) {
+    if (errors) {
       this.setState({
-        errors: result.errors,
+        errors: errors,
         fetching: false,
         lapsedTime: diff
       });
       return;
     }
 
-    this.setState({
-      result: result.data.search.data,
-      count: result.data.search.count,
-      fetching: false,
-      lapsedTime: diff
-    });
+    if (data) {
+      this.setState({
+        result: data.search.data,
+        count: data.search.count,
+        fetching: false,
+        lapsedTime: diff
+      });
+    }
   };
 
   _handleInputChange = value => {
@@ -162,7 +175,6 @@ class GraphQLSearch extends PureComponent {
 
   render() {
     const { classes } = this.props;
-    const { errors, fetching, count, result, lapsedTime } = this.state;
     const actions = {
       reset: this._reset,
       search: this._executeSearch,
@@ -171,55 +183,34 @@ class GraphQLSearch extends PureComponent {
     };
 
     return (
-      <Fragment>
-        <Grid
-          container
-          className={classes.root}
-          spacing={8}
-          justify="center"
-          wrap="wrap"
-        >
-          <Grid item xs={12}>
-            <SearchInput
-              actions={actions}
-              classes={classes}
-              state={this.state}
-            />
-          </Grid>
+      <Query query={searchQuery} skip={true}>
+        {({ client: { query } }) => (
+          <ErrorBoundary>
+            <Grid
+              container
+              className={classes.root}
+              spacing={8}
+              justify="center"
+              wrap="wrap"
+            >
+              <Grid item xs={12} sm={12} md={12}>
+                <SearchInput
+                  actions={actions}
+                  classes={classes}
+                  state={this.state}
+                  mutator={query}
+                />
+              </Grid>
 
-          <Grid item md={12}>
-            {fetching && <Loader />}
-            {errors && <ErrorMessage error={errors} />}
-            {count && (
-              <Typography variant="caption" component="span">
-                Results Found {count} in {lapsedTime} seconds.
-              </Typography>
-            )}
-          </Grid>
-
-          <Grid item md={12}>
-            {result && result.length ? (
-              <div className={classes.results}>
-                {result.map(res => (
-                  <Link
-                    key={res.id}
-                    to={'/person/' + res.id}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    <PersonSummaryCard person={res} />
-                  </Link>
-                ))}
-              </div>
-            ) : lapsedTime ? (
-              <Typography variant="caption" component="p">
-                No Results Found.
-              </Typography>
-            ) : null}
-          </Grid>
-        </Grid>
-      </Fragment>
+              <Grid item xs={12} sm={12} md={12}>
+                <SearchResult classes={classes} state={this.state} />
+              </Grid>
+            </Grid>
+          </ErrorBoundary>
+        )}
+      </Query>
     );
   }
 }
 
-export default withStyles(styles)(withApollo(GraphQLSearch));
+export default withStyles(searchStyle)(GraphQLSearch);

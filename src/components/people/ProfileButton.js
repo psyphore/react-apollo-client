@@ -4,7 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { graphql } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import Badge from '@material-ui/core/Badge';
+// import Badge from '@material-ui/core/Badge';
+import Typography from '@material-ui/core/Typography';
 
 import { getMyAvatarQuery } from '../../graphql';
 import PersonChipImage from './PersonChipImage';
@@ -13,29 +14,7 @@ import AppBarButtonLoader from '../loader/AppBarButtonLoader';
 
 // https://github.com/benawad/slack-clone-client/blob/49_subscriptions_auth/src/containers/MessageContainer.js
 
-const styles = theme => ({
-  row: {
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  avatar: {
-    margin: 10
-  },
-  bigAvatar: {
-    width: 60,
-    height: 60
-  },
-  badge: {
-    top: 1,
-    right: -15,
-    // The border color match the background color.
-    border: `2px solid ${
-      theme.palette.type === 'light'
-        ? theme.palette.grey[200]
-        : theme.palette.grey[900]
-    }`
-  }
-});
+import { personProfilebuttonStyle } from '../../assets/jss';
 
 const gqlOptions = {
   options: () => ({
@@ -47,28 +26,30 @@ const gqlOptions = {
 const ProfileButton = ({ data: { me, loading }, classes }) => (
   <div className={classes.row}>
     <Tooltip
-      title={me && me.firstname ? me.firstname : 'My Profile'}
+      title={me && me.firstname ? me.firstname : 'Unauthorized'}
       placement="top"
     >
-      <Badge
+      {/* <Badge
         badgeContent={0}
         color="primary"
         classes={{ badge: classes.badge }}
+      > */}
+      <Button
+        component={Link}
+        disabled={loading || !me}
+        to="/me"
+        variant="fab"
+        color="primary"
       >
-        <Button
-          component={Link}
-          disabled={loading}
-          to="/me"
-          variant="fab"
-          color="primary"
-        >
-          {loading ? (
-            <AppBarButtonLoader />
-          ) : (
-            me && <PersonChipImage detail={me} />
-          )}
-        </Button>
-      </Badge>
+        {loading ? (
+          <AppBarButtonLoader />
+        ) : me ? (
+          <PersonChipImage detail={me} />
+        ) : (
+          <Typography variant="caption">?</Typography>
+        )}
+      </Button>
+      {/* </Badge> */}
     </Tooltip>
   </div>
 );
@@ -79,5 +60,5 @@ ProfileButton.propTypes = {
 };
 
 export default graphql(getMyAvatarQuery, gqlOptions)(
-  withStyles(styles)(ProfileButton)
+  withStyles(personProfilebuttonStyle)(ProfileButton)
 );

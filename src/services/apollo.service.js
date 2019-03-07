@@ -8,7 +8,6 @@ import { withClientState } from 'apollo-link-state';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { createUploadLink } from 'apollo-upload-client';
-// import { BatchHttpLink } from "apollo-link-batch-http";
 
 import Auth from './security.service';
 
@@ -17,7 +16,7 @@ const defaultState = {};
 const defaultOptions = {
   watchQuery: {
     fetchPolicy: 'cache-and-network',
-    errorPolicy: 'ignore'
+    errorPolicy: 'all'
   },
   query: {
     fetchPolicy: 'network-only',
@@ -36,6 +35,7 @@ export const createClient = (uri, ws) => {
   const stateLink = withClientState({ cache, defaults: defaultState });
 
   // https://blog.apollographql.com/batching-client-graphql-queries-a685f5bcd41b
+  // import { BatchHttpLink } from "apollo-link-batch-http";
   // const batchHttpLink = new BatchHttpLink({ uri, headers: { batch: "true " } });
 
   const wsLink = new WebSocketLink({
@@ -50,10 +50,16 @@ export const createClient = (uri, ws) => {
 
   const uploadLink = createUploadLink({
     credentials: 'same-origin',
+    headers: {
+      authorization: auth.getAuthorizationHeader()
+    },
     uri
   });
 
-  const httpLink = new HttpLink({ uri, credentials: 'same-origin' });
+  const httpLink = new HttpLink({
+    uri,
+    credentials: 'same-origin'
+  });
 
   const retryLink = new RetryLink({ delay: 5000, attempts: 2 });
 
@@ -67,7 +73,9 @@ export const createClient = (uri, ws) => {
     return forward(operation);
   });
 
-  const errorHandler = onError(({ graphQLErrors, networkError }) => {
+  const errorHandler = onError(errObj => {
+    console.log(errObj);
+    const { graphQLErrors, networkError } = errObj;
     if (graphQLErrors)
       graphQLErrors.map(({ message, locations, path }) =>
         console.error(

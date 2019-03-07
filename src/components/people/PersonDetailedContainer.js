@@ -1,93 +1,70 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 import Person from '../people/PersonCard';
+// import Person from '../people/PersonCard.1';
 import ProductSummaryList from '../products/ProductSummaryList';
 import Team from './TeamList';
 
-const styles = theme => ({
-  root: {
-    display: 'grid',
-    gridGap: '5px',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(275px, 1fr))',
-    gridAutoRows: '240px'
-  },
-  children: {
-    display: 'grid',
-    gridGap: '5px',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-    gridAutoRows: '50px',
-    alignContent: 'space-evenly',
-    alignItems: 'start'
-  },
-  actionPaper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'left',
-    color: theme.palette.text.secondary
-  },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary
-  }
-});
+import { personDetailedContainerStyle } from '../../assets/jss';
+
+const PersonTeams = ({ person, classes }) => (
+  <Fragment>
+    {person.manager && (
+      <Grid item xs={12} sm={12} md={6} className={classes.gridItemStyle}>
+        <Paper className={classes.paper}>
+          <Team
+            title="Manager"
+            collection={[person.manager]}
+            classes={classes}
+          />
+        </Paper>
+      </Grid>
+    )}
+    {person.products && person.products.length !== 0 && (
+      <Grid item xs={12} sm={12} md={6} className={classes.gridItemStyle}>
+        <Paper className={classes.paper}>
+          <ProductSummaryList products={person.products} title="My Products" />
+        </Paper>
+      </Grid>
+    )}
+    {person.line && person.line.length !== 0 && (
+      <Grid item xs={12} sm={12} md={12} className={classes.gridItemStyle}>
+        <Paper className={classes.paper}>
+          <Team
+            title="Reporting Line"
+            collection={person.line}
+            classes={classes}
+          />
+        </Paper>
+      </Grid>
+    )}
+    {person.team && person.team.length !== 0 && (
+      <Grid item xs={12} sm={12} md={12} className={classes.gridItemStyle}>
+        <Paper className={classes.paper}>
+          <Team title="My Team" collection={person.team} classes={classes} />
+        </Paper>
+      </Grid>
+    )}
+  </Fragment>
+);
 
 const PersonDetailedContainer = ({ classes, person }) => (
-  <Grid container spacing={8} wrap="wrap" justify="space-evenly">
-    <Grid item md={3}>
+  <Grid
+    container
+    className={classes.gridContainerStyle}
+    spacing={8}
+    justify="center"
+  >
+    <Grid item xs={12} sm={12} md={4} className={classes.gridItemStyle}>
       <Person detail={person} />
     </Grid>
-    <Grid item md={9}>
-      <Grid container spacing={8} wrap="wrap" justify="space-evenly">
-        {person.manager && (
-          <Grid item md={3}>
-            <Paper className={classes.paper}>
-              <Team
-                title="Manager"
-                collection={[person.manager]}
-                classes={classes}
-              />
-            </Paper>
-          </Grid>
-        )}
-        {person.line &&
-          person.line.length !== 0 && (
-            <Grid item md={3}>
-              <Paper className={classes.paper}>
-                <Team
-                  title="Reporting Line"
-                  collection={person.line}
-                  classes={classes}
-                />
-              </Paper>
-            </Grid>
-          )}
-        {person.team &&
-          person.team.length !== 0 && (
-            <Grid item md={3}>
-              <Paper className={classes.paper}>
-                <Team
-                  title="My Team"
-                  collection={person.team}
-                  classes={classes}
-                />
-              </Paper>
-            </Grid>
-          )}
-        {person.products &&
-          person.products.length !== 0 && (
-            <Grid item md={3}>
-              <Paper className={classes.paper}>
-                <ProductSummaryList
-                  products={person.products}
-                  title="My Products"
-                />
-              </Paper>
-            </Grid>
-          )}
+    <Grid item xs={12} sm={12} md={7} className={classes.gridItemStyle}>
+      <Grid container className={classes.gridContainerStyle} spacing={8}>
+        <PersonTeams person={person} classes={classes} />
       </Grid>
     </Grid>
   </Grid>
@@ -98,4 +75,6 @@ PersonDetailedContainer.propTypes = {
   person: object.isRequired
 };
 
-export default withStyles(styles)(PersonDetailedContainer);
+export default withStyles(personDetailedContainerStyle)(
+  PersonDetailedContainer
+);

@@ -3,7 +3,7 @@ import { graphql } from 'react-apollo';
 
 import { getBuildingQuery } from '../../graphql';
 import BuildingPersonContainer from '../../components/buildings/BuildingPeopleContainer';
-import { Loader, ErrorMessage } from '../../components';
+import { Loader, ErrorBoundary } from '../../components';
 
 const options = {
   options: ({ match }) => ({
@@ -14,11 +14,12 @@ const options = {
 };
 
 const BuildingPeopleView = ({ data: { error, loading, building } }) => (
-  <Fragment>
-    {loading && <Loader />}
-    {error && <ErrorMessage error={error} />}
-    {!loading && !error && <BuildingPersonContainer building={building} />}
-  </Fragment>
+  <ErrorBoundary>
+    <Fragment>
+      {loading && <Loader />}
+      {!loading && !error && <BuildingPersonContainer building={building} />}
+    </Fragment>
+  </ErrorBoundary>
 );
 
 export default graphql(getBuildingQuery, options)(BuildingPeopleView);

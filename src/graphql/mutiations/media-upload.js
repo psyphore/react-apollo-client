@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const upload_file = gql`
-  mutation($link: MediaLink!) {
+  mutation uploadFile($link: MediaLink!) {
     singleUpload(file: $link) {
       id
     }

@@ -13,7 +13,7 @@ export default ({ clickHandler, loading }) => (
       onClick={clickHandler}
       variant="fab"
     >
-      {loading ? <AppBarButtonLoader /> : <SecurityOutlined />}
+      {loading ? <AppBarButtonLoader /> : <SecurityOutlined color="action" />}
     </Button>
   </Tooltip>
 );

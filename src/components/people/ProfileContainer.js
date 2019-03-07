@@ -6,142 +6,114 @@ import Grid from '@material-ui/core/Grid';
 
 import PersonContext from '../../HOC/personContext';
 import Team from './TeamList';
-import Person from '../people/PersonCard';
+// import PersonCard from './PersonCard';
+import PersonCard from './PersonCard.1';
 import ProductSummaryList from '../products/ProductSummaryList';
 import DetailPanel from '../panel';
-
 import { DontReadTheComments } from '../../components/notifications/NotesSubscriptions';
-
 import { Lunch } from '../lunch';
+import { profileContainerStyle } from '../../assets/jss';
 
-const styles = theme => ({
-  root: {
-    display: 'grid',
-    gridGap: '5px',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(275px, 1fr))',
-    gridAutoRows: '240px'
-  },
-  children: {
-    display: 'grid',
-    gridGap: '5px',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-    gridAutoRows: '50px',
-    alignContent: 'space-evenly',
-    alignItems: 'start'
-  },
-  actionPaper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'left',
-    color: theme.palette.text.secondary
-  },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary
-  },
-  quickAction: {
-    display: 'flex',
-    flex: 1
-  },
-  DetailPanel: {
-    root: {
-      width: '100%'
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      flexBasis: '33.33%',
-      flexShrink: 0
-    },
-    secondaryHeading: {
-      fontSize: theme.typography.pxToRem(15),
-      color: theme.palette.text.secondary
-    }
-  }
-});
+const ExtraTeamInformation = ({ classes, person, refetch }) => (
+  <Grid item xs={12} sm={12} md={7} className={classes.gridItemStyle}>
+    <Grid container className={classes.gridContainerStyle} spacing={8}>
+      <MyActions person={person} classes={classes} onClick={e => refetch()} />
+      {person.manager && (
+        <Grid item xs={12} sm={12} md={6} className={classes.gridItemStyle}>
+          <Paper className={classes.paper}>
+            <Team
+              title="Manager"
+              collection={[person.manager]}
+              classes={classes}
+            />
+          </Paper>
+        </Grid>
+      )}
+      {person.products && person.products.length !== 0 && (
+        <Grid item xs={12} sm={12} md={6} className={classes.gridItemStyle}>
+          <DetailPanel
+            classes={classes}
+            title="My Products"
+            subtitle="I know these products"
+          >
+            <ProductSummaryList title="" products={person.products} />
+          </DetailPanel>
+        </Grid>
+      )}
+      {person.line && person.line.length !== 0 && (
+        <Grid item xs={12} sm={12} md={12} className={classes.gridItemStyle}>
+          <DetailPanel
+            classes={classes}
+            title="Reporting Line"
+            subtitle="The team I manage"
+          >
+            <Paper className={classes.paper}>
+              <Team title="" collection={person.line} classes={classes} />
+            </Paper>
+          </DetailPanel>
+        </Grid>
+      )}
+      {person.team && person.team.length !== 0 && (
+        <Grid item xs={12} sm={12} md={12} className={classes.gridItemStyle}>
+          <DetailPanel
+            classes={classes}
+            title="My Team"
+            subtitle="The people I share the same manager with"
+          >
+            <Team title="" collection={person.team} classes={classes} />
+          </DetailPanel>
+        </Grid>
+      )}
+    </Grid>
+    <MySubscriptions person={person} classes={classes} />
+  </Grid>
+);
+
+const MyActions = ({ classes, person }) => (
+  <Grid item xs={12} sm={12} md={12} className={classes.gridItemStyle}>
+    <Paper className={classes.actionPaper}>
+      <div className={classes.quickAction}>
+        <Lunch person={person} />
+      </div>
+    </Paper>
+  </Grid>
+);
+
+const MySubscriptions = ({
+  classes: { gridContainerStyle, gridItemStyle },
+  person
+}) => (
+  <Grid container className={gridContainerStyle} spacing={8}>
+    <Grid item xs={12} sm={12} md={12} className={gridItemStyle}>
+      <DontReadTheComments repoFullName="psyphore.github.io" />
+    </Grid>
+  </Grid>
+);
+
+const MyProfile = ({ classes: { gridItemStyle }, person }) => (
+  <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
+    <PersonCard detail={person} update={true} />
+  </Grid>
+);
 
 class ProfileContainer extends PureComponent {
   render() {
-    const { classes, person, auth } = this.props;
+    const { classes, person, auth, refetch } = this.props;
     const { Provider } = PersonContext;
     return (
       <Provider value={{ actions: {}, state: { person, auth } }}>
-        <Grid container spacing={8} wrap="wrap" justify="space-evenly">
-          <Grid item md={12}>
-            <Paper className={classes.actionPaper}>
-              <div className={classes.quickAction}>
-                <Lunch person={person} />
-              </div>
-            </Paper>
-          </Grid>
-          <Grid item md={3}>
-            <Person detail={person} update={true} />
-          </Grid>
-          <Grid item md={9}>
-            <Grid container spacing={8} wrap="wrap" justify="flex-start">
-              {person.manager && (
-                <Grid item md={3}>
-                  <Paper className={classes.paper}>
-                    <Team
-                      title="Manager"
-                      collection={[person.manager]}
-                      classes={classes}
-                    />
-                  </Paper>
-                </Grid>
-              )}
-              {person.line &&
-                person.line.length !== 0 && (
-                  <Grid item md={4}>
-                    <DetailPanel
-                      classes={classes}
-                      title="Reporting Line"
-                      subtitle="The team I manage"
-                    >
-                      <Paper className={classes.paper}>
-                        <Team
-                          title=""
-                          collection={person.line}
-                          classes={classes}
-                        />
-                      </Paper>
-                    </DetailPanel>
-                  </Grid>
-                )}
-              {person.team &&
-                person.team.length !== 0 && (
-                  <Grid item md={4}>
-                    <DetailPanel
-                      classes={classes}
-                      title="My Team"
-                      subtitle="The people I share the same manager with"
-                    >
-                      <Team
-                        title=""
-                        collection={person.team}
-                        classes={classes}
-                      />
-                    </DetailPanel>
-                  </Grid>
-                )}
-              {person.products &&
-                person.products.length !== 0 && (
-                  <Grid item md={4}>
-                    <DetailPanel
-                      classes={classes}
-                      title="My Products"
-                      subtitle="I know these products"
-                    >
-                      <ProductSummaryList title="" products={person.products} />
-                    </DetailPanel>
-                  </Grid>
-                )}
-            </Grid>
-            <Grid container spacing={8} wrap="wrap" justify="flex-start">
-              <Grid item md={4}>
-                <DontReadTheComments repoFullName="psyphore.github.io" />
-              </Grid>
-            </Grid>
-          </Grid>
+        <Grid
+          container
+          className={classes.gridContainerStyle}
+          spacing={8}
+          justify="center"
+        >
+          <ExtraTeamInformation
+            person={person}
+            classes={classes}
+            refetch={refetch}
+          />
+          <MyProfile person={person} classes={classes} />
         </Grid>
       </Provider>
     );
@@ -153,4 +125,4 @@ ProfileContainer.propTypes = {
   person: object.isRequired
 };
 
-export default withStyles(styles)(ProfileContainer);
+export default withStyles(profileContainerStyle)(ProfileContainer);

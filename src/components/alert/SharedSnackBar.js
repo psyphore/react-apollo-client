@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconButton, Snackbar } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
+import Close from '@material-ui/icons/Close';
 
 import { SharedSnackbarConsumer } from './SnackBarProvider';
 
@@ -18,7 +18,7 @@ const SharedSnackbar = () => (
         message={message}
         action={[
           <IconButton key="close" color="inherit" onClick={closeSnackbar}>
-            <Close />
+            <Close color="action" />
           </IconButton>
         ]}
       />

@@ -1,5 +1,5 @@
 export { default as LeaveContext } from './leaveContext';
-export { default as LunchContext } from './lunchContext';
+export { LunchProvider, SharedLunchConumer } from './lunchContext';
 export { default as PersonContext } from './personContext';
 export { Provider as AppProvider, Consumer as AppConsumer } from './appContext';
 export {

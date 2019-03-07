@@ -1,8 +1,6 @@
 import React, { createContext, PureComponent } from 'react';
-import Dropzone from 'react-dropzone';
 
 import { upload_file } from '../../graphql';
-import SharedFileInput from './SharedFileManager';
 
 const Context = createContext();
 
@@ -55,7 +53,6 @@ class ProviderComponent extends PureComponent {
         }}
       >
         {children}
-        {/* <SharedFileInput /> */}
       </Provider>
     );
   }

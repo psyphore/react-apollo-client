@@ -3,7 +3,7 @@ import { object } from 'prop-types';
 import { graphql } from 'react-apollo';
 
 import { getPersonQuery } from '../../graphql/index';
-import { Loader, ErrorMessage } from '../../components';
+import { Loader, ErrorBoundary } from '../../components';
 import PersonDetailedContainer from '../../components/people/PersonDetailedContainer';
 
 const queryOptions = {
@@ -15,13 +15,14 @@ const queryOptions = {
 };
 
 const DetailView = ({ data, auth }) => (
-  <Fragment>
-    {data && data.loading ? <Loader /> : null}
-    {data && data.error ? <ErrorMessage error={data.error} /> : null}
-    {data && !data.loading && !data.error ? (
-      <PersonDetailedContainer auth={auth} person={data.person} />
-    ) : null}
-  </Fragment>
+  <ErrorBoundary>
+    <Fragment>
+      {data && data.loading ? <Loader /> : null}
+      {data && !data.loading && !data.error ? (
+        <PersonDetailedContainer auth={auth} person={data.person} />
+      ) : null}
+    </Fragment>
+  </ErrorBoundary>
 );
 
 DetailView.propTypes = {

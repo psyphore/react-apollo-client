@@ -140,15 +140,16 @@ export class UploadFile extends PureComponent {
   render() {
     const { children } = this.props;
     const { accept } = this.state;
+    const { root, acceptStyle, activeStyle, rejectStyle } = style;
     return (
       <Mutation mutation={upload_file}>
         {uploadFile => (
           <Dropzone
             accept={accept}
-            style={style.root}
-            activeStyle={style.activeStyle}
-            acceptStyle={style.acceptStyle}
-            rejectStyle={style.rejectStyle}
+            style={root}
+            activeStyle={activeStyle}
+            acceptStyle={acceptStyle}
+            rejectStyle={rejectStyle}
             multiple={false}
             onDropAccepted={() => this.dzHandler(uploadFile)}
             onDrop={this.onDrop}

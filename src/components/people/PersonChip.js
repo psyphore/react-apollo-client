@@ -5,26 +5,9 @@ import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import Tooltip from '../tooltip';
 
-const baseUrl = `${process.env.REACT_APP_GRAPHQL_URI}/media/`;
+import { personChipStyle } from '../../assets/jss';
 
-const styles = theme => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    flexWrap: 'nowrap',
-    margin: theme.spacing.unit / 2
-  },
-  size: {
-    width: 60,
-    height: 60
-  },
-  label: {
-    width: '100px',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis'
-  }
-});
+const baseUrl = `${process.env.REACT_APP_GRAPHQL_URI}/media/`;
 
 const AvatarRender = ({ size, detail, height = 60, width = 60 }) =>
   detail.avatar ? (
@@ -44,8 +27,6 @@ const PersonChip = ({ classes: { root, size, label }, detail }) => (
         root,
         label
       }}
-      component="a"
-      href={'/person/' + detail.id}
       clickable
       variant="outlined"
     />
@@ -57,4 +38,4 @@ PersonChip.propTypes = {
   classes: object.isRequired
 };
 
-export default withStyles(styles)(PersonChip);
+export default withStyles(personChipStyle)(PersonChip);

@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 
 import { Support } from '../support/';
 import ProfileButton from '../people/ProfileButton';
+import SearchButton from '../search/SearchButton';
 import { AppConsumer } from '../../HOC';
 
 const styles = {
@@ -19,7 +20,9 @@ const styles = {
   },
   row: {
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'space-evenly',
+    margin: '0 auto 0 auto',
+    padding: '0 auto 0 auto'
   },
   menuButton: {
     marginLeft: -12,
@@ -45,6 +48,7 @@ const AppHeaderBar = ({ classes, title }) => (
               <Fragment>
                 {auth().isAuthenticated() && (
                   <Fragment>
+                    <SearchButton />
                     <Support />
                     <ProfileButton />
                   </Fragment>

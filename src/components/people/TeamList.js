@@ -2,11 +2,18 @@ import React, { Fragment } from 'react';
 
 import PersonC from './PersonChip';
 import TitleRender from '../title';
+import Link from 'react-router-dom/Link';
 
 const BodyRender = ({ children, collection }) => (
   <div className={children}>
     {collection.map((person, index) => (
-      <PersonC key={person.id + index} detail={person} />
+      <Link
+        key={person.id + index}
+        to={'/person/' + person.id}
+        style={{ textDecoration: 'none' }}
+      >
+        <PersonC detail={person} />
+      </Link>
     ))}
   </div>
 );

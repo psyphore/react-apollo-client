@@ -15,7 +15,7 @@ const styles = theme => ({
 const AppFooterBar = ({ classes, title }) => (
   <div className={classes.root}>
     <Divider />
-    <Typography variant="subheading" gutterBottom>
+    <Typography variant="subtitle1" gutterBottom>
       {title + ' - '}
       <DayJS format="YYYY">{dayJS().toISOString()}</DayJS>
     </Typography>

@@ -6,6 +6,8 @@ import {
   disableFragmentWarnings
 } from 'graphql-tag';
 
+import './assets/css/index.css';
+
 import App from './App';
 import { createClient } from './services';
 import { AppProvider, NotificationProvider } from './HOC';

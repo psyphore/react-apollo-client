@@ -12,9 +12,9 @@ const Message = ({ loading, data }) => (
         <SharedSnackbarConsumer>
           {({ openSnackbar }) => (
             <Fragment>
-              <Typography variant="title" component="h4">
+              {/* <Typography variant="h6" component="h4">
                 {data.subject}
-              </Typography>
+              </Typography> */}
               {data.message && openSnackbar(data.message)}
             </Fragment>
           )}
@@ -25,13 +25,13 @@ const Message = ({ loading, data }) => (
 
 const StandBy = loading => (
   <Fragment>
-    {loading && <Typography variant="headline">stand by...</Typography>}
+    {loading && <Typography variant="h5">stand by...</Typography>}
   </Fragment>
 );
 
 const NoData = ({ loading, data }) => (
   <Fragment>
-    {!loading && !data && <Typography variant="headline">No alerts</Typography>}
+    {!loading && !data && <Typography variant="h5">No alerts</Typography>}
   </Fragment>
 );
 
