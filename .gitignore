@@ -17,3 +17,5 @@
 *-debug.log*
 *-error.log*
 *-lock.json
+/*.env
+/*.production
