@@ -1,5 +1,7 @@
 # GraphQL Client
 
+Using Apollo Client to connect to GraphQL API
+
 ## Environment Setup
 
 ```env

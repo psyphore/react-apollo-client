@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Query } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
 import dayJS from 'dayjs';
@@ -37,14 +37,13 @@ const SearchInput = ({
           onFocusCapture={() => clear()}
           value={query}
         />
-        <Button
+        <Fab
           aria-label="search"
           color="primary"
           onClick={() => search(mutator)}
-          variant="fab"
         >
           <Search />
-        </Button>
+        </Fab>
       </div>
     </div>
   </div>

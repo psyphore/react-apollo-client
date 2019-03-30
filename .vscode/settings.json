@@ -1,6 +1,6 @@
 {
   "npm-scripts.showStartNotification": false,
-  "window.zoomLevel": 0.75,
+  "window.zoomLevel": 1,
   "editor.fontSize": 12,
   "terminal.integrated.fontSize": 12,
   "editor.formatOnSave": true,

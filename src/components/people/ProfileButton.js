@@ -3,8 +3,7 @@ import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { graphql } from 'react-apollo';
 import { Link } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
-// import Badge from '@material-ui/core/Badge';
+import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
 
 import { getMyAvatarQuery } from '../../graphql';
@@ -29,18 +28,7 @@ const ProfileButton = ({ data: { me, loading }, classes }) => (
       title={me && me.firstname ? me.firstname : 'Unauthorized'}
       placement="top"
     >
-      {/* <Badge
-        badgeContent={0}
-        color="primary"
-        classes={{ badge: classes.badge }}
-      > */}
-      <Button
-        component={Link}
-        disabled={loading || !me}
-        to="/me"
-        variant="fab"
-        color="primary"
-      >
+      <Fab component={Link} disabled={loading || !me} to="/me" color="primary">
         {loading ? (
           <AppBarButtonLoader />
         ) : me ? (
@@ -48,8 +36,7 @@ const ProfileButton = ({ data: { me, loading }, classes }) => (
         ) : (
           <Typography variant="caption">?</Typography>
         )}
-      </Button>
-      {/* </Badge> */}
+      </Fab>
     </Tooltip>
   </div>
 );

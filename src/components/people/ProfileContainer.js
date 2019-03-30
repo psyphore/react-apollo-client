@@ -4,9 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-import PersonContext from '../../HOC/personContext';
+import { PersonProvider, PersonConsumer } from '../../HOC';
+
 import Team from './TeamList';
-// import PersonCard from './PersonCard';
 import PersonCard from './PersonCard.1';
 import ProductSummaryList from '../products/ProductSummaryList';
 import DetailPanel from '../panel';
@@ -97,11 +97,16 @@ const MyProfile = ({ classes: { gridItemStyle }, person }) => (
 );
 
 class ProfileContainer extends PureComponent {
+  static contextType = PersonConsumer;
+
+  componentDidMount() {
+    console.log(this.context);
+  }
+
   render() {
     const { classes, person, auth, refetch } = this.props;
-    const { Provider } = PersonContext;
     return (
-      <Provider value={{ actions: {}, state: { person, auth } }}>
+      <PersonProvider value={{ actions: {}, state: { person, auth } }}>
         <Grid
           container
           className={classes.gridContainerStyle}
@@ -115,7 +120,7 @@ class ProfileContainer extends PureComponent {
           />
           <MyProfile person={person} classes={classes} />
         </Grid>
-      </Provider>
+      </PersonProvider>
     );
   }
 }

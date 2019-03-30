@@ -4,7 +4,7 @@ import { Mutation } from 'react-apollo';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import EditSharp from '@material-ui/icons/EditSharp';
@@ -317,14 +317,13 @@ class PersonEditDialog extends PureComponent {
 
     return (
       <Fragment>
-        <Button
+        <Fab
           aria-label="Edit Profile"
           color="primary"
           onClick={this.handleClickOpen}
-          variant="fab"
         >
           <EditSharp color="action" />
-        </Button>
+        </Fab>
 
         <Dialog
           open={open}

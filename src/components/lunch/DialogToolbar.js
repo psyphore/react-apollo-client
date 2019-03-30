@@ -3,7 +3,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 const DialogToolBar = ({
@@ -20,14 +20,9 @@ const DialogToolBar = ({
         today ? today.format('DD MMMM YYYY') + ' -' : ''
       } Place Your Lunch Order`}
     </Typography>
-    <Button
-      aria-label="Lunch"
-      color="primary"
-      onClick={placeOrder}
-      variant="fab"
-    >
+    <Fab aria-label="Lunch" color="primary" onClick={placeOrder}>
       <AddIcon />
-    </Button>
+    </Fab>
   </Toolbar>
 );
 

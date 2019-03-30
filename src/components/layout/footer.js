@@ -3,7 +3,6 @@ import { string, object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-import DayJS from 'react-dayjs';
 import dayJS from 'dayjs';
 
 const styles = theme => ({
@@ -16,8 +15,11 @@ const AppFooterBar = ({ classes, title }) => (
   <div className={classes.root}>
     <Divider />
     <Typography variant="subtitle1" gutterBottom>
-      {title + ' - '}
-      <DayJS format="YYYY">{dayJS().toISOString()}</DayJS>
+      {title +
+        ' - ' +
+        dayJS()
+          .year()
+          .toString()}
     </Typography>
   </div>
 );

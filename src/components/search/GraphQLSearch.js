@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { Query } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
 import Link from 'react-router-dom/Link';
@@ -12,7 +12,7 @@ import { Typography } from '@material-ui/core';
 import { searchStyle } from '../../assets/jss';
 
 import { searchQuery } from '../../graphql';
-// import PersonSummaryCard from '../people/PersonSummaryCard';
+
 import PersonSummaryCard from '../people/PersonSummaryCard.1';
 import { Loader, ErrorBoundary } from '../index';
 
@@ -41,15 +41,14 @@ const SearchInput = ({
         />
       </Grid>
       <Grid item xs={2} sm={2} md={2}>
-        <Button
+        <Fab
           aria-label="search"
           color="primary"
           disabled={fetching}
           onClick={() => search(mutator)}
-          variant="fab"
         >
           <Search />
-        </Button>
+        </Fab>
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
         {fetching && <Loader />}
