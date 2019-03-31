@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { object } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,32 +16,35 @@ import DialogContent from './DialogContent';
 
 const FullScreenDialog = ({ classes }) => (
   <SharedLunchConumer>
-    {({ state, actions, person }) => (
-      <Dialog
-        fullScreen
-        onClose={actions.close}
-        open={state.open}
-        TransitionComponent={SlideUp}
-      >
-        <AppBar className={classes.appBar}>
-          <DialogToolBar actions={actions} classes={classes} state={state} />
-        </AppBar>
-        <div className={classes.container}>
-          {state.fetching && <Loader />}
-          <div className={classes.header}>
-            <DialogActions actions={actions} state={state} />
+    {({ state, actions }) => (
+      <Fragment>
+        <Dialog
+          fullScreen
+          onClose={actions.close}
+          open={state.open}
+          TransitionComponent={SlideUp}
+        >
+          <AppBar className={classes.appBar}>
+            <DialogToolBar actions={actions} classes={classes} state={state} />
+          </AppBar>
+          <div className={classes.container}>
+            {state.fetching && <Loader />}
+            <div className={classes.header}>
+              <DialogActions actions={actions} state={state} />
+            </div>
+            <div className={classes.content}>
+              <DialogContent
+                actions={actions}
+                classes={classes}
+                state={state}
+              />
+            </div>
+            <div className={classes.footer} />
           </div>
-          <div className={classes.content}>
-            <DialogContent
-              actions={actions}
-              classes={classes}
-              person={person}
-              state={state}
-            />
-          </div>
-          <div className={classes.footer} />
-        </div>
-      </Dialog>
+        </Dialog>
+
+        {console.info(state, actions)}
+      </Fragment>
     )}
   </SharedLunchConumer>
 );
