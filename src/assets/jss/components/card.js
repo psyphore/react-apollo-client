@@ -11,8 +11,6 @@ export const cardStyle = {
   card: {
     border: '0',
     margin: '30px',
-    // marginBottom: '30px',
-    // marginTop: '30px',
     borderRadius: '6px',
     color: 'rgba(0, 0, 0, 0.87)',
     background: '#fff',
@@ -22,7 +20,6 @@ export const cardStyle = {
     display: 'flex',
     flexDirection: 'column',
     minWidth: '10%',
-    // maxWidth: '90%',
     wordWrap: 'break-word',
     fontSize: '.875rem'
   },
@@ -31,8 +28,10 @@ export const cardStyle = {
     boxShadow: 'none'
   },
   cardProfile: {
-    marginTop: '30px',
-    textAlign: 'center'
+    margin: '30px'
+  },
+  cardProfileEdit: {
+    margin: '30px 0 0 0'
   },
   cardChart: {
     '& p': {

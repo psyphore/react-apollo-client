@@ -11,15 +11,7 @@ import EditSharp from '@material-ui/icons/EditSharp';
 
 import { profileEditDialogStyle } from '../../assets/jss';
 
-import {
-  Input,
-  Card,
-  Header,
-  Body,
-  Footer,
-  Avatar,
-  Button as CfButton
-} from '../coolForm';
+import { Input, Card, Header, Body, Footer, Avatar, Button } from '../coolForm';
 import { updateMe } from '../../graphql';
 
 const baseUrl = `${process.env.REACT_APP_GRAPHQL_URI}/media/`,
@@ -169,11 +161,11 @@ const DialogCard = ({ state, classes, actions, mutator }) => {
   } ${state.lastname}`;
   const { close, update } = actions;
   return (
-    <Card>
+    <Card id="form-dialog-title" editProfile>
       <Header color="primary">
         <Grid container spacing={8} justify="center">
           <Grid item xs={12} sm={12} md={8}>
-            <Typography variant="h4">{fullNames}</Typography>
+            <Typography variant="h5">{fullNames}</Typography>
             <Typography variant="caption" gutterBottom>
               Edit Profile
             </Typography>
@@ -193,10 +185,10 @@ const DialogCard = ({ state, classes, actions, mutator }) => {
         </DialogContent>
       </Body>
       <Footer>
-        <CfButton onClick={() => close()}>Cancel</CfButton>
-        <CfButton onClick={() => update(mutator)} color="primary">
+        <Button onClick={() => close()}>Cancel</Button>
+        <Button onClick={() => update(mutator)} color="primary">
           Save
-        </CfButton>
+        </Button>
       </Footer>
     </Card>
   );
@@ -224,7 +216,7 @@ class PersonEditDialog extends PureComponent {
   };
 
   clearState = () => {
-    console.log('clear dialog state');
+    // console.log('clear dialog state');
     const { detail } = this.props;
     Object.keys(detail).map(key => {
       this.setState({ [key]: null });
@@ -235,7 +227,7 @@ class PersonEditDialog extends PureComponent {
   mapToState = () => {
     const { detail } = this.props;
     Object.keys(detail).map(key => {
-      console.log(`mapping: ${key} = ${detail[key]}`);
+      // console.log(`mapping: ${key} = ${detail[key]}`);
       this.setState({ [key]: detail[key] });
       return key;
     });
@@ -277,10 +269,7 @@ class PersonEditDialog extends PureComponent {
     });
 
     // close on done
-    if (data) {
-      console.log(data);
-      this.handleClose();
-    }
+    if (data) this.handleClose();
     if (error) console.error(error);
   };
 
@@ -299,7 +288,7 @@ class PersonEditDialog extends PureComponent {
         [name]: [...value]
       }));
     } else {
-      console.log(`${name}:${value}`);
+      // console.log(`${name}:${value}`);
       this.setState(() => ({
         [name]: value
       }));
