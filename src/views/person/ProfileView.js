@@ -13,13 +13,19 @@ const ProfileView = ({ auth }) => (
         <Fragment>
           {loading ? <Loader /> : null}
           {!loading && !error && (
-            <ProfileContainer auth={auth} person={me} refetch={refetch} />
+            <ProfileContainer person={me} refetch={refetch} />
           )}
         </Fragment>
       </ErrorBoundary>
     )}
   </Query>
 );
+
+// const ProfileView = () => (
+//   <ErrorBoundary>
+//     <ProfileContainer />
+//   </ErrorBoundary>
+// );
 
 ProfileView.propTypes = {
   classes: object

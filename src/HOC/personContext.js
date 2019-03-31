@@ -1,33 +1,61 @@
 import React, { createContext, Component } from 'react';
+import { withApollo } from 'react-apollo';
 
 import { Auth } from '../services';
 
+import { getMeQuery } from '../graphql';
+
 const PersonContext = createContext({
   actions: {},
-  authMe: () => {
-    const auth = new Auth();
-    auth.logout();
-    auth.login();
-  }
+  state: {}
 });
 
 class ProviderComponent extends Component {
+  fetchPolicy = 'network-only';
+  defaultLimit = 5;
+  defaultOffset = 0;
+  defaultPageMax = 10;
+  defaultPageMin = 0;
+
   state = {
-    me: {}
+    me: {},
+    fetching: false
   };
 
   updateMe = me => {
     console.log('Updating me', me);
     const updatedMe = me;
-    setTimeout(() => {
-      // simulate api call
-      this.setState({ me: updatedMe });
-    }, 700);
+    this.setState(() => ({ me: updatedMe, fetching: false }));
   };
 
   clearMe = () => {
     console.info('Clearing Me');
     this.setState({ me: {} });
+  };
+
+  authMe = () => {
+    const auth = new Auth();
+    auth.logout();
+    auth.login();
+  };
+
+  fetchMe = async () => {
+    console.info('Fetching Me');
+    const { client } = this.props;
+    this.setState(() => ({ fetching: true }));
+    const result = await client.query({
+      query: getMeQuery,
+      variables: {},
+      options: { fetchPolicy: this.fetchPolicy }
+    });
+
+    console.info('fetch me result', result);
+
+    const {
+      data: { me }
+    } = result;
+
+    this.updateMe(me);
   };
 
   render() {
@@ -36,10 +64,12 @@ class ProviderComponent extends Component {
     return (
       <Provider
         value={{
-          ...this.state,
+          state: { ...this.state },
           actions: {
             updateMe: this.updateMe,
-            clearMe: this.clearMe
+            clearMe: this.clearMe,
+            authenticate: this.authMe,
+            fetchMe: this.fetchMe
           }
         }}
       >
@@ -49,5 +79,5 @@ class ProviderComponent extends Component {
   }
 }
 
-export const Provider = ProviderComponent;
+export const Provider = withApollo(ProviderComponent);
 export const Consumer = PersonContext.Consumer;

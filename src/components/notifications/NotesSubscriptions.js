@@ -7,19 +7,13 @@ import { SharedSnackbarConsumer } from '../alert/SnackBarProvider';
 
 const Message = ({ loading, data }) => (
   <Fragment>
-    {!loading &&
-      data && (
-        <SharedSnackbarConsumer>
-          {({ openSnackbar }) => (
-            <Fragment>
-              {/* <Typography variant="h6" component="h4">
-                {data.subject}
-              </Typography> */}
-              {data.message && openSnackbar(data.message)}
-            </Fragment>
-          )}
-        </SharedSnackbarConsumer>
-      )}
+    {!loading && data && (
+      <SharedSnackbarConsumer>
+        {({ openSnackbar }) => (
+          <Fragment>{data.message && openSnackbar(data.message)}</Fragment>
+        )}
+      </SharedSnackbarConsumer>
+    )}
   </Fragment>
 );
 

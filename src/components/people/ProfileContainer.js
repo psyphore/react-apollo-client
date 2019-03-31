@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-import { PersonProvider, PersonConsumer } from '../../HOC';
+import { PersonConsumer } from '../../HOC';
 
 import Team from './TeamList';
 import PersonCard from './PersonCard.1';
@@ -65,7 +65,7 @@ const ExtraTeamInformation = ({ classes, person, refetch }) => (
         </Grid>
       )}
     </Grid>
-    <MySubscriptions person={person} classes={classes} />
+    <MySubscriptions classes={classes} />
   </Grid>
 );
 
@@ -80,8 +80,7 @@ const MyActions = ({ classes, person }) => (
 );
 
 const MySubscriptions = ({
-  classes: { gridContainerStyle, gridItemStyle },
-  person
+  classes: { gridContainerStyle, gridItemStyle }
 }) => (
   <Grid container className={gridContainerStyle} spacing={8}>
     <Grid item xs={12} sm={12} md={12} className={gridItemStyle}>
@@ -99,35 +98,29 @@ const MyProfile = ({ classes: { gridItemStyle }, person }) => (
 class ProfileContainer extends PureComponent {
   static contextType = PersonConsumer;
 
-  componentDidMount() {
-    console.log(this.context);
-  }
-
   render() {
-    const { classes, person, auth, refetch } = this.props;
+    const { classes, person, refetch } = this.props;
     return (
-      <PersonProvider value={{ actions: {}, state: { person, auth } }}>
-        <Grid
-          container
-          className={classes.gridContainerStyle}
-          spacing={8}
-          justify="center"
-        >
-          <ExtraTeamInformation
-            person={person}
-            classes={classes}
-            refetch={refetch}
-          />
-          <MyProfile person={person} classes={classes} />
-        </Grid>
-      </PersonProvider>
+      <Grid
+        container
+        className={classes.gridContainerStyle}
+        spacing={8}
+        justify="center"
+      >
+        <ExtraTeamInformation
+          person={person}
+          classes={classes}
+          refetch={refetch}
+        />
+        <MyProfile person={person} classes={classes} />
+      </Grid>
     );
   }
 }
 
 ProfileContainer.propTypes = {
   classes: object.isRequired,
-  person: object.isRequired
+  person: object
 };
 
 export default withStyles(profileContainerStyle)(ProfileContainer);
