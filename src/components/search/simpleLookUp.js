@@ -67,15 +67,26 @@ const resultPaper = {
   zIndex: 25
 };
 
-const SearchResult = ({ classes, state: { result, lapsedTime }, onSelect }) => {
+const SearchResult = ({
+  classes,
+  state: { result, lapsedTime, open },
+  onSelect,
+  actions
+}) => {
   return (
     <Paper style={resultPaper}>
       <List>
-        {result && result.length ? (
+        {open ? (
           <div style={resultSearch}>
             {result.map(res => (
-              <ListItem key={res.id} onClick={() => onSelect(res)}>
-                <PersonChip detail={res} classes={classes} />
+              <ListItem
+                key={res.id}
+                onClick={() => {
+                  onSelect(res);
+                  actions.reset();
+                }}
+              >
+                <PersonChip detail={res} />
               </ListItem>
             ))}
           </div>
@@ -99,6 +110,7 @@ class SimpleLookUp extends PureComponent {
       first: 25,
       offset: 0,
       result: null,
+      open: false,
       count: null,
       fetching: false,
       lapsedTime: null,
@@ -116,6 +128,7 @@ class SimpleLookUp extends PureComponent {
       first: 25,
       offset: 0,
       result: null,
+      open: false,
       count: null,
       fetching: false,
       lapsedTime: null,
@@ -162,7 +175,8 @@ class SimpleLookUp extends PureComponent {
         result: data.search.data,
         count: data.search.count,
         fetching: false,
-        lapsedTime: diff
+        lapsedTime: diff,
+        open: true
       });
     }
   };
@@ -201,6 +215,7 @@ class SimpleLookUp extends PureComponent {
                 <SearchResult
                   classes={classes}
                   state={this.state}
+                  actions={actions}
                   onSelect={onSelection}
                 />
               </ListItem>
