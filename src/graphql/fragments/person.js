@@ -8,6 +8,7 @@ export const basicPerson = gql`
     firstname
     lastname
     knownAs
+    deactivated
   }
 `;
 
