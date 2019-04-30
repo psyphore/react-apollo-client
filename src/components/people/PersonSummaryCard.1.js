@@ -3,12 +3,11 @@ import { object } from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 
 import { Card, Body, Avatar } from '../coolForm';
+import { greyFilter } from '../../assets/jss';
+
 const baseUrl = `${process.env.REACT_APP_GRAPHQL_URI}/media/`,
   width = 250,
   height = 250;
-const decommed = {
-  filter: 'grayscale(100%)'
-};
 
 const PersonSummaryCard = ({ person }) => (
   <Card profile>
@@ -16,7 +15,7 @@ const PersonSummaryCard = ({ person }) => (
       <img
         src={`${baseUrl + person.avatar}/${width}/${height}`}
         alt="..."
-        style={person.deactivated ? decommed : null}
+        style={person.deactivated ? greyFilter : null}
       />
     </Avatar>
     <Body profile>

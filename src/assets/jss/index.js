@@ -33,3 +33,5 @@ export {
 } from './people/profile-edit-dialog';
 
 export { default as lunchDialogStyle } from './lunch-container/lunch-dialog';
+
+export { default as greyFilter } from './people/people-avatar-filters';

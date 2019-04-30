@@ -2,10 +2,10 @@ import React, { Fragment } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import classNames from 'classnames';
 
+import { greyFilter } from '../../assets/jss';
+
 const baseUrl = `${process.env.REACT_APP_GRAPHQL_URI}/media/`;
-const decommed = {
-  filter: 'grayscale(100%)'
-};
+
 export default ({ detail, sizeClass }) => (
   <Fragment>
     {detail.avatar ? (
@@ -14,7 +14,7 @@ export default ({ detail, sizeClass }) => (
         className={classNames({ margin: 10 }, { width: 60, height: 60 })}
         size={sizeClass || 60}
         src={`${baseUrl + detail.avatar}/${60}/${60}`}
-        style={detail.deactivated ? decommed : null}
+        style={detail.deactivated ? greyFilter : null}
       />
     ) : (
       <Avatar
