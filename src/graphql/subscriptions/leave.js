@@ -1,13 +1,11 @@
 import gql from 'graphql-tag';
+import { basicLeaveNotification } from '../fragments/subscription';
 
-const leaveNotification = gql`
-  subscription {
-    leaveNotification {
-      id
-      subject
-      body
+export const leaveNotification = gql`
+  subscription leave {
+    myLeaveNotifications {
+      ...leaveNotificationFields
     }
   }
+  ${basicLeaveNotification}
 `;
-
-export { leaveNotification };

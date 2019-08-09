@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import { basicBuilding } from '../fragments/building';
 
 export const getBuildingsQuery = gql`
-  query($first: Int, $offset: Int) {
+  query getBuildings($first: Int, $offset: Int) {
     buildings(first: $first, offset: $offset) {
       ...buildingBasicFields
     }
@@ -11,7 +11,7 @@ export const getBuildingsQuery = gql`
 `;
 
 export const getBuildingQueryx = gql`
-  query($id: ID, $name: String) {
+  query getBuilding2($id: ID, $name: String) {
     building(id: $id, name: $name) {
       ...buildingBasicFields
     }
@@ -20,7 +20,7 @@ export const getBuildingQueryx = gql`
 `;
 
 export const getBuildingQuery = gql`
-  query($name: String) {
+  query getBuilding($name: String) {
     building(name: $name) {
       id
       name

@@ -35,8 +35,9 @@ class ProviderComponent extends Component {
     onBehalfOf: null
   };
 
+  handleSelection = (prop, value) => this.setState({ [prop]: value });
+
   addLunch = lunch => {
-    console.log('Adding lunch', lunch);
     const updatedCart = [...this.state.lunch];
     const updatedItemIndex = updatedCart.findIndex(
       item => item.id === lunch.id
@@ -58,7 +59,6 @@ class ProviderComponent extends Component {
   };
 
   updateLunch = lunch => {
-    console.log('Removing lunch with id: ' + lunch.id);
     const updatedCart = [...this.state.lunch];
     const updatedItemIndex = updatedCart.findIndex(
       item => item.id === lunch.id
@@ -80,7 +80,6 @@ class ProviderComponent extends Component {
   };
 
   clearLunch = () => {
-    console.info('Clearing Notifications');
     this.setState({ lunch: [] });
   };
 
@@ -145,31 +144,43 @@ class ProviderComponent extends Component {
 
   handlePlaceOrder = async () => {
     const { client } = this.props;
-    const { selection, today } = this.state;
+    const { selection, today, onBehalfOf, ownAcc } = this.state;
 
     this.setState({
       fetching: true
     });
 
-    // todo: use token instead of person object
+    /*
+    input MealOrder {
+  content: String!
+  date: String!
+  onBehalfOf: String
+  provider: MealProvider!
+  comments: String
+  ownAccount: Boolean
+}
+    */
+
     const result = await client.mutate({
       mutation: placeOrder,
       variables: {
         body: {
-          content: selection,
-          date: today.toISOString()
+          content: selection.name,
+          date: today.toISOString(),
+          ownAccount: ownAcc && ownAcc.length !== 0,
+          onBehalfOf: onBehalfOf,
+          provider: selection.provider.replace('2', '_2').replace(/ +/g, '_'),
+          comments: selection.comments
         }
       }
     });
 
     if (result.data.placeOrder) {
-      console.log('meal placement set state called');
       setTimeout(() => {
-        console.log(result.data.placeOrder);
         this.setState(state => ({
           fetching: !state.fetching,
           snackAlert: !state.snackAlert,
-          snackMessage: `Meal '${selection}' Placed Successfully`
+          snackMessage: `Meal placed successfully!`
         }));
         setTimeout(() => {
           this.setState(() => ({
@@ -221,9 +232,15 @@ class ProviderComponent extends Component {
       return;
     }
 
-    let cleanMeals = result.data.meals.map(({ type, name }) => {
-      return { type: type.replace(/_+/g, ' '), name: name };
-    });
+    const cleanMeals = [
+      ...new Set(
+        result.data.meals.map(meal => {
+          meal.type = meal.type.replace(/_+/g, ' ');
+          meal.provider = meal.provider.replace(/_+/g, ' ').trim();
+          return meal;
+        })
+      )
+    ];
 
     this.setState(() => ({
       selection: null,
@@ -248,7 +265,7 @@ class ProviderComponent extends Component {
     } = result;
 
     this.setState(() => ({
-      history: lunchHistory
+      history: [...new Set(lunchHistory)]
     }));
   };
 
@@ -274,18 +291,9 @@ class ProviderComponent extends Component {
     await this.handleFetchingHistory();
   };
 
-  handleMealSelection = e => {
-    this.setState(() => ({
-      selection: e.name === 'nothing yet' ? e.type.replace(/_+/g, ' ') : e.name
-    }));
-  };
+  handleMealSelection = e => this.handleSelection('selection', e);
 
-  handleMealSelectionForSomeoneElse = e => {
-    console.log(e);
-    this.setState(() => ({
-      onBehalfOf: e.id
-    }));
-  };
+  handleMealSelectionFor = e => this.handleSelection('onBehalfOf', e.id);
 
   handleCustomMeal = () => {
     this.setState(() => ({
@@ -294,13 +302,8 @@ class ProviderComponent extends Component {
     }));
   };
 
-  handleOwnAccount = item => {
-    this.setState(state => ({
-      ownAcc: [...state.ownAcc].push(item)
-    }));
-  };
-
-  handleSelection = (prop, value) => this.setState({ [prop]: value });
+  handleOwnAccount = i =>
+    this.handleSelection('ownAcc', [...this.state.ownAcc].push(i));
 
   render() {
     const { Provider } = LunchContext;
@@ -326,7 +329,7 @@ class ProviderComponent extends Component {
             nextHistory: this.nextHistoryBatch,
             prevHistory: this.prevHistoryBatch,
             ownAccount: this.handleOwnAccount,
-            selectOnBehalfOf: this.handleMealSelectionForSomeoneElse
+            selectOnBehalfOf: this.handleMealSelectionFor
           }
         }}
       >

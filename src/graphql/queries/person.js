@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import { semiPerson, fullPerson, expandedPerson } from '../fragments/person';
 
 export const getPeopleQuery = gql`
-  query($first: Int, $offset: Int) {
+  query getPeople($first: Int, $offset: Int) {
     people(first: $first, offset: $offset) {
       ...personSemiFields
     }
@@ -11,7 +11,7 @@ export const getPeopleQuery = gql`
 `;
 
 export const getPersonQuery = gql`
-  query($id: ID!) {
+  query getPerson($id: ID!) {
     person(id: $id) {
       ...personFullFields
     }
@@ -20,7 +20,7 @@ export const getPersonQuery = gql`
 `;
 
 export const getMeQuery = gql`
-  query {
+  query getMe {
     me {
       ...personExpandedFields
     }
@@ -29,7 +29,7 @@ export const getMeQuery = gql`
 `;
 
 export const getMyAvatarQuery = gql`
-  query {
+  query getMyAvatar {
     me {
       ...personSemiFields
     }
@@ -38,7 +38,7 @@ export const getMyAvatarQuery = gql`
 `;
 
 export const getMyNotificationsQuery = gql`
-  query($id: ID) {
+  query getNotification($id: ID) {
     myNotifications(id: $id) {
       id
       subject

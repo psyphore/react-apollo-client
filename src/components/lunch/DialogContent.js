@@ -1,11 +1,11 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 
 import LunchList from './LunchList';
 import LunchTodayList from './LunchTodayList';
+import CustomMeal from './CustomMealForm';
 
 import DialogSelection from './DialogSelection';
 
@@ -28,41 +28,26 @@ const GridedOutContent = ({ classes, state, actions }) => {
   } = state;
   return (
     <Grid container className={gridContainerStyle} spacing={8}>
-      <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
-        <Fragment>
-          {!fetching ? (
-            <Paper className={children}>
-              <LunchTodayList
-                meals={todaysOptions}
-                parentActions={actions}
-                title="Todays' Meals"
-                classes={classes}
-              />
-            </Paper>
-          ) : (
-            <RenderEmptyMessage message="Fetching meal of the day, please wait..." />
-          )}
-        </Fragment>
-        <Fragment>
-          {customMeal && (
-            <Paper className={children}>
-              <Typography variant="subtitle1">Custom Order:</Typography>
-              <TextField
-                autoFocus
-                fullWidth
-                margin="dense"
-                multiline
-                id="customMeal"
-                label="Custom Meal Order"
-                type="text"
-                rowsMax={6}
-                onChange={e => actions.selection('selection', e.target.value)}
-              />
-            </Paper>
-          )}
-          <DialogSelection classes={classes} state={state} />
-        </Fragment>
+      <Grid item xs={12} sm={12} md={12} className={gridItemStyle}>
+        <DialogSelection classes={classes} state={state} />
       </Grid>
+      <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
+        {!fetching ? (
+          <LunchTodayList
+            meals={todaysOptions}
+            parentActions={actions}
+            title="Todays' Meals"
+            classes={classes}
+          />
+        ) : (
+          <RenderEmptyMessage message="Fetching meal of the day, please wait..." />
+        )}
+      </Grid>
+      {customMeal && (
+        <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
+          <CustomMeal classes={classes} state={state} actions={actions} />
+        </Grid>
+      )}
       <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
         {history && history.length !== 0 ? (
           <Paper className={children}>

@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -10,9 +11,9 @@ export default ({
   meals,
   parentActions: { selectMeal, customMeal },
   title,
-  classes: { text }
+  classes: { text, gridded }
 }) => (
-  <Fragment>
+  <Paper className={gridded.children}>
     <div className={text}>
       <Typography variant="h6" gutterBottom>
         {title}
@@ -27,7 +28,7 @@ export default ({
             </ListItemIcon>
             <ListItemText
               primary={meal.name}
-              secondary={meal.type.replace(/_+/g, ' ')}
+              secondary={meal.type + ' by ' + meal.provider}
             />
           </ListItem>
         ))}
@@ -38,5 +39,5 @@ export default ({
         <ListItemText primary="Custom Meal Order" secondary="mix it up" />
       </ListItem>
     </List>
-  </Fragment>
+  </Paper>
 );

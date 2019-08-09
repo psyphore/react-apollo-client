@@ -216,7 +216,6 @@ class PersonEditDialog extends PureComponent {
   };
 
   clearState = () => {
-    // console.log('clear dialog state');
     const { detail } = this.props;
     Object.keys(detail).map(key => {
       this.setState({ [key]: null });
@@ -227,7 +226,6 @@ class PersonEditDialog extends PureComponent {
   mapToState = () => {
     const { detail } = this.props;
     Object.keys(detail).map(key => {
-      // console.log(`mapping: ${key} = ${detail[key]}`);
       this.setState({ [key]: detail[key] });
       return key;
     });
@@ -288,7 +286,6 @@ class PersonEditDialog extends PureComponent {
         [name]: [...value]
       }));
     } else {
-      // console.log(`${name}:${value}`);
       this.setState(() => ({
         [name]: value
       }));

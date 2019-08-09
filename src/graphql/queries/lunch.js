@@ -1,12 +1,12 @@
 import gql from 'graphql-tag';
 import {
   mealOfTheDay,
-  mealHistoryBasic,
+  mealRecommendationBasic,
   mealHistory
 } from '../fragments/lunch';
 
 export const todaysMeals = gql`
-  query($date: String) {
+  query getMealSpecials($date: String) {
     meals(date: $date) {
       ...todaysMeals
     }
@@ -15,7 +15,7 @@ export const todaysMeals = gql`
 `;
 
 export const myMealHistory = gql`
-  query($first: Int, $offset: Int) {
+  query getMealHistory($first: Int, $offset: Int) {
     lunchHistory(first: $first, offset: $offset) {
       ...mealHistoryFields
     }
@@ -24,19 +24,19 @@ export const myMealHistory = gql`
 `;
 
 export const mealTrends = gql`
-  query($first: Int, $offset: Int) {
-    meals(fist: $first, offset: $offset) {
-      hits
-      name
+  query getMealTrends($date: String!, $first: Int = 5, $offset: Int = 0) {
+    trendingMeals(date: $date, first: $first, offset: $offset) {
+      ...mealRecommandationFields
     }
   }
+  ${mealRecommendationBasic}
 `;
 
 export const recomendedMeals = gql`
-  query($first: Int, $offset: Int) {
-    meals(fist: $first, offset: $offset) {
-      ...mealBasicFields
+  query getMealTrends($date: String!, $first: Int = 5, $offset: Int = 0) {
+    recommendations(date: $date, first: $first, offset: $offset) {
+      ...mealRecommandationFields
     }
   }
-  ${mealHistoryBasic}
+  ${mealRecommendationBasic}
 `;

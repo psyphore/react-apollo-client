@@ -1,21 +1,20 @@
 import gql from 'graphql-tag';
+import { basicLunchNotification } from '../fragments/subscription';
 
 export const lunchNotification = gql`
-  subscription {
+  subscription getMealNotifications {
     meals {
-    id
-    message
-    status
+      ...lunchNotificationFields
+    }
   }
-  }
+  ${basicLunchNotification}
 `;
 
 export const lunchPlacementNotification = gql`
-  subscription {
+  subscription getMyLunchPlacementNotifications {
     meals {
-    id
-    message
-    status
+      ...lunchNotificationFields
+    }
   }
-  }
+  ${basicLunchNotification}
 `;

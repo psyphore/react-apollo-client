@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import { fullSupport, basicSupport } from '../fragments/support';
 
 export const currentSupportPerson = gql`
-  query {
+  query getSupprt {
     watcher {
       ...supportFullFields
     }
@@ -11,7 +11,7 @@ export const currentSupportPerson = gql`
 `;
 
 export const supportRegister = gql`
-  query($first: Int, $offset: Int) {
+  query getAllSupporters($first: Int, $offset: Int) {
     watchers(first: $first, offset: $offset) {
       ...supportBasicFields
     }

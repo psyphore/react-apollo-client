@@ -15,7 +15,10 @@ const DialogSelection = ({ classes: { children }, state: { selection } }) => (
             <ListItemIcon>
               <Check />
             </ListItemIcon>
-            <ListItemText primary={selection} secondary="Current Selection" />
+            <ListItemText
+              primary={selection.name}
+              secondary="Current Selection"
+            />
           </ListItem>
         </List>
       </Paper>

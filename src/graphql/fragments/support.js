@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { semiPerson } from './person'
+import { semiPerson } from './person';
 
 export const fullSupport = gql`
   fragment supportFullFields on Support {
@@ -18,6 +18,9 @@ export const basicSupport = gql`
     wk
     from
     to
-    person
+    person {
+      ...personSemiFields
+    }
   }
+  ${semiPerson}
 `;

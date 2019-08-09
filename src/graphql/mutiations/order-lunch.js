@@ -1,7 +1,13 @@
 import gql from 'graphql-tag';
 
 export const placeOrder = gql`
-  mutation($body: MealOrder!) {
+  mutation mealOrder($body: MealOrder!) {
     placeOrder(order: $body)
+  }
+`;
+
+export const removeOrder = gql`
+  mutation removeOrder($body: RemoveMealOrder!) {
+    removeOrder(order: $body)
   }
 `;

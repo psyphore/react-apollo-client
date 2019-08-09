@@ -1,31 +1,29 @@
 import gql from 'graphql-tag';
+import { basicNotification } from '../fragments/subscription';
 
 export const notifications = gql`
-  subscription {
+  subscription getNotifications {
     notifications {
-      id
-      subject
-      body
+      ...notificationFields
     }
   }
+  ${basicNotification}
 `;
 
 export const serverHits = gql`
-  subscription {
+  subscription getServerHits {
     serverHits {
-      id
-      subject
-      body
+      ...notificationFields
     }
   }
+  ${basicNotification}
 `;
 
 export const getMyNotifications = gql`
-  subscription($id: ID) {
+  subscription getMyNotifications($id: ID) {
     myNotifications(id: $id) {
-      id
-      subject
-      body
+      ...notificationFields
     }
   }
+  ${basicNotification}
 `;
