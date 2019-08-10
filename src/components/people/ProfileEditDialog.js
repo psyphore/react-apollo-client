@@ -217,18 +217,12 @@ class PersonEditDialog extends PureComponent {
 
   clearState = () => {
     const { detail } = this.props;
-    Object.keys(detail).map(key => {
-      this.setState({ [key]: null });
-      return key;
-    });
+    Object.keys(detail).map(key => this.setState({ [key]: undefined }));
   };
 
   mapToState = () => {
     const { detail } = this.props;
-    Object.keys(detail).map(key => {
-      this.setState({ [key]: detail[key] });
-      return key;
-    });
+    Object.keys(detail).map(key => this.setState({ [key]: detail[key] }));
   };
 
   update = async mutator => {

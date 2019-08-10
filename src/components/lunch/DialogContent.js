@@ -29,8 +29,13 @@ const GridedOutContent = ({ classes, state, actions }) => {
   return (
     <Grid container className={gridContainerStyle} spacing={8}>
       <Grid item xs={12} sm={12} md={12} className={gridItemStyle}>
-        <DialogSelection classes={classes} state={state} />
+        <DialogSelection classes={classes} state={state} actions={actions} />
       </Grid>
+      {customMeal && (
+        <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
+          <CustomMeal classes={classes} state={state} actions={actions} />
+        </Grid>
+      )}
       <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
         {!fetching ? (
           <LunchTodayList
@@ -43,11 +48,6 @@ const GridedOutContent = ({ classes, state, actions }) => {
           <RenderEmptyMessage message="Fetching meal of the day, please wait..." />
         )}
       </Grid>
-      {customMeal && (
-        <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
-          <CustomMeal classes={classes} state={state} actions={actions} />
-        </Grid>
-      )}
       <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
         {history && history.length !== 0 ? (
           <Paper className={children}>

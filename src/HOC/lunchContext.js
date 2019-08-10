@@ -19,7 +19,13 @@ class ProviderComponent extends Component {
   state = {
     lunch: [],
     open: false,
-    selection: null,
+    selection: {
+      name: null,
+      comments: null,
+      provider: null,
+      ownAccount: false,
+      type: undefined
+    },
     today: dayJS(),
     todaysOptions: [],
     fetching: false,
@@ -31,11 +37,10 @@ class ProviderComponent extends Component {
     recommended: [],
     snackAlert: false,
     snackMessage: null,
-    ownAcc: [],
     onBehalfOf: null
   };
 
-  handleSelection = (prop, value) => this.setState({ [prop]: value });
+  handleStateUpdate = (prop, value) => this.setState({ [prop]: value });
 
   addLunch = lunch => {
     const updatedCart = [...this.state.lunch];
@@ -88,7 +93,13 @@ class ProviderComponent extends Component {
       lunch: [],
       open: isOpen ? isOpen : false,
       today: dayJS(),
-      selection: null,
+      selection: {
+        name: null,
+        comments: null,
+        provider: null,
+        ownAccount: false,
+        type: undefined
+      },
       todaysOptions: [],
       fetching: false,
       extensions: null,
@@ -99,7 +110,6 @@ class ProviderComponent extends Component {
       recommended: [],
       snackAlert: false,
       snackMessage: null,
-      ownAcc: [],
       onBehalfOf: null
     }));
   };
@@ -144,35 +154,29 @@ class ProviderComponent extends Component {
 
   handlePlaceOrder = async () => {
     const { client } = this.props;
-    const { selection, today, onBehalfOf, ownAcc } = this.state;
+    const {
+      selection: { name, provider, ownAccount, comments, type },
+      today,
+      onBehalfOf
+    } = this.state;
 
     this.setState({
       fetching: true
     });
 
-    /*
-    input MealOrder {
-  content: String!
-  date: String!
-  onBehalfOf: String
-  provider: MealProvider!
-  comments: String
-  ownAccount: Boolean
-}
-    */
+    const payload = {
+      provider: provider.replace('2', '_2').replace(/ +/g, '_'),
+      comments: comments,
+      content: name,
+      date: today.toISOString(),
+      ownAccount: ownAccount ? ownAccount : false,
+      onBehalfOf: onBehalfOf ? onBehalfOf : null,
+      type: type
+    };
 
     const result = await client.mutate({
       mutation: placeOrder,
-      variables: {
-        body: {
-          content: selection.name,
-          date: today.toISOString(),
-          ownAccount: ownAcc && ownAcc.length !== 0,
-          onBehalfOf: onBehalfOf,
-          provider: selection.provider.replace('2', '_2').replace(/ +/g, '_'),
-          comments: selection.comments
-        }
-      }
+      variables: { body: payload }
     });
 
     if (result.data.placeOrder) {
@@ -220,7 +224,12 @@ class ProviderComponent extends Component {
 
     if (result.errors) {
       this.setState(() => ({
-        selection: null,
+        selection: {
+          name: null,
+          comments: null,
+          provider: null,
+          ownAccount: false
+        },
         todaysOptions: [],
         errors: result.errors,
         fetching: false,
@@ -243,7 +252,12 @@ class ProviderComponent extends Component {
     ];
 
     this.setState(() => ({
-      selection: null,
+      selection: {
+        name: null,
+        comments: null,
+        provider: null,
+        ownAccount: false
+      },
       todaysOptions: cleanMeals,
       fetching: false,
       extensions: result.extensions
@@ -291,19 +305,53 @@ class ProviderComponent extends Component {
     await this.handleFetchingHistory();
   };
 
-  handleMealSelection = e => this.handleSelection('selection', e);
+  handleMealSelection = e => this.handleStateUpdate('selection', e);
 
-  handleMealSelectionFor = e => this.handleSelection('onBehalfOf', e.id);
+  handleMealSelectionFor = e => this.handleStateUpdate('onBehalfOf', e.id);
 
   handleCustomMeal = () => {
     this.setState(() => ({
       customMeal: !this.state.customMeal,
-      selection: null
+      selection: {
+        name: undefined,
+        comments: undefined,
+        provider: undefined,
+        ownAccount: false,
+        type: 'Other'
+      }
     }));
   };
 
-  handleOwnAccount = i =>
-    this.handleSelection('ownAcc', [...this.state.ownAcc].push(i));
+  handleCustomMealEvents = (prop, value) => {
+    const { selection } = this.state;
+    selection[prop] = value;
+    this.setState(() => ({ selection: selection }));
+  };
+
+  handleClearingMeal = () => {
+    const { selection } = this.state;
+    Object.keys(selection).map(key => {
+      switch (key) {
+        case 'ownAccount':
+          {
+            selection[key] = false;
+          }
+          break;
+        case 'type':
+          {
+            selection[key] = 'Other';
+          }
+          break;
+        default:
+          {
+            selection[key] = undefined;
+          }
+          break;
+      }
+    });
+
+    this.setState(() => ({ selection: selection, customMeal: false }));
+  };
 
   render() {
     const { Provider } = LunchContext;
@@ -322,14 +370,15 @@ class ProviderComponent extends Component {
             close: this.handleClose,
             selectMeal: this.handleMealSelection,
             placeOrder: this.handlePlaceOrder,
-            selection: this.handleSelection,
+            selection: this.handleStateUpdate,
             nextDay: this.handleNextDay,
             prevDay: this.handlePrevDay,
             updateDay: this.handleUpdateDay,
             nextHistory: this.nextHistoryBatch,
             prevHistory: this.prevHistoryBatch,
-            ownAccount: this.handleOwnAccount,
-            selectOnBehalfOf: this.handleMealSelectionFor
+            selectOnBehalfOf: this.handleMealSelectionFor,
+            editCustomMeal: this.handleCustomMealEvents,
+            clearMeal: this.handleClearingMeal
           }
         }}
       >

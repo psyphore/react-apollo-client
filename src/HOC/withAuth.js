@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { object } from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import { Auth } from '../services';
@@ -22,10 +21,6 @@ export default ProtectedComponent => {
       return <ProtectedComponent auth={this.auth} {...this.props} />;
     }
   }
-
-  AuthHOC.contextTypes = {
-    router: object.isRequired
-  };
 
   return withRouter(AuthHOC);
 };

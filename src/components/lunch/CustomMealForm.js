@@ -1,23 +1,111 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
+import Switch from '@material-ui/core/Switch';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import Paper from '@material-ui/core/Paper';
 
-const CustomMeal = ({ classes, title = 'Custom Meal', state, actions }) => {
+import { Input } from '../coolForm';
+
+const style = { marginLeft: '1px', marginRight: '1px' };
+
+const CustomDialogContent = ({
+  detail,
+  actions: { selection, editCustomMeal },
+  mealProviders
+}) => (
+  <Grid container style={style} spacing={8}>
+    <Grid item xs={12} sm={6} md={6}>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Meal Provider</FormLabel>
+        <RadioGroup
+          aria-label="Meal Provider"
+          name="mealProvider"
+          onChange={e => editCustomMeal('provider', e.target.value)}
+          value={detail.provider}
+        >
+          {mealProviders.map((p, ix) => (
+            <FormControlLabel
+              key={ix}
+              value={p}
+              control={<Radio />}
+              label={p}
+            />
+          ))}
+        </RadioGroup>
+      </FormControl>
+    </Grid>
+    <Grid item xs={12} sm={6} md={6}>
+      <FormControl component="fieldset">
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={detail.ownAccount}
+                onChange={e => editCustomMeal('ownAccount', e.target.checked)}
+                value="ownAccount"
+              />
+            }
+            label="Own Account"
+          />
+        </FormGroup>
+      </FormControl>
+    </Grid>
+    <Grid item xs={12} sm={11} md={11}>
+      <Input
+        id="customMeal"
+        labelText="Meal Content"
+        formControlProps={{
+          autoFocus: true,
+          fullWidth: true,
+          margin: 'dense'
+        }}
+        inputProps={{
+          value: detail.name,
+          multiline: true,
+          rows: 2,
+          max: 120,
+          required: true,
+          onChange: e => editCustomMeal('name', e.target.value)
+        }}
+      />
+    </Grid>
+    <Grid item xs={12} sm={11} md={11}>
+      <Input
+        id="customMealComments"
+        labelText="Meal Comments"
+        formControlProps={{
+          autoFocus: true,
+          fullWidth: true,
+          margin: 'dense'
+        }}
+        inputProps={{
+          value: detail.comments,
+          multiline: true,
+          rows: 2,
+          max: 120,
+          type: 'text',
+          onChange: e => editCustomMeal('comments', e.target.value)
+        }}
+      />
+    </Grid>
+  </Grid>
+);
+
+const CustomMeal = ({ title = 'Custom Meal', state, actions, classes }) => {
+  const { selection, todaysOptions } = state;
   const {
     text,
-    gridded: { gridContainerStyle, gridItemStyle, children }
+    gridded: { children }
   } = classes;
-
   const mealProviders = [
-    ...new Set(state.todaysOptions.map(item => item.provider))
-  ];
+    ...new Set(todaysOptions.map(item => item.provider))
+  ].sort((a, b) => (a < b ? 1 : -1));
 
   return (
     <Paper className={children}>
@@ -26,65 +114,13 @@ const CustomMeal = ({ classes, title = 'Custom Meal', state, actions }) => {
           {title}
         </Typography>
       </div>
-      <Grid container className={gridContainerStyle} spacing={8}>
-        <form>
-          <Grid item xs={12} sm={12} md={12} className={gridItemStyle}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Meal Provider</FormLabel>
-              <RadioGroup
-                aria-label="Meal Provider"
-                name="mealProvider"
-                onChange={e =>
-                  actions.selection('selection.provider', e.target.value)
-                }
-              >
-                {mealProviders.map((provider, ix) => (
-                  <FormControlLabel
-                    key={ix}
-                    value={provider}
-                    control={<Radio />}
-                    label={provider}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={12} md={12} className={gridItemStyle}>
-            <FormControl component="fieldset">
-              <TextField
-                autoFocus
-                fullWidth
-                margin="dense"
-                multiline
-                id="customMeal"
-                label="Meal Content"
-                type="text"
-                rowsMax={6}
-                onChange={e =>
-                  actions.selection('selection.name', e.target.value)
-                }
-              />
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={12} md={12} className={gridItemStyle}>
-            <FormControl component="fieldset">
-              <TextField
-                autoFocus
-                fullWidth
-                margin="dense"
-                multiline
-                id="customMealcomments"
-                label="Meal Comments"
-                type="text"
-                rowsMax={6}
-                onChange={e =>
-                  actions.selection('selection.comment', e.target.value)
-                }
-              />
-            </FormControl>
-          </Grid>
-        </form>
-      </Grid>
+      <div>
+        <CustomDialogContent
+          detail={selection}
+          actions={actions}
+          mealProviders={mealProviders}
+        />
+      </div>
     </Paper>
   );
 };

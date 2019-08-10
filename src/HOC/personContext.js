@@ -23,13 +23,11 @@ class ProviderComponent extends Component {
   };
 
   updateMe = me => {
-    console.log('Updating me', me);
     const updatedMe = me;
     this.setState(() => ({ me: updatedMe, fetching: false }));
   };
 
   clearMe = () => {
-    console.info('Clearing Me');
     this.setState({ me: {} });
   };
 
@@ -40,7 +38,6 @@ class ProviderComponent extends Component {
   };
 
   fetchMe = async () => {
-    console.info('Fetching Me');
     const { client } = this.props;
     this.setState(() => ({ fetching: true }));
     const result = await client.query({
