@@ -1,7 +1,7 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
 
-import { DatePicker, SimpleLookUp } from '../index';
+import { DatePicker, SimpleLookUp } from '../../index';
 
 const dialogStyle = {
   display: 'flex',

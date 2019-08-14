@@ -2,10 +2,10 @@ import React, { PureComponent, Fragment } from 'react';
 
 import LunchButton from './LunchButton';
 import LunchDialog from './LunchDialog';
-import { SharedSnackbarConsumer } from '../alert/SnackBarProvider';
+import { SharedSnackbarConsumer } from '../../alert/SnackBarProvider';
 
-import { SharedLunchConumer } from '../../HOC';
-import ErrorBoundary from '../error';
+import { SharedLunchConumer } from '../../../HOC';
+import ErrorBoundary from '../../error';
 
 class LunchContainer extends PureComponent {
   static contextType = SharedLunchConumer;

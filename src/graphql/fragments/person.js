@@ -17,6 +17,7 @@ export const semiPerson = gql`
     ...personBasicFields
     title
     avatar
+    isSpecial
   }
   ${basicPerson}
 `;

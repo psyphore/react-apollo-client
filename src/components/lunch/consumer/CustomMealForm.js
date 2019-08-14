@@ -10,7 +10,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import Paper from '@material-ui/core/Paper';
 
-import { Input } from '../coolForm';
+import { Input } from '../../coolForm';
 
 const style = { marginLeft: '1px', marginRight: '1px' };
 

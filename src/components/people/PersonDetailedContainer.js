@@ -5,7 +5,6 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 import Person from '../people/PersonCard';
-// import Person from '../people/PersonCard.1';
 import ProductSummaryList from '../products/ProductSummaryList';
 import Team from './TeamList';
 

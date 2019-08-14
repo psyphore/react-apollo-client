@@ -18,6 +18,11 @@ class ProviderComponent extends Component {
 
   state = {
     lunch: [],
+    history: [],
+    trending: [],
+    recommended: [],
+    today: dayJS(),
+    todaysOptions: [],
     open: false,
     selection: {
       name: null,
@@ -26,15 +31,25 @@ class ProviderComponent extends Component {
       ownAccount: false,
       type: undefined
     },
-    today: dayJS(),
-    todaysOptions: [],
+    managedLunch: {
+      open: false,
+      options: [
+        {
+          date: '',
+          options: {
+            name: '',
+            content: '',
+            type: '',
+            provider: ''
+          }
+        }
+      ]
+    },
+
     fetching: false,
-    extensions: null,
     first: this.defaultLimit,
     offset: this.defaultOffset,
-    history: [],
-    trending: [],
-    recommended: [],
+
     snackAlert: false,
     snackMessage: null,
     onBehalfOf: null
@@ -91,6 +106,10 @@ class ProviderComponent extends Component {
   clearState = isOpen => {
     this.setState(() => ({
       lunch: [],
+      history: [],
+      trending: [],
+      recommended: [],
+      todaysOptions: [],
       open: isOpen ? isOpen : false,
       today: dayJS(),
       selection: {
@@ -100,14 +119,25 @@ class ProviderComponent extends Component {
         ownAccount: false,
         type: undefined
       },
-      todaysOptions: [],
+      managedLunch: {
+        open: false,
+        options: [
+          {
+            date: '',
+            options: {
+              name: '',
+              content: '',
+              type: '',
+              provider: ''
+            }
+          }
+        ]
+      },
+
       fetching: false,
-      extensions: null,
       first: this.defaultLimit,
       offset: this.defaultOffset,
-      history: [],
-      trending: [],
-      recommended: [],
+
       snackAlert: false,
       snackMessage: null,
       onBehalfOf: null
@@ -328,26 +358,134 @@ class ProviderComponent extends Component {
     this.setState(() => ({ selection: selection }));
   };
 
+  handleMealManagementEvents = (prop, value) => {
+    const { managedLunch } = this.state;
+    managedLunch[prop] = value;
+    this.setState(() => ({ managedLunch: managedLunch }));
+  };
+
+  clearManagedLunchState = isOpen => {
+    this.setState(() => ({
+      today: dayJS(),
+      managedLunch: {
+        open: isOpen ? isOpen : false,
+        options: [
+          {
+            date: '',
+            options: {
+              name: '',
+              content: '',
+              type: '',
+              provider: ''
+            }
+          }
+        ]
+      }
+    }));
+  };
+
+  handleFetchingManagedMealsOfTheDay = async () => {
+    const { client } = this.props;
+    const { today, managedLunch } = this.state;
+
+    this.setState(() => ({ fetching: true }));
+
+    const result = await client.query({
+      query: todaysMeals,
+      variables: { date: today.toISOString() },
+      options: { fetchPolicy: this.fetchPolicy }
+    });
+
+    if (result.errors) {
+      return;
+    }
+
+    const cleanMeals = [
+      ...new Set(
+        result.data.meals.map(meal => {
+          meal.type = meal.type.replace(/_+/g, ' ');
+          meal.provider = meal.provider.replace(/_+/g, ' ').trim();
+          return meal;
+        })
+      )
+    ];
+
+    cleanMeals.map(cm => managedLunch.options.push(cm));
+
+    this.setState(() => ({
+      managedLunch: managedLunch,
+      fetching: false
+    }));
+  };
+
+  handleSaveManagedMealOptions = async () => {
+    const { client } = this.props;
+    const {
+      managedLunch: { open, options },
+      today
+    } = this.state;
+
+    this.setState(() => ({ fetching: true }));
+
+    const collection = []
+    options.map(o => {
+      const payload = {
+      provider: o.provider.replace('2', '_2').replace(/ +/g, '_'),
+      content: o.content,
+      name: o.name,
+      date: today.toISOString(),
+      type: o.type
+    };
+    collection.push(payload);
+    })
+
+    const result = await client.mutate({
+      mutation: placeOrder,
+      variables: { body: collection }
+    });
+
+    if (result.data.placeOrder) {
+      setTimeout(() => {
+        this.setState(state => ({
+          fetching: !state.fetching,
+          snackAlert: !state.snackAlert,
+          snackMessage: `Meal placed successfully!`
+        }));
+        setTimeout(() => {
+          this.setState(() => ({
+            fetching: false,
+            snackAlert: false,
+            snackMessage: null,
+            selection: null
+          }));
+        }, 6000);
+      }, 1000);
+    }
+  };
+
+  openManagedLunchDialog = () => {
+    this.clearManagedLunchState(true);
+  };
+
+  closeManagedLunchDialog = () => {
+    this.clearManagedLunchState(false);
+  };
+
   handleClearingMeal = () => {
     const { selection } = this.state;
     Object.keys(selection).map(key => {
       switch (key) {
         case 'ownAccount':
-          {
-            selection[key] = false;
-          }
+          selection[key] = false;
           break;
         case 'type':
-          {
-            selection[key] = 'Other';
-          }
+          selection[key] = 'Other';
           break;
         default:
-          {
-            selection[key] = undefined;
-          }
+          selection[key] = undefined;
           break;
       }
+      return true;
     });
 
     this.setState(() => ({ selection: selection, customMeal: false }));
@@ -356,6 +494,10 @@ class ProviderComponent extends Component {
   render() {
     const { Provider } = LunchContext;
     const { children } = this.props;
+
+    const managedLunchActions = {
+      
+    }
 
     return (
       <Provider
@@ -378,7 +520,8 @@ class ProviderComponent extends Component {
             prevHistory: this.prevHistoryBatch,
             selectOnBehalfOf: this.handleMealSelectionFor,
             editCustomMeal: this.handleCustomMealEvents,
-            clearMeal: this.handleClearingMeal
+            clearMeal: this.handleClearingMeal,
+            manager: managedLunchActions
           }
         }}
       >

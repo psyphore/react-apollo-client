@@ -10,7 +10,7 @@ import Fab from '@material-ui/core/Fab';
 import DeleteForeverOutlined from '@material-ui/icons/DeleteForeverOutlined';
 import Grid from '@material-ui/core/Grid';
 
-import Tooltip from '../tooltip';
+import Tooltip from '../../tooltip';
 
 const DialogSelection = ({
   classes: {

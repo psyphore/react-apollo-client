@@ -4,17 +4,17 @@ import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
 
-import { lunchDialogStyle } from '../../assets/jss';
+import { lunchDialogStyle } from '../../../assets/jss';
 
-import SlideUp from '../transitions/SlideUp';
-import { Loader } from '../';
-import { SharedLunchConumer } from '../../HOC';
+import SlideUp from '../../transitions/SlideUp';
+import { Loader } from '../..';
+import { SharedLunchConumer } from '../../../HOC';
 
-import DialogToolBar from './DialogToolbar';
-import DialogActions from './DialogActions';
-import DialogContent from './DialogContent';
+import DialogToolBar from '../consumer/DialogToolbar';
+import DialogActions from '../consumer/DialogActions';
+import DialogContent from '../consumer/DialogContent';
 
-const FullScreenDialog = ({ classes }) => (
+const FullScreenLunchManagerDialog = ({ classes }) => (
   <SharedLunchConumer>
     {({ state, actions }) => (
       <Dialog
@@ -41,8 +41,8 @@ const FullScreenDialog = ({ classes }) => (
   </SharedLunchConumer>
 );
 
-FullScreenDialog.propTypes = {
+FullScreenLunchManagerDialog.propTypes = {
   classes: object.isRequired
 };
 
-export default withStyles(lunchDialogStyle)(FullScreenDialog);
+export default withStyles(lunchDialogStyle)(FullScreenLunchManagerDialog);
