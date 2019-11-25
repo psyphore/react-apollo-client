@@ -16,3 +16,4 @@ export {
   SharedFileManagerConsumer,
   SharedFileManagerProvider
 } from './fileManager/FileManagerProvider';
+export { default as Map } from './mapbox/index';
