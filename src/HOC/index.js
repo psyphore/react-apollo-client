@@ -14,3 +14,11 @@ export {
 } from './notificationContext';
 export { default as ProtectedComponent } from './withAuth';
 export { default as GlobalState } from './globalState';
+export {
+  Provider as LunchManagerProvider,
+  SharedLunchManagerConumer
+} from './lunchManagerContext';
+export {
+  Provider as AdminManagerProvider,
+  SharedAdminConumer
+} from './adminContext';

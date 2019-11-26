@@ -21,12 +21,6 @@ const ProfileView = ({ auth }) => (
   </Query>
 );
 
-// const ProfileView = () => (
-//   <ErrorBoundary>
-//     <ProfileContainer />
-//   </ErrorBoundary>
-// );
-
 ProfileView.propTypes = {
   classes: object
 };
