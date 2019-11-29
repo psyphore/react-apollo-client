@@ -4,25 +4,29 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import { GradeSharp, GradeTwoTone } from '@material-ui/icons';
+import GradeSharp from '@material-ui/icons/GradeSharp';
 import Typography from '@material-ui/core/Typography';
 
 export default ({
   title,
   meals,
-  action: { selectMeal },
+  actions: { selectMeal },
   classes: { text, gridded }
 }) => (
   <Paper className={gridded.children}>
     <div className={text}>
-      <Typography variant="display3" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         {title}
       </Typography>
     </div>
     <List>
       {meals &&
         meals.map((meal, index) => (
-          <ListItem button key={index} onClick={() => selectMeal(meal)}>
+          <ListItem
+            button
+            key={index}
+            onClick={() => selectMeal({ ...meal, id: index })}
+          >
             <ListItemIcon>
               <GradeSharp />
             </ListItemIcon>
@@ -30,6 +34,7 @@ export default ({
               primary={meal.name}
               secondary={meal.category + ' by ' + meal.provider}
             />
+            {meal.comments && <ListItemText primary={meal.comments} />}
           </ListItem>
         ))}
     </List>

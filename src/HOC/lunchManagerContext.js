@@ -194,6 +194,18 @@ class ProviderComponent extends Component {
 
   handleMealSelection = e => this.handleStateUpdate('meal', e);
 
+  handleClearMealSelection = () =>
+    this.handleStateUpdate('meal', {
+      date: undefined,
+      item: {
+        name: undefined,
+        content: undefined,
+        comments: undefined,
+        category: undefined,
+        provider: undefined
+      }
+    });
+
   handleSaveMealOptions = async () => {
     const { client } = this.props;
     const { options, today } = this.state;
@@ -235,14 +247,51 @@ class ProviderComponent extends Component {
     }
   };
 
-  initProvider = () => {
-    return {};
+  handleMealOptionAdding = e => {
+    const updatedCart = [...this.state.options];
+    const updatedItemIndex = updatedCart.findIndex(item => item.id === e.id);
+
+    if (updatedItemIndex < 0) {
+      updatedCart.push({ ...e });
+    } else {
+      const updatedItem = {
+        ...updatedCart[updatedItemIndex]
+      };
+      updatedCart[updatedItemIndex] = updatedItem;
+    }
+
+    setTimeout(
+      () => this.handleStateUpdate('options', updatedCart),
+      networkTimeout
+    );
   };
+
+  handleMealOptionsUpdate = e => {
+    const updatedCart = [...this.state.options];
+    const updatedItemIndex = updatedCart.findIndex(item => item.id === e.id);
+    const updatedItem = { ...updatedCart[updatedItemIndex] };
+
+    if (updatedItemIndex === -1) {
+      updatedCart[updatedItemIndex] = updatedItem;
+    } else {
+      updatedCart.splice(updatedItemIndex, 1);
+    }
+
+    setTimeout(
+      () => this.handleStateUpdate('options', updatedCart),
+      networkTimeout
+    );
+  };
+
+  handleMealEditEvents = (prop, value) => {
+    const { meal } = this.state;
+    meal[prop] = value;
+    this.handleMealSelection(meal);
+  }
 
   render() {
     const { Provider } = LunchManagerContext;
     const { children } = this.props;
-    console.log('lunch manager context rendering...');
 
     return (
       <Provider
@@ -250,7 +299,15 @@ class ProviderComponent extends Component {
           state: { ...this.state },
           actions: {
             open: this.handleOpen,
-            close: this.handleClose
+            close: this.handleClose,
+
+            addMeal: this.handleMealOptionAdding,
+            updateMeals: this.handleMealOptionsUpdate,
+
+            selectMeal: this.handleMealSelection,
+            clearMeal: this.handleClearMealSelection,
+
+            mealEvent: this.handleMealEditEvents
           }
         }}
       >
