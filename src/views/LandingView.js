@@ -1,6 +1,6 @@
 import React from 'react';
 import { GraphQLSearch } from '../components';
 
-const LandingView = () => <GraphQLSearch />;
+export default () => <GraphQLSearch />;
 
-export default LandingView;
+// export default LandingView;

@@ -4,17 +4,19 @@ import LunchButton from './LunchManagerButton';
 import LunchDialog from './LunchManagerDialog';
 import { SharedSnackbarConsumer } from '../../alert/SnackBarProvider';
 
-import { SharedLunchManagerConumer } from '../../../HOC';
+import { SharedLunchManagerConsumer } from '../../../HOC';
 import ErrorBoundary from '../../error';
 
-class LunchContainer extends PureComponent {
-  static contextType = SharedLunchManagerConumer;
+class LunchManagerContainer extends PureComponent {
+  static contextType = SharedLunchManagerConsumer;
 
   render() {
     const {
       actions: { open },
       state: { snackAlert, snackMessage }
     } = this.context;
+
+    console.log(this.context);
 
     return (
       <ErrorBoundary>
@@ -32,4 +34,4 @@ class LunchContainer extends PureComponent {
   }
 }
 
-export default LunchContainer;
+export default LunchManagerContainer;

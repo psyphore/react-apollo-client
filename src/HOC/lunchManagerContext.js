@@ -24,13 +24,13 @@ class ProviderComponent extends Component {
     defaultProviders: ['2B CUISINE', 'DEJA VU'],
     defaultCategories: ['Meal of the day', 'Vegetarian', 'Banting'],
     meal: {
-      date: '',
-      meal: {
-        name: '',
-        content: '',
-        comments: '',
-        category: '',
-        provider: ''
+      date: undefined,
+      item: {
+        name: undefined,
+        content: undefined,
+        comments: undefined,
+        category: undefined,
+        provider: undefined
       }
     },
     options: [],
@@ -43,18 +43,12 @@ class ProviderComponent extends Component {
     snackMessage: null
   };
 
-  handleFetchingOfCategoriesAndProviders = async () => {
+  handleFetchingOfCategoriesAndProviders = () => {
     return new Promise((resolve, reject) => {
       resolve({
         providers: ['2B CUISINE', 'DEJA VU'],
         categories: ['Meal of the day', 'Vegetarian', 'Banting']
       });
-    });
-  };
-
-  handleFetchingMealsOfTheDay = async () => {
-    return new Promise((resolve, reject) => {
-      resolve([]);
     });
   };
 
@@ -65,11 +59,18 @@ class ProviderComponent extends Component {
     const { today } = this.state;
 
     this.setState(() => ({
-      selection: null,
       todaysOptions: [],
-      fetching: true,
-      extensions: null,
-      customMeal: false
+      meal: {
+        date: undefined,
+        meal: {
+          name: undefined,
+          content: undefined,
+          comments: undefined,
+          category: undefined,
+          provider: undefined
+        }
+      },
+      options: []
     }));
 
     const result = await client.query({
@@ -80,19 +81,23 @@ class ProviderComponent extends Component {
 
     if (result.errors) {
       this.setState(() => ({
-        selection: {
-          name: null,
-          comments: null,
-          provider: null,
-          ownAccount: false
-        },
         todaysOptions: [],
+        meal: {
+          date: undefined,
+          meal: {
+            name: undefined,
+            content: undefined,
+            comments: undefined,
+            category: undefined,
+            provider: undefined
+          }
+        },
+        options: [],
         errors: result.errors,
+
         fetching: false,
-        extensions: result.extensions,
         snackAlert: false,
-        snackMessage: null,
-        ownAcc: []
+        snackMessage: null
       }));
       return;
     }
@@ -129,13 +134,13 @@ class ProviderComponent extends Component {
       defaultProviders: ['2B CUISINE', 'DEJA VU'],
       defaultCategories: ['Meal of the day', 'Vegetarian', 'Banting'],
       meal: {
-        date: '',
-        meal: {
-          name: '',
-          content: '',
-          comments: '',
-          category: '',
-          provider: ''
+        date: undefined,
+        item: {
+          name: undefined,
+          content: undefined,
+          comments: undefined,
+          category: undefined,
+          provider: undefined
         }
       },
       options: [],
@@ -149,7 +154,7 @@ class ProviderComponent extends Component {
     }));
   };
 
-  handleClickOpen = async () => {
+  handleOpen = async () => {
     this.clearState(true);
     await this.asyncFetcher();
   };
@@ -184,44 +189,12 @@ class ProviderComponent extends Component {
 
     setTimeout(() => {
       this.handleFetchingMealsOfTheDay();
-    }, 199);
+    }, this.networkTimeout);
   };
 
-  handleMealSelection = e => this.handleStateUpdate('selection', e);
+  handleMealSelection = e => this.handleStateUpdate('meal', e);
 
-  handleCustomMealEvents = (prop, value) => {
-    const { selection } = this.state;
-    selection[prop] = value;
-    this.setState(() => ({ selection: selection }));
-  };
-
-  handleMealManagementEvents = (prop, value) => {
-    const { managedLunch } = this.state;
-    managedLunch[prop] = value;
-    this.setState(() => ({ managedLunch: managedLunch }));
-  };
-
-  clearManagedLunchState = isOpen => {
-    this.setState(() => ({
-      today: dayJS(),
-      managedLunch: {
-        open: isOpen ? isOpen : false,
-        options: [
-          {
-            date: '',
-            options: {
-              name: '',
-              content: '',
-              type: '',
-              provider: ''
-            }
-          }
-        ]
-      }
-    }));
-  };
-
-  handleSaveManagedMealOptions = async () => {
+  handleSaveMealOptions = async () => {
     const { client } = this.props;
     const { options, today } = this.state;
 
@@ -233,7 +206,8 @@ class ProviderComponent extends Component {
         content: o.content,
         name: o.name,
         date: today.toISOString(),
-        type: o.type
+        category: o.category,
+        comments: o.comments
       };
       return payload;
     });
@@ -248,45 +222,35 @@ class ProviderComponent extends Component {
         this.setState(state => ({
           fetching: !state.fetching,
           snackAlert: !state.snackAlert,
-          snackMessage: `Meal placed successfully!`
+          snackMessage: `Meal updated successfully!`
         }));
         setTimeout(() => {
           this.setState(() => ({
             fetching: false,
             snackAlert: false,
-            snackMessage: null,
-            selection: null
+            snackMessage: null
           }));
         }, 6000);
       }, 1000);
     }
   };
 
-  openManagedLunchDialog = () => {
-    this.clearManagedLunchState(true);
-  };
-
-  closeManagedLunchDialog = () => {
-    this.clearManagedLunchState(false);
+  initProvider = () => {
+    return {};
   };
 
   render() {
     const { Provider } = LunchManagerContext;
     const { children } = this.props;
+    console.log('lunch manager context rendering...');
 
     return (
       <Provider
         value={{
           state: { ...this.state },
           actions: {
-            open: this.handleClickOpen,
-            close: this.handleClose,
-            nextDay: this.handleNextDay,
-            prevDay: this.handlePrevDay,
-            updateDay: this.handleUpdateDay,
-            clearMeal: e => console.log('clearing meal', e),
-            fetchMeals: e => console.log('fetching meals', e),
-            updateMeals: e => console.log('updating meals', e)
+            open: this.handleOpen,
+            close: this.handleClose
           }
         }}
       >
@@ -297,4 +261,4 @@ class ProviderComponent extends Component {
 }
 
 export const Provider = withApollo(ProviderComponent);
-export const SharedLunchManagerConumer = LunchManagerContext.Consumer;
+export const SharedLunchManagerConsumer = LunchManagerContext.Consumer;

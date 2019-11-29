@@ -8,14 +8,14 @@ import { lunchDialogStyle } from '../../../assets/jss';
 
 import SlideUp from '../../transitions/SlideUp';
 import { Loader } from '../..';
-import { SharedLunchConumer } from '../../../HOC';
+import { SharedLunchConsumer } from '../../../HOC';
 
 import DialogToolBar from './DialogToolbar';
 import DialogActions from './DialogActions';
 import DialogContent from './DialogContent';
 
 const FullScreenDialog = ({ classes }) => (
-  <SharedLunchConumer>
+  <SharedLunchConsumer>
     {({ state, actions }) => (
       <Dialog
         fullScreen
@@ -38,7 +38,7 @@ const FullScreenDialog = ({ classes }) => (
         </div>
       </Dialog>
     )}
-  </SharedLunchConumer>
+  </SharedLunchConsumer>
 );
 
 FullScreenDialog.propTypes = {

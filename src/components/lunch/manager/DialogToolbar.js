@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Fab from '@material-ui/core/Fab';
-import SaveAlt from '@material-ui/icons/SaveAlt';
+import CloudUpload from '@material-ui/icons/CloudUpload';
 
 const DialogToolBar = ({
   actions: { close, placeOrder },
@@ -20,8 +20,8 @@ const DialogToolBar = ({
         today ? today.format('DD MMMM YYYY') + ' -' : ''
       } Manage Available Meal Options`}
     </Typography>
-    <Fab aria-label="Lunch" color="primary" onClick={placeOrder}>
-      <SaveAlt />
+    <Fab aria-label="Lunch" color="secondary" onClick={placeOrder}>
+      <CloudUpload />
     </Fab>
   </Toolbar>
 );

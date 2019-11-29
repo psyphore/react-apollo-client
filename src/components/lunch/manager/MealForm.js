@@ -16,7 +16,7 @@ const style = { marginLeft: '1px', marginRight: '1px' };
 
 const CustomDialogContent = ({
   detail,
-  actions,
+  actions: { updateMeals },
   defaultProviders,
   defaultCategories
 }) => (
@@ -140,11 +140,7 @@ const CustomDialogContent = ({
       />
     </Grid>
     <Grid item xs={12} sm={12} md={11}>
-      <Fab
-        aria-label="Lunch"
-        color="primary"
-        onClick={() => console.log('add to meal collection')}
-      >
+      <Fab aria-label="Lunch" color="primary" onClick={updateMeals}>
         <AddIcon />
       </Fab>
     </Grid>

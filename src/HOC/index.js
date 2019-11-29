@@ -2,7 +2,7 @@ export {
   Provider as LeaveProvider,
   Consumer as LeaveConsumer
 } from './leaveContext';
-export { Provider as LunchProvider, SharedLunchConumer } from './lunchContext';
+export { Provider as LunchProvider, SharedLunchConsumer } from './lunchContext';
 export {
   Provider as PersonProvider,
   Consumer as PersonConsumer
@@ -16,9 +16,5 @@ export { default as ProtectedComponent } from './withAuth';
 export { default as GlobalState } from './globalState';
 export {
   Provider as LunchManagerProvider,
-  SharedLunchManagerConumer
+  SharedLunchManagerConsumer
 } from './lunchManagerContext';
-export {
-  Provider as AdminManagerProvider,
-  SharedAdminConumer
-} from './adminContext';

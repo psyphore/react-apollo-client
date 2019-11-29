@@ -31,7 +31,7 @@ export default class Auth {
         history.replace('/');
       } else if (err) {
         history.replace('/');
-        console.log(err);
+        console.error(err);
       }
     });
   }
@@ -79,7 +79,7 @@ export default class Auth {
     } else {
       isMe = false;
     }
-    console.log(valid && isMe);
+    // console.log(valid && isMe);
     return true; //valid && isMe;
   }
 

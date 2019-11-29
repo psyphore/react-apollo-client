@@ -4,6 +4,7 @@ import { Provider as AppProvider } from './appContext';
 import { Provider as PersonProvider } from './personContext';
 import { Provider as LunchProvider } from './lunchContext';
 import { Provider as NotificationProvider } from './notificationContext';
+import { Provider as LunchManagerProvider } from './lunchManagerContext';
 
 import { SharedSnackbarProvider } from '../components/alert/SnackBarProvider';
 
@@ -13,11 +14,13 @@ class GlobalState extends Component {
     return (
       <AppProvider>
         <SharedSnackbarProvider>
-          <PersonProvider>
-            <NotificationProvider>
-              <LunchProvider>{children}</LunchProvider>
-            </NotificationProvider>
-          </PersonProvider>
+          <LunchManagerProvider>
+            <PersonProvider>
+              <NotificationProvider>
+                <LunchProvider>{children}</LunchProvider>
+              </NotificationProvider>
+            </PersonProvider>
+          </LunchManagerProvider>
         </SharedSnackbarProvider>
       </AppProvider>
     );

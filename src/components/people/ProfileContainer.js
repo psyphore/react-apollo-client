@@ -11,7 +11,7 @@ import PersonCard from './PersonCard.1';
 import ProductSummaryList from '../products/ProductSummaryList';
 import DetailPanel from '../panel';
 import { DontReadTheComments } from '../../components/notifications/NotesSubscriptions';
-import { Lunch, LunchManager } from '../lunch';
+import { Lunch } from '../lunch';
 import { profileContainerStyle } from '../../assets/jss';
 
 const ExtraTeamInformation = ({ classes, person, refetch }) => (
@@ -74,7 +74,6 @@ const MyActions = ({ classes, person }) => (
     <Paper className={classes.actionPaper}>
       <div className={classes.quickAction}>
         <Lunch person={person} />
-        {person.isSpecial && <LunchManager person={person} />}
       </div>
     </Paper>
   </Grid>

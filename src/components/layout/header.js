@@ -10,6 +10,7 @@ import { Support } from '../support/';
 import ProfileButton from '../people/ProfileButton';
 import SearchButton from '../search/SearchButton';
 import { AppConsumer } from '../../HOC';
+import { LunchManager } from '../lunch';
 
 const styles = {
   root: {
@@ -48,6 +49,7 @@ const AppHeaderBar = ({ classes, title }) => (
               <Fragment>
                 {auth().isAuthenticated() && (
                   <Fragment>
+                    <LunchManager />
                     <SearchButton />
                     <Support />
                     <ProfileButton />

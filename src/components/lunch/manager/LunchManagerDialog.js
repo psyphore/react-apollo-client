@@ -8,44 +8,37 @@ import { lunchDialogStyle } from '../../../assets/jss';
 
 import SlideUp from '../../transitions/SlideUp';
 import { Loader } from '../..';
-import { SharedLunchManagerConumer } from '../../../HOC';
+import { SharedLunchManagerConsumer } from '../../../HOC';
 
 import DialogToolBar from './DialogToolbar';
 import DialogActions from './DialogActions';
 import DialogContent from './DialogContent';
 
 const FullScreenLunchManagerDialog = ({ classes }) => (
-  <SharedLunchManagerConumer>
-    {({ state, actions }) =>
-      state &&
-      state.open && (
-        <Dialog
-          fullScreen
-          onClose={actions.close}
-          open={state.open}
-          TransitionComponent={SlideUp}
-        >
-          <AppBar className={classes.appBar}>
-            <DialogToolBar actions={actions} classes={classes} state={state} />
-          </AppBar>
-          <div className={classes.container}>
-            {state.fetching && <Loader />}
-            <div className={classes.header}>
-              <DialogActions actions={actions} state={state} />
-            </div>
-            <div className={classes.content}>
-              <DialogContent
-                actions={actions}
-                classes={classes}
-                state={state}
-              />
-            </div>
-            <div className={classes.footer} />
+  <SharedLunchManagerConsumer>
+    {({ state, actions }) => (
+      <Dialog
+        fullScreen
+        onClose={actions.close}
+        open={state.open}
+        TransitionComponent={SlideUp}
+      >
+        <AppBar className={classes.appBar}>
+          <DialogToolBar actions={actions} classes={classes} state={state} />
+        </AppBar>
+        <div className={classes.container}>
+          {state.fetching && <Loader />}
+          <div className={classes.header}>
+            <DialogActions actions={actions} state={state} />
           </div>
-        </Dialog>
-      )
-    }
-  </SharedLunchManagerConumer>
+          <div className={classes.content}>
+            <DialogContent actions={actions} classes={classes} state={state} />
+          </div>
+          <div className={classes.footer} />
+        </div>
+      </Dialog>
+    )}
+  </SharedLunchManagerConsumer>
 );
 
 FullScreenLunchManagerDialog.propTypes = {
