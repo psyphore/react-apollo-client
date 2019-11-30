@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -32,9 +32,19 @@ export default ({
             </ListItemIcon>
             <ListItemText
               primary={meal.name}
-              secondary={meal.category + ' by ' + meal.provider}
+              secondary={
+                <Fragment>
+                  <Typography component="span" color="textPrimary">
+                    {meal.category + ' by ' + meal.provider}
+                  </Typography>
+                  {meal.comments && (
+                    <Typography component="span" color="textPrimary">
+                      {meal.comments}
+                    </Typography>
+                  )}
+                </Fragment>
+              }
             />
-            {meal.comments && <ListItemText primary={meal.comments} />}
           </ListItem>
         ))}
     </List>

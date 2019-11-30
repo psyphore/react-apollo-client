@@ -79,6 +79,7 @@ export default class Auth {
     } else {
       isMe = false;
     }
+
     // console.log(valid && isMe);
     return true; //valid && isMe;
   }

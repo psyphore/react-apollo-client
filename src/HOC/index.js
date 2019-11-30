@@ -16,5 +16,6 @@ export { default as ProtectedComponent } from './withAuth';
 export { default as GlobalState } from './globalState';
 export {
   Provider as LunchManagerProvider,
-  SharedLunchManagerConsumer
+  SharedLunchManagerConsumer,
+  lmctx as LunchManagerContext
 } from './lunchManagerContext';

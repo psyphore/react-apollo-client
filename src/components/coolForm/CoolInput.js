@@ -18,6 +18,7 @@ function CustomInput({ ...props }) {
     formControlProps,
     labelText,
     id,
+    name,
     labelProps,
     inputProps,
     error,
@@ -51,7 +52,7 @@ function CustomInput({ ...props }) {
         </InputLabel>
       ) : null}
       {inputProps.type && inputProps.type === 'file' ? (
-        <input id={id} {...inputProps} />
+        <input id={id} name={name} {...inputProps} />
       ) : (
         <Input
           classes={{
@@ -60,6 +61,7 @@ function CustomInput({ ...props }) {
             underline: underlineClasses
           }}
           id={id}
+          name={name}
           {...inputProps}
         />
       )}
@@ -77,6 +79,7 @@ CustomInput.propTypes = {
   labelText: node,
   labelProps: object,
   id: string,
+  name: string,
   inputProps: object,
   formControlProps: object,
   error: bool,

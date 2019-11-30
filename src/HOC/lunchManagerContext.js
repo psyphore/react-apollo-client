@@ -19,19 +19,16 @@ class ProviderComponent extends Component {
 
   state = {
     today: dayJS(),
-    todaysOptions: [],
     open: false,
     defaultProviders: ['2B CUISINE', 'DEJA VU'],
     defaultCategories: ['Meal of the day', 'Vegetarian', 'Banting'],
     meal: {
       date: undefined,
-      item: {
-        name: undefined,
-        content: undefined,
-        comments: undefined,
-        category: undefined,
-        provider: undefined
-      }
+      name: '',
+      content: '',
+      comments: '',
+      category: undefined,
+      provider: undefined
     },
     options: [],
 
@@ -44,7 +41,7 @@ class ProviderComponent extends Component {
   };
 
   handleFetchingOfCategoriesAndProviders = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       resolve({
         providers: ['2B CUISINE', 'DEJA VU'],
         categories: ['Meal of the day', 'Vegetarian', 'Banting']
@@ -59,16 +56,13 @@ class ProviderComponent extends Component {
     const { today } = this.state;
 
     this.setState(() => ({
-      todaysOptions: [],
       meal: {
         date: undefined,
-        meal: {
-          name: undefined,
-          content: undefined,
-          comments: undefined,
-          category: undefined,
-          provider: undefined
-        }
+        name: '',
+        content: '',
+        comments: '',
+        category: undefined,
+        provider: undefined
       },
       options: []
     }));
@@ -81,16 +75,13 @@ class ProviderComponent extends Component {
 
     if (result.errors) {
       this.setState(() => ({
-        todaysOptions: [],
         meal: {
           date: undefined,
-          meal: {
-            name: undefined,
-            content: undefined,
-            comments: undefined,
-            category: undefined,
-            provider: undefined
-          }
+          name: undefined,
+          content: undefined,
+          comments: undefined,
+          category: undefined,
+          provider: undefined
         },
         options: [],
         errors: result.errors,
@@ -113,15 +104,18 @@ class ProviderComponent extends Component {
     ];
 
     this.setState(() => ({
-      selection: {
-        name: null,
-        comments: null,
-        provider: null,
-        ownAccount: false
+      meal: {
+        date: undefined,
+        name: '',
+        content: '',
+        comments: '',
+        category: undefined,
+        provider: undefined
       },
-      todaysOptions: cleanMeals,
-      fetching: false,
-      extensions: result.extensions
+
+      options: cleanMeals,
+
+      fetching: false
     }));
   };
 
@@ -130,18 +124,15 @@ class ProviderComponent extends Component {
       open: isOpen ? isOpen : false,
 
       today: dayJS(),
-      todaysOptions: [],
       defaultProviders: ['2B CUISINE', 'DEJA VU'],
       defaultCategories: ['Meal of the day', 'Vegetarian', 'Banting'],
       meal: {
         date: undefined,
-        item: {
-          name: undefined,
-          content: undefined,
-          comments: undefined,
-          category: undefined,
-          provider: undefined
-        }
+        name: '',
+        content: '',
+        comments: '',
+        category: undefined,
+        provider: undefined
       },
       options: [],
 
@@ -197,13 +188,11 @@ class ProviderComponent extends Component {
   handleClearMealSelection = () =>
     this.handleStateUpdate('meal', {
       date: undefined,
-      item: {
-        name: undefined,
-        content: undefined,
-        comments: undefined,
-        category: undefined,
-        provider: undefined
-      }
+      name: '',
+      content: '',
+      comments: '',
+      category: undefined,
+      provider: undefined
     });
 
   handleSaveMealOptions = async () => {
@@ -242,34 +231,52 @@ class ProviderComponent extends Component {
             snackAlert: false,
             snackMessage: null
           }));
-        }, 6000);
-      }, 1000);
+        }, this.networkTimeout);
+      }, this.networkTimeout);
     }
   };
 
   handleMealOptionAdding = e => {
-    const updatedCart = [...this.state.options];
-    const updatedItemIndex = updatedCart.findIndex(item => item.id === e.id);
+    console.log(e);
+    const { meal, options, today } = this.state;
+    const updatedCart = [...options];
+    const updatedItemIndex = updatedCart.findIndex(
+      item =>
+        item.name === meal.name &&
+        item.category === meal.category &&
+        item.provider === meal.provider
+    );
 
     if (updatedItemIndex < 0) {
-      updatedCart.push({ ...e });
+      meal['date'] = today;
+      updatedCart.push({ ...meal });
     } else {
       const updatedItem = {
         ...updatedCart[updatedItemIndex]
       };
+      updatedItem['date'] = today;
       updatedCart[updatedItemIndex] = updatedItem;
     }
 
-    setTimeout(
-      () => this.handleStateUpdate('options', updatedCart),
-      networkTimeout
-    );
+    setTimeout(() => {
+      this.handleStateUpdate('options', updatedCart);
+      this.handleClearMealSelection();
+    }, this.networkTimeout);
   };
 
   handleMealOptionsUpdate = e => {
-    const updatedCart = [...this.state.options];
-    const updatedItemIndex = updatedCart.findIndex(item => item.id === e.id);
+    console.log(e);
+    const { meal, options, today } = this.state;
+    const updatedCart = [...options];
+    const updatedItemIndex = updatedCart.findIndex(
+      item =>
+        item.name === meal.name &&
+        item.category === meal.category &&
+        item.provider === meal.provider
+    );
     const updatedItem = { ...updatedCart[updatedItemIndex] };
+
+    updatedItem['date'] = today;
 
     if (updatedItemIndex === -1) {
       updatedCart[updatedItemIndex] = updatedItem;
@@ -277,17 +284,18 @@ class ProviderComponent extends Component {
       updatedCart.splice(updatedItemIndex, 1);
     }
 
-    setTimeout(
-      () => this.handleStateUpdate('options', updatedCart),
-      networkTimeout
-    );
+    setTimeout(() => {
+      this.handleStateUpdate('options', updatedCart);
+      this.handleClearMealSelection();
+    }, this.networkTimeout);
   };
 
-  handleMealEditEvents = (prop, value) => {
+  handleMealEditEvents = e => {
+    const { name, value } = e.target;
     const { meal } = this.state;
-    meal[prop] = value;
+    meal[name] = value;
     this.handleMealSelection(meal);
-  }
+  };
 
   render() {
     const { Provider } = LunchManagerContext;
@@ -319,3 +327,4 @@ class ProviderComponent extends Component {
 
 export const Provider = withApollo(ProviderComponent);
 export const SharedLunchManagerConsumer = LunchManagerContext.Consumer;
+export const lmctx = LunchManagerContext;
