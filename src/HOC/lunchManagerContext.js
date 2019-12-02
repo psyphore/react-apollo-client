@@ -27,8 +27,8 @@ class ProviderComponent extends Component {
       name: '',
       content: '',
       comments: '',
-      category: undefined,
-      provider: undefined
+      category: '',
+      provider: ''
     },
     options: [],
 
@@ -43,8 +43,16 @@ class ProviderComponent extends Component {
   handleFetchingOfCategoriesAndProviders = () => {
     return new Promise(resolve => {
       resolve({
-        providers: ['2B CUISINE', 'DEJA VU'],
-        categories: ['Meal of the day', 'Vegetarian', 'Banting']
+        defaultProviders: ['2B CUISINE', 'DEJA VU'],
+        defaultCategories: ['Meal of the day', 'Vegetarian', 'Banting'],
+        meal: {
+          date: undefined,
+          name: '',
+          content: '',
+          comments: '',
+          category: '',
+          provider: ''
+        }
       });
     });
   };
@@ -61,8 +69,8 @@ class ProviderComponent extends Component {
         name: '',
         content: '',
         comments: '',
-        category: undefined,
-        provider: undefined
+        category: '',
+        provider: ''
       },
       options: []
     }));
@@ -131,8 +139,8 @@ class ProviderComponent extends Component {
         name: '',
         content: '',
         comments: '',
-        category: undefined,
-        provider: undefined
+        category: '',
+        provider: ''
       },
       options: [],
 
@@ -156,7 +164,6 @@ class ProviderComponent extends Component {
 
   asyncFetcher = async () => {
     await this.handleFetchingOfCategoriesAndProviders();
-    await this.handleFetchingMealsOfTheDay();
   };
 
   handleNextDay = async () => {
@@ -191,8 +198,8 @@ class ProviderComponent extends Component {
       name: '',
       content: '',
       comments: '',
-      category: undefined,
-      provider: undefined
+      category: '',
+      provider: ''
     });
 
   handleSaveMealOptions = async () => {
@@ -264,29 +271,14 @@ class ProviderComponent extends Component {
     }, this.networkTimeout);
   };
 
-  handleMealOptionsUpdate = e => {
-    console.log(e);
-    const { meal, options, today } = this.state;
+  handleMealOptionsUpdate = () => {
+    const { options } = this.state;
     const updatedCart = [...options];
-    const updatedItemIndex = updatedCart.findIndex(
-      item =>
-        item.name === meal.name &&
-        item.category === meal.category &&
-        item.provider === meal.provider
-    );
-    const updatedItem = { ...updatedCart[updatedItemIndex] };
 
-    updatedItem['date'] = today;
-
-    if (updatedItemIndex === -1) {
-      updatedCart[updatedItemIndex] = updatedItem;
-    } else {
-      updatedCart.splice(updatedItemIndex, 1);
-    }
+    console.log('> final meal cart: ', updatedCart);
 
     setTimeout(() => {
-      this.handleStateUpdate('options', updatedCart);
-      this.handleClearMealSelection();
+      this.clearState(false);
     }, this.networkTimeout);
   };
 
@@ -295,6 +287,12 @@ class ProviderComponent extends Component {
     const { meal } = this.state;
     meal[name] = value;
     this.handleMealSelection(meal);
+  };
+
+  componentDidMount = () => {
+    this.handleFetchingOfCategoriesAndProviders().then(value => {
+      this.setState({ ...value });
+    });
   };
 
   render() {

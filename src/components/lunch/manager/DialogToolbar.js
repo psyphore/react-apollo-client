@@ -7,7 +7,7 @@ import Fab from '@material-ui/core/Fab';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 
 const DialogToolBar = ({
-  actions: { close, placeOrder },
+  actions: { close, updateMeals },
   classes: { flex },
   state: { today }
 }) => (
@@ -20,7 +20,7 @@ const DialogToolBar = ({
         today ? today.format('DD MMMM YYYY') + ' -' : ''
       } Manage Available Meal Options`}
     </Typography>
-    <Fab aria-label="Lunch" color="secondary" onClick={placeOrder}>
+    <Fab aria-label="Lunch" color="secondary" onClick={updateMeals}>
       <CloudUpload />
     </Fab>
   </Toolbar>
