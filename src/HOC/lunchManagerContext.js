@@ -287,6 +287,18 @@ class ProviderComponent extends Component {
     this.handleMealSelection(meal);
   };
 
+  handleUpdateDay = value => {
+    let day = dayJS(value);
+
+    !day.isValid()
+      ? this.setState(() => ({ today: dayJS() }))
+      : this.setState(() => ({ today: day }));
+
+    setTimeout(() => {
+      this.handleFetchingMealsOfTheDay();
+    }, this.networkTimeout);
+  };
+
   componentDidMount = () => {
     this.handleFetchingOfCategoriesAndProviders().then(value => {
       this.setState({ ...value });
@@ -311,7 +323,8 @@ class ProviderComponent extends Component {
             selectMeal: this.handleMealSelection,
             clearMeal: this.handleClearMealSelection,
 
-            mealEvent: this.handleMealEditEvents
+            mealEvent: this.handleMealEditEvents,
+            updateDay: this.handleUpdateDay
           }
         }}
       >
