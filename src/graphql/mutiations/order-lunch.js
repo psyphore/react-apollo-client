@@ -11,3 +11,9 @@ export const removeOrder = gql`
     removeOrder(order: $body)
   }
 `;
+
+export const setMealOptions = gql`
+  mutation saveMealOptions($options: MealOptions!) {
+    setMeals(meals: $options)
+  }
+`;

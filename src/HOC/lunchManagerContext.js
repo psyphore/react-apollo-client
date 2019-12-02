@@ -2,7 +2,7 @@ import React, { createContext, Component } from 'react';
 import { withApollo } from 'react-apollo';
 import dayJS from 'dayjs';
 
-import { todaysMeals, placeOrder } from '../graphql';
+import { todaysMeals, placeOrder, setMealOptions } from '../graphql';
 
 const LunchManagerContext = createContext({
   actions: {},
@@ -221,7 +221,7 @@ class ProviderComponent extends Component {
     });
 
     const result = await client.mutate({
-      mutation: placeOrder,
+      mutation: setMealOptions,
       variables: { body: collection }
     });
 
@@ -271,15 +271,13 @@ class ProviderComponent extends Component {
     }, this.networkTimeout);
   };
 
-  handleMealOptionsUpdate = () => {
+  handleMealOptionsUpdate = async () => {
     const { options } = this.state;
     const updatedCart = [...options];
 
     console.log('> final meal cart: ', updatedCart);
 
-    setTimeout(() => {
-      this.clearState(false);
-    }, this.networkTimeout);
+    await this.handleSaveMealOptions();
   };
 
   handleMealEditEvents = e => {
