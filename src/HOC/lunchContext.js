@@ -3,6 +3,7 @@ import { withApollo } from 'react-apollo';
 import dayJS from 'dayjs';
 
 import { todaysMeals, placeOrder, myMealHistory } from '../graphql';
+import { fetchCategoriesAndProviders } from '../components/lunch/utils';
 
 const LunchContext = createContext({
   actions: {},
@@ -15,6 +16,7 @@ class ProviderComponent extends Component {
   defaultOffset = 0;
   defaultPageMax = 10;
   defaultPageMin = 0;
+  defaultNetworkTimeout = 799;
 
   state = {
     lunch: [],
@@ -24,12 +26,16 @@ class ProviderComponent extends Component {
     today: dayJS(),
     todaysOptions: [],
     open: false,
+    defaultCategories: [],
+    defaultProviders: [],
     selection: {
-      name: null,
-      comments: null,
-      provider: null,
-      ownAccount: false,
-      type: undefined
+      id: null,
+      name: '',
+      comments: '',
+      provider: '',
+      content: '',
+      category: '',
+      ownAccount: false
     },
 
     fetching: false,
@@ -41,7 +47,7 @@ class ProviderComponent extends Component {
     onBehalfOf: null
   };
 
-  handleStateUpdate = (prop, value) => this.setState({ [prop]: value });
+  handleStateUpdate = (prop, value) => this.setState(() => ({ [prop]: value }));
 
   addLunch = lunch => {
     const updatedCart = [...this.state.lunch];
@@ -59,9 +65,28 @@ class ProviderComponent extends Component {
       updatedCart[updatedItemIndex] = updatedItem;
     }
     setTimeout(() => {
-      // simulate api call
-      this.setState({ lunch: updatedCart });
-    }, 700);
+      this.handleStateUpdate('lunch', updatedCart);
+    }, this.defaultNetworkTimeout);
+  };
+
+  addCustomLunch = lunch => {
+    const updatedCart = [...this.state.lunch];
+    const updatedItemIndex = updatedCart.findIndex(
+      item => item.name === lunch.name && item.id === lunch.id
+    );
+
+    if (updatedItemIndex < 0) {
+      updatedCart.push({ ...lunch, quantity: 1 });
+    } else {
+      const updatedItem = {
+        ...updatedCart[updatedItemIndex]
+      };
+      updatedItem.quantity++;
+      updatedCart[updatedItemIndex] = updatedItem;
+    }
+    setTimeout(() => {
+      this.handleStateUpdate('lunch', updatedCart);
+    }, this.defaultNetworkTimeout);
   };
 
   updateLunch = lunch => {
@@ -80,9 +105,8 @@ class ProviderComponent extends Component {
       updatedCart[updatedItemIndex] = updatedItem;
     }
     setTimeout(() => {
-      // simulate api call
-      this.setState({ lunch: updatedCart });
-    }, 700);
+      this.handleStateUpdate('lunch', updatedCart);
+    }, this.defaultNetworkTimeout);
   };
 
   clearLunch = () => {
@@ -99,11 +123,13 @@ class ProviderComponent extends Component {
       open: isOpen ? isOpen : false,
       today: dayJS(),
       selection: {
-        name: null,
-        comments: null,
-        provider: null,
-        ownAccount: false,
-        type: undefined
+        id: null,
+        name: '',
+        comments: '',
+        provider: '',
+        content: '',
+        category: '',
+        ownAccount: false
       },
 
       fetching: false,
@@ -128,6 +154,7 @@ class ProviderComponent extends Component {
   asyncFetcher = async () => {
     await this.handleFetchingMealsOfTheDay();
     await this.handleFetchingHistory();
+    // await this.handleFetchingTrends();
   };
 
   handleNextDay = async () => {
@@ -151,13 +178,14 @@ class ProviderComponent extends Component {
 
     setTimeout(() => {
       this.handleFetchingMealsOfTheDay();
-    }, 199);
+    }, this.defaultNetworkTimeout);
   };
 
   handlePlaceOrder = async () => {
     const { client } = this.props;
     const {
-      selection: { name, provider, ownAccount, comments, type },
+      selection: { name, provider, ownAccount, comments, category, id },
+      lunch,
       today,
       onBehalfOf
     } = this.state;
@@ -166,15 +194,32 @@ class ProviderComponent extends Component {
       fetching: true
     });
 
-    const payload = {
-      provider: provider.replace('2', '_2').replace(/ +/g, '_'),
-      comments: comments,
-      content: name,
-      date: today.toISOString(),
-      ownAccount: ownAccount ? ownAccount : false,
-      onBehalfOf: onBehalfOf ? onBehalfOf : null,
-      type: type
-    };
+    // const payload = {
+    //   provider: provider.replace('2', '_2').replace(/ +/g, '_'),
+    //   comments: comments,
+    //   content: name,
+    //   date: today.toISOString(),
+    //   ownAccount: ownAccount ? ownAccount : false,
+    //   onBehalfOf: onBehalfOf ? onBehalfOf : null,
+    //   category: category,
+    //   name: name,
+    //   id: id
+    // };
+
+    const payload = lunch.map(item => {
+      const p = {
+        provider: item.provider.replace('2', '_2').replace(/ +/g, '_'),
+        comments: item.comments,
+        content: item.name,
+        date: today.toISOString(),
+        ownAccount: item.ownAccount ? ownAccount : false,
+        onBehalfOf: item.onBehalfOf ? onBehalfOf : null,
+        category: item.category.replace('2', '_2').replace(/ +/g, '_'),
+        name: item.name,
+        id: item.id
+      };
+      return p;
+    });
 
     const result = await client.mutate({
       mutation: placeOrder,
@@ -227,9 +272,12 @@ class ProviderComponent extends Component {
     if (result.errors) {
       this.setState(() => ({
         selection: {
+          id: null,
           name: null,
           comments: null,
           provider: null,
+          content: null,
+          category: null,
           ownAccount: false
         },
         todaysOptions: [],
@@ -245,19 +293,24 @@ class ProviderComponent extends Component {
 
     const cleanMeals = [
       ...new Set(
-        result.data.meals.map(meal => {
-          meal.type = meal.type.replace(/_+/g, ' ');
-          meal.provider = meal.provider.replace(/_+/g, ' ').trim();
-          return meal;
-        })
+        result.data.meals
+          .filter(meal => meal.id !== null)
+          .map(meal => {
+            meal.category = meal.category.replace(/_+/g, ' ');
+            meal.provider = meal.provider.replace(/_+/g, ' ').trim();
+            return meal;
+          })
       )
     ];
 
     this.setState(() => ({
       selection: {
+        id: null,
         name: null,
         comments: null,
         provider: null,
+        content: null,
+        category: null,
         ownAccount: false
       },
       todaysOptions: cleanMeals,
@@ -307,7 +360,10 @@ class ProviderComponent extends Component {
     await this.handleFetchingHistory();
   };
 
-  handleMealSelection = e => this.handleStateUpdate('selection', e);
+  handleMealSelection = e => {
+    this.handleStateUpdate('selection', e);
+    this.addLunch(e);
+  };
 
   handleMealSelectionFor = e => this.handleStateUpdate('onBehalfOf', e.id);
 
@@ -315,11 +371,13 @@ class ProviderComponent extends Component {
     this.setState(() => ({
       customMeal: !this.state.customMeal,
       selection: {
-        name: undefined,
-        comments: undefined,
-        provider: undefined,
-        ownAccount: false,
-        type: 'Other'
+        id: null,
+        name: 'Custom Meal',
+        comments: '',
+        provider: '',
+        content: '',
+        category: 'OTHER',
+        ownAccount: false
       }
     }));
   };
@@ -328,14 +386,6 @@ class ProviderComponent extends Component {
     const { selection } = this.state;
     selection[prop] = value;
     this.setState(() => ({ selection: selection }));
-  };
-
-  openManagedLunchDialog = () => {
-    this.clearManagedLunchState(true);
-  };
-
-  closeManagedLunchDialog = () => {
-    this.clearManagedLunchState(false);
   };
 
   handleClearingMeal = () => {
@@ -356,6 +406,18 @@ class ProviderComponent extends Component {
     });
 
     this.setState(() => ({ selection: selection, customMeal: false }));
+    this.clearLunch();
+  };
+
+  componentDidMount = async props => {
+    const {
+      defaultCategories,
+      defaultProviders
+    } = await fetchCategoriesAndProviders();
+    this.setState({
+      defaultCategories: [...defaultCategories],
+      defaultProviders: [...defaultProviders]
+    });
   };
 
   render() {
@@ -383,6 +445,7 @@ class ProviderComponent extends Component {
             prevHistory: this.prevHistoryBatch,
             selectOnBehalfOf: this.handleMealSelectionFor,
             editCustomMeal: this.handleCustomMealEvents,
+            addCustomMeal: this.addCustomLunch,
             clearMeal: this.handleClearingMeal
           }
         }}
@@ -395,3 +458,4 @@ class ProviderComponent extends Component {
 
 export const Provider = withApollo(ProviderComponent);
 export const SharedLunchConsumer = LunchContext.Consumer;
+export const lctx = LunchContext;

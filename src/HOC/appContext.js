@@ -49,3 +49,4 @@ class ProviderComponent extends Component {
 
 export const Provider = withApollo(ProviderComponent);
 export const Consumer = Context.Consumer;
+export const appContext = Context;

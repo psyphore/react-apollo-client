@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import LunchList from './LunchList';
 import LunchTodayList from './LunchTodayList';
 import CustomMeal from './CustomMealForm';
-
 import DialogSelection from './DialogSelection';
 
 const RenderEmptyMessage = ({ message }) => (

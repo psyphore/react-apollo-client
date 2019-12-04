@@ -2,7 +2,6 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
-// import FormLabel from '@material-ui/core/FormLabel';
 import Paper from '@material-ui/core/Paper';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
@@ -43,8 +42,10 @@ const CustomDialogContent = ({
       </FormControl>
     </Grid>
     <Grid item xs={12} sm={6} md={6}>
-      <FormControl>
-        <InputLabel htmlFor="provider-opts">Provider</InputLabel>
+      <FormControl component="fieldset">
+        <InputLabel component="legend" htmlFor="provider-opts">
+          Provider
+        </InputLabel>
         <Select
           placeholder="Provider"
           value={meal.provider}

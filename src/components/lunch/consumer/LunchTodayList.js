@@ -4,8 +4,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import { GradeSharp, GradeTwoTone } from '@material-ui/icons';
+import { GradeTwoTone } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
+import { MealIconSwitcher } from '../common';
 
 export default ({
   meals,
@@ -21,14 +22,14 @@ export default ({
     </div>
     <List>
       {meals &&
-        meals.map((meal, index) => (
-          <ListItem button key={index} onClick={() => selectMeal(meal)}>
+        meals.map(meal => (
+          <ListItem button key={meal.id} onClick={() => selectMeal(meal)}>
             <ListItemIcon>
-              <GradeSharp />
+              <MealIconSwitcher category={meal.category} />
             </ListItemIcon>
             <ListItemText
-              primary={meal.name}
-              secondary={meal.type + ' by ' + meal.provider}
+              primary={meal.name + ' by ' + meal.provider}
+              secondary={meal.content}
             />
           </ListItem>
         ))}
@@ -36,7 +37,7 @@ export default ({
         <ListItemIcon>
           <GradeTwoTone />
         </ListItemIcon>
-        <ListItemText primary="Custom Meal Order" secondary="mix it up" />
+        <ListItemText primary="Customize Meal" secondary="let's mix it up" />
       </ListItem>
     </List>
   </Paper>

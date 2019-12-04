@@ -4,11 +4,11 @@ import LunchButton from './LunchButton';
 import LunchDialog from './LunchDialog';
 import { SharedSnackbarConsumer } from '../../alert/SnackBarProvider';
 
-import { SharedLunchConsumer } from '../../../HOC';
+import { LunchContext } from '../../../HOC';
 import ErrorBoundary from '../../error';
 
 class LunchContainer extends PureComponent {
-  static contextType = SharedLunchConsumer;
+  static contextType = LunchContext;
 
   render() {
     const {

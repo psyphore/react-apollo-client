@@ -2,13 +2,13 @@ import React, { Fragment } from 'react';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Paper from '@material-ui/core/Paper';
-import Check from '@material-ui/icons/Check';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import DeleteForeverOutlined from '@material-ui/icons/DeleteForeverOutlined';
 import Grid from '@material-ui/core/Grid';
+
+import { MealIconSwitcher } from '../common';
 
 import Tooltip from '../../tooltip';
 
@@ -41,12 +41,10 @@ const DialogSelection = ({
         </Grid>
         <List>
           <ListItem>
-            <ListItemIcon>
-              <Check />
-            </ListItemIcon>
+            <MealIconSwitcher category={selection.category} />
             <ListItemText
-              primary={selection.name}
-              secondary={selection.type + ' by ' + selection.provider}
+              primary={selection.provider + ': ' + selection.name}
+              secondary={selection.content}
             />
           </ListItem>
         </List>

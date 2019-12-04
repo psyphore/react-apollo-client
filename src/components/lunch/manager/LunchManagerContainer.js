@@ -8,7 +8,7 @@ import { LunchManagerContext } from '../../../HOC';
 import ErrorBoundary from '../../error';
 
 class LunchManagerContainer extends PureComponent {
-  static contextType = LunchManagerContext; //SharedLunchManagerConsumer;
+  static contextType = LunchManagerContext;
 
   render() {
     const {

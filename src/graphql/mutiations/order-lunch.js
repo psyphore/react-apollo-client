@@ -6,6 +6,12 @@ export const placeOrder = gql`
   }
 `;
 
+export const placeMultipleOrders = gql`
+  mutation multipleMealOrder($body: [MealOrder]!) {
+    placeMultipleOrder(orders: $body)
+  }
+`;
+
 export const removeOrder = gql`
   mutation removeOrder($body: RemoveMealOrder!) {
     removeOrder(order: $body)
@@ -13,7 +19,7 @@ export const removeOrder = gql`
 `;
 
 export const setMealOptions = gql`
-  mutation saveMealOptions($options: MealOptions!) {
-    setMeals(meals: $options)
+  mutation saveMealOptions($body: [MealOption]!) {
+    setMeals(meals: $body)
   }
 `;

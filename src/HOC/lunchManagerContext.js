@@ -2,7 +2,8 @@ import React, { createContext, Component } from 'react';
 import { withApollo } from 'react-apollo';
 import dayJS from 'dayjs';
 
-import { todaysMeals, placeOrder, setMealOptions } from '../graphql';
+import { todaysMeals, setMealOptions } from '../graphql';
+import { fetchCategoriesAndProviders } from '../components/lunch/utils';
 
 const LunchManagerContext = createContext({
   actions: {},
@@ -38,23 +39,6 @@ class ProviderComponent extends Component {
 
     snackAlert: false,
     snackMessage: null
-  };
-
-  handleFetchingOfCategoriesAndProviders = () => {
-    return new Promise(resolve => {
-      resolve({
-        defaultProviders: ['2B CUISINE', 'DEJA VU'],
-        defaultCategories: ['Meal of the day', 'Vegetarian', 'Banting'],
-        meal: {
-          date: undefined,
-          name: '',
-          content: '',
-          comments: '',
-          category: '',
-          provider: ''
-        }
-      });
-    });
   };
 
   handleStateUpdate = (prop, value) => this.setState({ [prop]: value });
@@ -163,7 +147,14 @@ class ProviderComponent extends Component {
   };
 
   asyncFetcher = async () => {
-    await this.handleFetchingOfCategoriesAndProviders();
+    const {
+      defaultCategories,
+      defaultProviders
+    } = await fetchCategoriesAndProviders();
+    this.setState({
+      defaultCategories: [...defaultCategories],
+      defaultProviders: [...defaultProviders]
+    });
   };
 
   handleNextDay = async () => {
@@ -204,20 +195,19 @@ class ProviderComponent extends Component {
 
   handleSaveMealOptions = async () => {
     const { client } = this.props;
-    const { options, today } = this.state;
+    const { options } = this.state;
 
     this.setState(() => ({ fetching: true }));
 
     const collection = options.map(o => {
-      const payload = {
+      return {
         provider: o.provider.replace('2', '_2').replace(/ +/g, '_'),
+        category: o.category.replace(/ +/g, '_'),
         content: o.content,
         name: o.name,
-        date: today.toISOString(),
-        category: o.category,
+        date: o.date,
         comments: o.comments
       };
-      return payload;
     });
 
     const result = await client.mutate({
@@ -255,13 +245,61 @@ class ProviderComponent extends Component {
     );
 
     if (updatedItemIndex < 0) {
-      meal['date'] = today;
+      meal['date'] = today.toISOString();
       updatedCart.push({ ...meal });
     } else {
       const updatedItem = {
         ...updatedCart[updatedItemIndex]
       };
-      updatedItem['date'] = today;
+      updatedItem['date'] = today.toISOString();
+      updatedCart[updatedItemIndex] = updatedItem;
+    }
+
+    setTimeout(() => {
+      this.handleStateUpdate('options', updatedCart);
+      this.handleClearMealSelection();
+    }, this.networkTimeout);
+  };
+
+  handleMealOptionRemove = e => {
+    console.log(e);
+    const { options } = this.state;
+    const updatedCart = [...options];
+    const updatedItemIndex = updatedCart.findIndex(
+      item =>
+        item.name === e.name &&
+        item.category === e.category &&
+        item.provider === e.provider
+    );
+
+    if (updatedItemIndex !== -1)
+      updatedCart = updatedCart.splice(updatedItemIndex, 1);
+
+    setTimeout(() => {
+      this.handleStateUpdate('options', updatedCart);
+      this.handleClearMealSelection();
+    }, this.networkTimeout);
+  };
+
+  handleMealOptionUpdate = e => {
+    console.log(e);
+    const { meal, options, today } = this.state;
+    const updatedCart = [...options];
+    const updatedItemIndex = updatedCart.findIndex(
+      item =>
+        item.name === meal.name &&
+        item.category === meal.category &&
+        item.provider === meal.provider
+    );
+
+    if (updatedItemIndex < 0) {
+      meal['date'] = today.toISOString();
+      updatedCart.push({ ...meal });
+    } else {
+      const updatedItem = {
+        ...updatedCart[updatedItemIndex]
+      };
+      updatedItem['date'] = today.toISOString();
       updatedCart[updatedItemIndex] = updatedItem;
     }
 
@@ -299,9 +337,14 @@ class ProviderComponent extends Component {
     }, this.networkTimeout);
   };
 
-  componentDidMount = () => {
-    this.handleFetchingOfCategoriesAndProviders().then(value => {
-      this.setState({ ...value });
+  componentDidMount = async props => {
+    const {
+      defaultCategories,
+      defaultProviders
+    } = await fetchCategoriesAndProviders();
+    this.setState({
+      defaultCategories: [...defaultCategories],
+      defaultProviders: [...defaultProviders]
     });
   };
 

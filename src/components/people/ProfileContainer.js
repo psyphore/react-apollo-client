@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-import { PersonConsumer } from '../../HOC';
+import { PersonContext } from '../../HOC';
 
 import Team from './TeamList';
 import PersonCard from './PersonCard.1';
@@ -96,7 +96,7 @@ const MyProfile = ({ classes: { gridItemStyle }, person }) => (
 );
 
 class ProfileContainer extends PureComponent {
-  static contextType = PersonConsumer;
+  static contextType = PersonContext;
 
   render() {
     const { classes, person, refetch } = this.props;

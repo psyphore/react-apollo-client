@@ -2,9 +2,13 @@ import gql from 'graphql-tag';
 
 export const mealOfTheDay = gql`
   fragment todaysMeals on Meal {
-    type
-    name
+    id
+    category
     provider
+    date
+    name
+    content
+    comments
   }
 `;
 

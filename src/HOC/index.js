@@ -2,12 +2,21 @@ export {
   Provider as LeaveProvider,
   Consumer as LeaveConsumer
 } from './leaveContext';
-export { Provider as LunchProvider, SharedLunchConsumer } from './lunchContext';
+export {
+  Provider as LunchProvider,
+  SharedLunchConsumer,
+  lctx as LunchContext
+} from './lunchContext';
 export {
   Provider as PersonProvider,
-  Consumer as PersonConsumer
+  Consumer as PersonConsumer,
+  personContext as PersonContext
 } from './personContext';
-export { Provider as AppProvider, Consumer as AppConsumer } from './appContext';
+export {
+  Provider as AppProvider,
+  Consumer as AppConsumer,
+  appContext as AppContext
+} from './appContext';
 export {
   Provider as NotificationProvider,
   Consumer as NotificationConsumer
