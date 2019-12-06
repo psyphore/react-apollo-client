@@ -21,6 +21,10 @@ export {
   myMealHistory,
   recomendedMeals
 } from './queries/lunch';
-export { placeOrder, setMealOptions } from './mutiations/order-lunch';
+export {
+  placeOrder,
+  setMealOptions,
+  placeMultipleOrders
+} from './mutiations/order-lunch';
 export { supportRegister, currentSupportPerson } from './queries/support';
 export { upload_file, upload_files } from './mutiations/media-upload';

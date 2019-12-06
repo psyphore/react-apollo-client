@@ -2,7 +2,7 @@ import React, { createContext, Component } from 'react';
 import { withApollo } from 'react-apollo';
 import dayJS from 'dayjs';
 
-import { todaysMeals, placeOrder, myMealHistory } from '../graphql';
+import { todaysMeals, placeMultipleOrders, myMealHistory } from '../graphql';
 import { fetchCategoriesAndProviders } from '../components/lunch/utils';
 
 const LunchContext = createContext({
@@ -208,21 +208,21 @@ class ProviderComponent extends Component {
 
     const payload = lunch.map(item => {
       const p = {
+        id: item.id,
+        name: item.name,
         provider: item.provider.replace('2', '_2').replace(/ +/g, '_'),
+        category: item.category.replace('2', '_2').replace(/ +/g, '_'),
         comments: item.comments,
         content: item.name,
         date: today.toISOString(),
         ownAccount: item.ownAccount ? ownAccount : false,
-        onBehalfOf: item.onBehalfOf ? onBehalfOf : null,
-        category: item.category.replace('2', '_2').replace(/ +/g, '_'),
-        name: item.name,
-        id: item.id
+        onBehalfOf: item.onBehalfOf ? onBehalfOf : null
       };
       return p;
     });
 
     const result = await client.mutate({
-      mutation: placeOrder,
+      mutation: placeMultipleOrders,
       variables: { body: payload }
     });
 
@@ -231,7 +231,10 @@ class ProviderComponent extends Component {
         this.setState(state => ({
           fetching: !state.fetching,
           snackAlert: !state.snackAlert,
-          snackMessage: `Meal placed successfully!`
+          snackMessage: `
+          ${result.data.placeMultipleOrders}
+          Meal placed successfully!
+          `
         }));
         setTimeout(() => {
           this.setState(() => ({

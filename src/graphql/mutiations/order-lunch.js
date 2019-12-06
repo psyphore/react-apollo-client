@@ -7,8 +7,8 @@ export const placeOrder = gql`
 `;
 
 export const placeMultipleOrders = gql`
-  mutation multipleMealOrder($body: [MealOrder]!) {
-    placeMultipleOrder(orders: $body)
+  mutation placeMealOrders($meals: [MealOrder]!) {
+    placeMultipleOrder(order: $meals)
   }
 `;
 
