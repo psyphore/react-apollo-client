@@ -5,6 +5,12 @@ import {
   mealHistory
 } from '../fragments/lunch';
 
+export const fetchMealProperties = gql`
+  query getMealProps($type: MealProperties!) {
+    mealProps(type: $type)
+  }
+`;
+
 export const todaysMeals = gql`
   query getMealSpecials($date: String) {
     meals(date: $date) {

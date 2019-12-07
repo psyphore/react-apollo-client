@@ -14,7 +14,6 @@ export default ({
   title,
   type,
   page,
-  size,
   classes: { text }
 }) => {
   return (

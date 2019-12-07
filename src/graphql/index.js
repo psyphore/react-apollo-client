@@ -19,7 +19,8 @@ export {
   todaysMeals,
   mealTrends,
   myMealHistory,
-  recomendedMeals
+  recomendedMeals,
+  fetchMealProperties
 } from './queries/lunch';
 export {
   placeOrder,

@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import LunchList from './LunchList';
 import LunchTodayList from './LunchTodayList';
 import CustomMeal from './CustomMealForm';
-import DialogSelection from './DialogSelection';
+import DialogLunchCollection from './DialogLunchCollection';
 
 const RenderEmptyMessage = ({ message }) => (
   <Typography variant="caption">{message}</Typography>
@@ -27,9 +27,6 @@ const GridedOutContent = ({ classes, state, actions }) => {
   } = state;
   return (
     <Grid container className={gridContainerStyle} spacing={8}>
-      <Grid item xs={12} sm={12} md={12} className={gridItemStyle}>
-        <DialogSelection classes={classes} state={state} actions={actions} />
-      </Grid>
       {customMeal && (
         <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
           <CustomMeal classes={classes} state={state} actions={actions} />
@@ -63,6 +60,13 @@ const GridedOutContent = ({ classes, state, actions }) => {
         ) : (
           <RenderEmptyMessage message="You do not have any previous meals" />
         )}
+      </Grid>
+      <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
+        <DialogLunchCollection
+          classes={classes}
+          state={state}
+          actions={actions}
+        />
       </Grid>
       <Grid item xs={12} sm={12} md={4} className={gridItemStyle}>
         {trending && trending.length !== 0 ? (

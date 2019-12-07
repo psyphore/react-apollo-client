@@ -2,8 +2,12 @@ import React, { createContext, Component } from 'react';
 import { withApollo } from 'react-apollo';
 import dayJS from 'dayjs';
 
-import { todaysMeals, placeMultipleOrders, myMealHistory } from '../graphql';
-import { fetchCategoriesAndProviders } from '../components/lunch/utils';
+import {
+  todaysMeals,
+  placeMultipleOrders,
+  myMealHistory,
+  fetchMealProperties
+} from '../graphql';
 
 const LunchContext = createContext({
   actions: {},
@@ -109,8 +113,31 @@ class ProviderComponent extends Component {
     }, this.defaultNetworkTimeout);
   };
 
+  removeLunch = lunch => {
+    const updatedCart = [...this.state.lunch];
+    const updatedItemIndex = updatedCart.findIndex(
+      item =>
+        item.id === lunch.id &&
+        item.name === lunch.name &&
+        item.category === lunch.category &&
+        item.provider === lunch.provider
+    );
+
+    const updatedItem = {
+      ...updatedCart[updatedItemIndex]
+    };
+
+    if (updatedItem.quantity <= 0) {
+      updatedCart.splice(updatedItemIndex, 1);
+    }
+
+    setTimeout(() => {
+      this.handleStateUpdate('lunch', updatedCart);
+    }, this.defaultNetworkTimeout);
+  };
+
   clearLunch = () => {
-    this.setState({ lunch: [] });
+    this.handleStateUpdate('lunch', []);
   };
 
   clearState = isOpen => {
@@ -183,50 +210,33 @@ class ProviderComponent extends Component {
 
   handlePlaceOrder = async () => {
     const { client } = this.props;
-    const {
-      selection: { name, provider, ownAccount, comments, category, id },
-      lunch,
-      today,
-      onBehalfOf
-    } = this.state;
+    const { lunch, today } = this.state;
 
     this.setState({
       fetching: true
     });
-
-    // const payload = {
-    //   provider: provider.replace('2', '_2').replace(/ +/g, '_'),
-    //   comments: comments,
-    //   content: name,
-    //   date: today.toISOString(),
-    //   ownAccount: ownAccount ? ownAccount : false,
-    //   onBehalfOf: onBehalfOf ? onBehalfOf : null,
-    //   category: category,
-    //   name: name,
-    //   id: id
-    // };
 
     const payload = lunch.map(item => {
       const p = {
         id: item.id,
         name: item.name,
         provider: item.provider.replace('2', '_2').replace(/ +/g, '_'),
-        category: item.category.replace('2', '_2').replace(/ +/g, '_'),
+        category: item.category.replace(/ +/g, '_'),
         comments: item.comments,
         content: item.name,
         date: today.toISOString(),
-        ownAccount: item.ownAccount ? ownAccount : false,
-        onBehalfOf: item.onBehalfOf ? onBehalfOf : null
+        ownAccount: item.ownAccount ? item.ownAccount : false,
+        onBehalfOf: item.onBehalfOf ? item.onBehalfOf : null
       };
       return p;
     });
 
     const result = await client.mutate({
       mutation: placeMultipleOrders,
-      variables: { body: payload }
+      variables: { meals: payload }
     });
 
-    if (result.data.placeOrder) {
+    if (result.data.placeMultipleOrder) {
       setTimeout(() => {
         this.setState(state => ({
           fetching: !state.fetching,
@@ -247,10 +257,6 @@ class ProviderComponent extends Component {
       }, 1000);
 
       await this.handleFetchingHistory();
-
-      setTimeout(async () => {
-        await this.handleFetchingHistory();
-      }, 2500);
     }
   };
 
@@ -412,15 +418,46 @@ class ProviderComponent extends Component {
     this.clearLunch();
   };
 
-  componentDidMount = async props => {
-    const {
-      defaultCategories,
-      defaultProviders
-    } = await fetchCategoriesAndProviders();
-    this.setState({
-      defaultCategories: [...defaultCategories],
-      defaultProviders: [...defaultProviders]
+  handleFetchMealProperties = async () => {
+    const { client } = this.props;
+
+    const categoriesResult = await client.query({
+      query: fetchMealProperties,
+      variables: { type: 'CATEGORY' },
+      options: { fetchPolicy: this.fetchPolicy }
     });
+
+    if (categoriesResult.data.mealProps) {
+      this.handleStateUpdate(
+        'defaultCategories',
+        categoriesResult.data.mealProps
+      );
+    }
+
+    const providersResult = await client.query({
+      query: fetchMealProperties,
+      variables: { type: 'PROVIDER' },
+      options: { fetchPolicy: this.fetchPolicy }
+    });
+
+    if (providersResult.data.mealProps) {
+      this.handleStateUpdate(
+        'defaultProviders',
+        providersResult.data.mealProps
+      );
+    }
+  };
+
+  componentDidMount = async props => {
+    // const {
+    //   defaultCategories,
+    //   defaultProviders
+    // } = await fetchCategoriesAndProviders();
+    // this.setState({
+    //   defaultCategories: [...defaultCategories],
+    //   defaultProviders: [...defaultProviders]
+    // });
+    await this.handleFetchMealProperties();
   };
 
   render() {
@@ -434,6 +471,7 @@ class ProviderComponent extends Component {
           actions: {
             addLunch: this.addLunch,
             updateLunch: this.updateLunch,
+            removeLunch: this.removeLunch,
             clearLunch: this.clearLunch,
             customMeal: this.handleCustomMeal,
             open: this.handleClickOpen,
